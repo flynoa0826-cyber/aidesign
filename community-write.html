@@ -70,7 +70,7 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 
 /* 이미지 첨부 */
 .attach-row{padding:12px 24px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.attach-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t)}
+.attach-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t);white-space:nowrap;flex-shrink:0}
 .attach-btn:hover{border-color:var(--blue);color:var(--blue)}
 .attach-btn .material-icons-round{font-size:16px}
 .attach-note{font-size:12px;color:var(--ink-3)}
@@ -93,7 +93,7 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 .char-count{font-size:12px;color:var(--ink-3);text-align:right;padding:8px 24px;border-top:1px solid var(--line)}
 
 @media(max-width:900px){.lay{grid-template-columns:1fr}.side{display:none}}
-@media(max-width:600px){.lay{padding:16px 16px 60px}.toolbar{gap:1px}}
+@media(max-width:600px){.lay{padding:16px 16px 60px}.toolbar{gap:1px}.editor-body{min-height:240px;padding:16px 18px;font-size:15px;line-height:1.8}.editor-title{font-size:22px!important;padding:14px 18px!important}.attach-row{padding:10px 16px;flex-wrap:wrap;gap:8px}.attach-btn{padding:6px 12px;font-size:12px;white-space:nowrap}.attach-info{font-size:11px;line-height:1.5}}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
 .nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
@@ -157,6 +157,21 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 .mob-stag{padding:6px 14px;border-radius:100px;background:#F7F8FA;border:1px solid #E4E5E7;font-size:13px;color:#555;cursor:pointer}
 .mob-stag:hover{background:#EEF4FF;border-color:#1B64DA;color:#1B64DA}
 .gnb-mob-srch{display:none;background:transparent;border:none;padding:8px;cursor:pointer;color:#555;border-radius:100px;transition:all .18s;align-items:center;justify-content:center}.gnb-mob-srch .material-icons-round{font-size:22px}@media(max-width:900px){.gnb-mob-srch{display:flex}}
+
+.attached-files{padding:0 24px 12px;display:flex;flex-direction:column;gap:6px}
+.attached-files:empty{display:none}
+.af-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:#F7F8FA;border:1px solid #E4E5E7}
+.af-icon{font-size:18px!important;color:#1B64DA;flex-shrink:0}
+.af-name{flex:1;font-size:13px;color:#191919;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.af-size{font-size:12px;color:#999;flex-shrink:0}
+.af-del{background:none;border:none;cursor:pointer;color:#999;padding:2px;display:flex;align-items:center;border-radius:50%;flex-shrink:0;transition:all .18s}
+.af-del:hover{background:#FEE;color:#E8335D}
+.af-del .material-icons-round{font-size:16px}
+.attach-alert{margin:0 24px 12px;padding:10px 14px;border-radius:8px;background:#FEE;border:1px solid #FCC;color:#C41E45;font-size:13px;font-weight:500;display:none}
+.attach-alert.show{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.attached-files{padding:0 16px 10px}.attach-alert{margin:0 16px 10px;font-size:12px}.af-name{font-size:12px}.af-size{font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -272,10 +287,59 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
       <!-- 첨부 -->
       <div class="attach-row">
-        <button class="attach-btn"><span class="material-icons-round">image</span>이미지 첨부</button>
-        <button class="attach-btn"><span class="material-icons-round">attach_file</span>파일 첨부</button>
-        <span class="attach-note">이미지 최대 10MB · JPG, PNG, GIF, WebP</span>
+        <input type="file" id="fileUpload" style="display:none" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.zip" multiple onchange="handleFileAttach(this)">
+        <button class="attach-btn" onclick="document.getElementById('fileUpload').click()"><span class="material-icons-round">attach_file</span>파일 첨부</button>
+        <span class="attach-note">파일 최대 5개 · 5MB · JPG, PNG, GIF, WebP, PDF</span>
       </div>
+      <div id="attachedFiles" class="attached-files"></div>
+      <div id="attachAlert" class="attach-alert"></div>
+      <script>
+        let attachedFileList = [];
+        function handleFileAttach(input){
+          const newFiles = Array.from(input.files);
+          for(const f of newFiles){
+            if(attachedFileList.length >= 5){
+              showAttachAlert('파일은 최대 5개까지만 첨부할 수 있습니다.');
+              break;
+            }
+            attachedFileList.push(f);
+          }
+          renderAttachedFiles();
+          input.value = '';
+        }
+        function removeAttachedFile(idx){
+          attachedFileList.splice(idx, 1);
+          renderAttachedFiles();
+          hideAttachAlert();
+        }
+        function renderAttachedFiles(){
+          const wrap = document.getElementById('attachedFiles');
+          if(attachedFileList.length === 0){
+            wrap.innerHTML = '';
+            return;
+          }
+          wrap.innerHTML = attachedFileList.map((f, i) =>
+            '<div class="af-item"><span class="material-icons-round af-icon">description</span><span class="af-name">'+escapeHtml(f.name)+'</span><span class="af-size">'+formatSize(f.size)+'</span><button class="af-del" onclick="removeAttachedFile('+i+')" aria-label="삭제"><span class="material-icons-round">close</span></button></div>'
+          ).join('');
+        }
+        function showAttachAlert(msg){
+          const a = document.getElementById('attachAlert');
+          a.textContent = msg;
+          a.classList.add('show');
+          setTimeout(hideAttachAlert, 3000);
+        }
+        function hideAttachAlert(){
+          document.getElementById('attachAlert').classList.remove('show');
+        }
+        function formatSize(bytes){
+          if(bytes < 1024) return bytes+' B';
+          if(bytes < 1024*1024) return (bytes/1024).toFixed(1)+' KB';
+          return (bytes/(1024*1024)).toFixed(1)+' MB';
+        }
+        function escapeHtml(s){
+          return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        }
+      </script>
     </div>
   </div>
 
