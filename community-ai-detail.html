@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figma + Claude로 UI 시안 12개 — DESIGNR</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+:root {
+  --blue:#1B64DA; --blue-lt:#EEF4FF; --blue-dk:#1450B0;
+  --ink:#191919; --ink-2:#555; --ink-3:#999;
+  --bg:#FFFFFF; --bg-2:#F7F8FA; --bg-3:#EDEEF0;
+  --line:#E4E5E7; --line-2:#D0D2D6;
+  --cat:#6C3BF5; --cat-lt:#F0ECFE; --cat-dk:#5429D4;
+  --r-sm:4px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:100px;
+  --sh-1:0 1px 4px rgba(0,0,0,.07); --sh-2:0 4px 16px rgba(0,0,0,.09);
+  --sans:'Noto Sans KR',sans-serif; --serif:'Noto Serif KR',serif; --t:.18s ease;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:15px}
+
+
+
+
+
+
+
+
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r-full);font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;border:none;transition:all var(--t);text-decoration:none;white-space:nowrap}
+.btn-ol{background:transparent;border:1.5px solid var(--line-2);color:var(--ink)}
+.btn-ol:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-lt)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:var(--blue-dk);transform:translateY(-1px)}
+
+
+
+
+
+
+.lay{max-width:1160px;margin:0 auto;padding:36px 24px 80px;display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start}
+.crumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);margin-bottom:20px}
+.crumb a{color:var(--ink-3);text-decoration:none;transition:color var(--t)}
+.crumb a:hover{color:var(--ink)}
+.crumb .material-icons-round{font-size:14px}
+
+.art-tags{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.tag{padding:4px 12px;border-radius:var(--r-full);font-size:12px;font-weight:600}
+.tag-cat{background:var(--cat-lt);color:var(--cat)}
+.tag-hot{background:var(--ink);color:#fff;display:flex;align-items:center;gap:3px}
+.tag-hot .material-icons-round{font-size:12px}
+.tag-sub{background:var(--bg-2);color:var(--ink-2)}
+
+.art-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:700;color:var(--ink);letter-spacing:-.5px;line-height:1.3;margin-bottom:20px}
+.art-meta{display:flex;align-items:center;gap:14px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:32px;flex-wrap:wrap}
+.author-block{display:flex;align-items:center;gap:10px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;background:var(--cat-lt);color:var(--cat)}
+.author-name{font-size:14px;font-weight:700}
+.author-role{font-size:12px;color:var(--ink-3)}
+.fol-btn{padding:5px 14px;border-radius:var(--r-full);border:1.5px solid var(--line-2);background:transparent;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t)}
+.fol-btn:hover{border-color:var(--cat);color:var(--cat)}
+.meta-sep{color:var(--line-2)}
+.meta-item{font-size:13px;color:var(--ink-3);display:flex;align-items:center;gap:4px}
+.meta-item .material-icons-round{font-size:15px}
+.meta-r{margin-left:auto;display:flex;gap:8px}
+.meta-act{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-3);transition:all var(--t)}
+.meta-act:hover{border-color:var(--ink);color:var(--ink)}
+.meta-act .material-icons-round{font-size:17px}
+
+.art-body{font-size:16px;line-height:1.9;color:#2C2C2C;margin-bottom:40px}
+.art-body p{margin-bottom:20px}
+.art-body h2{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--ink);margin:40px 0 16px;letter-spacing:-.3px}
+.art-body h3{font-size:17px;font-weight:700;color:var(--ink);margin:28px 0 12px}
+.art-body ul,.art-body ol{padding-left:24px;margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+.art-body li{line-height:1.8}
+.art-body blockquote{margin:28px 0;padding:20px 24px;background:var(--cat-lt);border-left:3px solid var(--cat);border-radius:0 var(--r-lg) var(--r-lg) 0;font-size:15px;line-height:1.8;color:var(--cat-dk)}
+.art-body blockquote p{margin:0}
+.art-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+
+/* 프롬프트 박스 */
+.prompt-box{background:var(--ink);border-radius:var(--r-lg);padding:18px 22px;margin:20px 0;position:relative}
+.prompt-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px}
+.prompt-text{font-size:13px;color:rgba(255,255,255,.88);line-height:1.8;font-family:monospace}
+.prompt-copy{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:4px 10px;border-radius:var(--r-full);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all var(--t)}
+.prompt-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+
+/* 스텝 박스 */
+.step-box{display:flex;gap:16px;background:var(--bg-2);border-radius:var(--r-lg);padding:18px 20px;margin:16px 0}
+.step-n{width:32px;height:32px;border-radius:50%;background:var(--cat);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;font-family:var(--serif)}
+.step-t{font-size:15px;font-weight:700;margin-bottom:5px}
+.step-d{font-size:13px;color:var(--ink-2);line-height:1.7}
+
+/* 결과 테이블 */
+.res-table{width:100%;border-collapse:collapse;margin:20px 0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);font-size:14px}
+.res-table th{background:var(--cat);color:#fff;padding:11px 16px;text-align:left;font-weight:600;font-size:13px}
+.res-table td{padding:11px 16px;border-bottom:1px solid var(--line)}
+.res-table tr:last-child td{border-bottom:none}
+.res-table tr:nth-child(even) td{background:var(--bg-2)}
+.good{color:#065F46;font-weight:700}
+.bad{color:#7F1D1D;font-weight:700}
+
+/* 하이라이트 */
+.hl-box{background:var(--cat-lt);border-left:3px solid var(--cat);border-radius:0 var(--r-lg) var(--r-lg) 0;padding:16px 20px;margin:20px 0}
+.hl-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cat);margin-bottom:8px}
+.hl-box p{margin:0;font-size:14px;color:var(--cat-dk);line-height:1.8}
+
+.react-bar{display:flex;align-items:center;gap:10px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:36px;flex-wrap:wrap}
+.rbtn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);color:var(--ink-2);transition:all var(--t)}
+.rbtn:hover{border-color:var(--ink);color:var(--ink)}
+.rbtn.liked{background:var(--cat-lt);border-color:var(--cat);color:var(--cat)}
+.rbtn .material-icons-round{font-size:18px}
+.react-r{margin-left:auto;display:flex;gap:8px}
+.sbtn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-3);transition:all var(--t)}
+.sbtn:hover{border-color:var(--ink);color:var(--ink)}
+.sbtn .material-icons-round{font-size:17px}
+
+.author-card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-xl);padding:22px;display:flex;gap:14px;align-items:flex-start;margin-bottom:36px;cursor:pointer;transition:all var(--t)}
+.author-card:hover{box-shadow:var(--sh-1)}
+.ac-av{width:52px;height:52px;border-radius:50%;background:var(--cat-lt);color:var(--cat);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:20px;font-weight:700;flex-shrink:0}
+.ac-name{font-size:16px;font-weight:700;margin-bottom:3px}
+.ac-role{font-size:13px;color:var(--ink-3);margin-bottom:8px}
+.ac-desc{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:12px}
+.ac-stats{display:flex;gap:18px;font-size:12px;color:var(--ink-3)}
+.ac-stats strong{color:var(--ink);font-weight:700}
+.ac-fol{margin-left:auto;padding:8px 18px;background:var(--cat);color:#fff;border:none;border-radius:var(--r-full);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);align-self:flex-start;flex-shrink:0;transition:all var(--t)}
+.ac-fol:hover{background:var(--cat-dk)}
+
+.cm-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.cm-title{font-family:var(--serif);font-size:20px;font-weight:700}
+.cm-cnt{color:var(--cat)}
+.cm-sort{padding:6px 12px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:12px;font-family:var(--sans);cursor:pointer;outline:none;color:var(--ink-2)}
+.cm-input{display:flex;gap:12px;margin-bottom:24px;align-items:flex-start}
+.cm-av{width:36px;height:36px;border-radius:50%;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.cm-ta{flex:1;padding:12px 16px;border:1.5px solid var(--line);border-radius:var(--r-lg);font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--bg);resize:none;min-height:76px;outline:none;transition:border-color var(--t);line-height:1.7}
+.cm-ta:focus{border-color:var(--cat)}
+.cm-ta::placeholder{color:var(--ink-3)}
+.cm-sub{padding:10px 20px;border-radius:var(--r-lg);background:var(--cat);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);align-self:flex-end;transition:all var(--t)}
+.cm-sub:hover{background:var(--cat-dk)}
+.cm-list{display:flex;flex-direction:column;gap:0}
+.cm-item{padding:18px 0;border-bottom:1px solid var(--bg-2)}
+.cm-item:last-child{border-bottom:none}
+.cm-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ci-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ci-a1{background:var(--cat-lt);color:var(--cat)}
+.ci-a2{background:var(--blue-lt);color:var(--blue)}
+.ci-a3{background:#E6F9F3;color:#0BAD75}
+.ci-name{font-size:13px;font-weight:700}
+.ci-role{font-size:11px;color:var(--ink-3)}
+.ci-date{font-size:11px;color:var(--ink-3);margin-left:auto}
+.cm-body{font-size:14px;line-height:1.8;color:var(--ink);padding-left:42px;margin-bottom:8px}
+.cm-acts{display:flex;gap:12px;padding-left:42px}
+.ca{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-3);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color var(--t)}
+.ca:hover{color:var(--ink)}
+.ca .material-icons-round{font-size:14px}
+
+.rel-title{font-family:var(--serif);font-size:18px;font-weight:700;margin:40px 0 14px}
+.rel-list{display:flex;flex-direction:column;gap:0}
+.rel-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:all var(--t)}
+.rel-item:last-child{border-bottom:none}
+.rel-item:hover .rel-text{color:var(--cat)}
+.rel-n{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--bg-3);min-width:28px;flex-shrink:0}
+.rel-text{font-size:14px;font-weight:500;color:var(--ink);transition:color var(--t);flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+.side{display:flex;flex-direction:column;gap:16px;position:sticky;top:88px}
+.scard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden}
+.scard-h{padding:14px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px}
+.scard-h .material-icons-round{font-size:16px;color:var(--cat)}
+.scard-b{padding:14px 18px}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+.toc-item a{display:block;padding:7px 12px;border-radius:var(--r-md);font-size:13px;color:var(--ink-3);text-decoration:none;transition:all var(--t);border-left:2px solid transparent}
+.toc-item a:hover{color:var(--ink);background:var(--bg-2)}
+.toc-item a.on{color:var(--cat);border-left-color:var(--cat);font-weight:600;background:var(--cat-lt)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-card{background:var(--bg-2);border-radius:var(--r-md);padding:12px;text-align:center}
+.stat-n{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);display:block;margin-bottom:2px}
+.stat-l{font-size:11px;color:var(--ink-3)}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tg{padding:5px 12px;border-radius:var(--r-full);background:var(--bg-2);border:1px solid var(--line);font-size:12px;color:var(--ink-2);cursor:pointer;transition:all var(--t)}
+.tg:hover{background:var(--cat-lt);border-color:var(--cat);color:var(--cat)}
+.next-list{display:flex;flex-direction:column;gap:0}
+.next-item{padding:10px 0;border-bottom:1px solid var(--bg-2);cursor:pointer}
+.next-item:last-child{border-bottom:none;padding-bottom:0}
+.next-item:hover .next-t{color:var(--cat)}
+.next-t{font-size:13px;font-weight:600;line-height:1.5;margin-bottom:3px;transition:color var(--t)}
+.next-m{font-size:11px;color:var(--ink-3)}
+
+.m
+
+
+
+to{transform:translateX(0)}
+
+
+
+
+
+
+
+@media(max-width:900px){.side{display:none}.react-r{display:none}.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.side{display:none!important}.ph-stats{display:none!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}}
+@media(max-width:600px){.lay{padding:20px 16px 48px}.art-meta{gap:8px}.meta-r{display:none}}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
+.nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-right:40px;display:flex;align-items:flex-start;gap:3px;flex-shrink:0}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:#1B64DA;margin-top:4px;flex-shrink:0}
+.nm{display:flex;align-items:center;gap:2px;list-style:none;margin-right:auto}
+.nm a{display:block;padding:7px 14px;border-radius:100px;font-size:14px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease;white-space:nowrap}
+.nm a:hover{color:#191919;background:#F7F8FA}
+.nm a.active{background:#1B64DA;color:#fff;font-weight:600}
+.nav-r{display:flex;align-items:center;gap:8px}
+.gnb-icon{background:transparent;color:#555;border:none;padding:8px;cursor:pointer;border-radius:100px;position:relative;transition:all .18s ease;display:flex;align-items:center;justify-content:center}
+.gnb-icon:hover{background:#F7F8FA;color:#191919}
+.gnb-icon .material-icons-round{font-size:22px}
+.gnb-ndot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#FF4D4F;border-radius:50%;border:2px solid #fff}
+.gnb-login{display:inline-flex;align-items:center;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:1.5px solid #D0D2D6;background:transparent;color:#191919;text-decoration:none;transition:all .18s ease}
+.gnb-login:hover{border-color:#1B64DA;color:#1B64DA;background:#EEF4FF}
+.gnb-write{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;background:#1B64DA;color:#fff;text-decoration:none;transition:all .18s ease}
+.gnb-write:hover{background:#1450B0;transform:translateY(-1px)}
+.gnb-write .material-icons-round{font-size:16px}
+.gnb-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:#191919;margin-left:auto}
+.gnb-burger .material-icons-round{font-size:24px}
+.gnb-mob{display:none;position:fixed;inset:0;z-index:200}
+.gnb-mob.open{display:flex}
+.gnb-mbd{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.gnb-mdr{position:relative;width:280px;background:#fff;height:100%;padding:24px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;animation:gnb-si .2s ease}
+@keyframes gnb-si{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.gnb-mdr-logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-bottom:12px;display:flex;align-items:flex-start;gap:3px}
+.gnb-mdr a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;font-size:15px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease}
+.gnb-mdr a:hover{background:#F7F8FA;color:#191919}
+.gnb-mdr a.active{background:#EEF4FF;color:#1B64DA;font-weight:600}
+.gnb-mdr .material-icons-round{font-size:20px}
+.gnb-mdr-acts{margin-top:auto;padding-top:20px;border-top:1px solid #E4E5E7;display:flex;flex-direction:column;gap:8px}
+@media(max-width:900px){.nm,.nav-r{display:none!important}.gnb-burger{display:flex!important;margin-left:14px}.gnb-mob-srch{margin-left:auto;margin-right:-8px}}
+
+.gnb-footer{background:#F7F8FA;border-top:1px solid #E4E5E7;padding:48px 24px 32px}
+.gnb-footer-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.gnb-footer-brand{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#191919;margin-bottom:10px;letter-spacing:-.5px}
+.gnb-footer-desc{font-size:13px;color:#999;line-height:1.7;margin-bottom:16px}
+.gnb-footer-sns{display:flex;gap:8px}
+.gnb-footer-sns-btn{width:34px;height:34px;border-radius:8px;border:1px solid #E4E5E7;background:#fff;display:flex;align-items:center;justify-content:center;color:#555;cursor:pointer;transition:all .18s}
+.gnb-footer-sns-btn:hover{border-color:#1B64DA;color:#1B64DA}
+.gnb-footer-sns-btn .material-icons-round{font-size:17px}
+.gnb-fcol h4{font-size:13px;font-weight:700;color:#191919;margin-bottom:14px}
+.gnb-fcol ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.gnb-fcol ul a{font-size:13px;color:#999;text-decoration:none;transition:color .18s}
+.gnb-fcol ul a:hover{color:#191919}
+.gnb-footer-bottom{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #E4E5E7;font-size:12px;color:#999}
+@media(max-width:900px){.gnb-footer-inner{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:600px){.gnb-footer-inner{grid-template-columns:1fr}.gnb-footer-bottom{flex-direction:column;gap:8px;text-align:center}}
+.mob-search{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5)}
+.mob-search.open{display:flex;align-items:flex-start}
+.mob-search-inner{width:100%;background:#fff;padding:16px}
+.mob-search-bar{display:flex;align-items:center;gap:8px;border:2px solid #1B64DA;border-radius:100px;padding:0 14px;background:#F7F8FA}
+.mob-search-bar .material-icons-round{font-size:20px;color:#1B64DA;flex-shrink:0}
+.mob-search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Noto Sans KR',sans-serif;padding:12px 6px;background:transparent;color:#191919}
+.mob-search-bar input::placeholder{color:#999}
+.mob-search-bar button{background:none;border:none;cursor:pointer;color:#999;padding:4px;display:flex;align-items:center}
+.mob-search-bar button .material-icons-round{font-size:20px}
+.mob-search-tags{display:flex;gap:8px;flex-wrap:wrap;padding:12px 4px 4px}
+.mob-stag{padding:6px 14px;border-radius:100px;background:#F7F8FA;border:1px solid #E4E5E7;font-size:13px;color:#555;cursor:pointer}
+.mob-stag:hover{background:#EEF4FF;border-color:#1B64DA;color:#1B64DA}
+.gnb-mob-srch{display:none;background:transparent;border:none;padding:8px;cursor:pointer;color:#555;border-radius:100px;transition:all .18s;align-items:center;justify-content:center}.gnb-mob-srch .material-icons-round{font-size:22px}@media(max-width:900px){.gnb-mob-srch{display:flex}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nw">
+    <a href="index.html" class="logo">DESIGNR<span class="logo-dot"></span></a>
+    <ul class="nm">
+      <li><a href="index.html">홈</a></li>
+      <li><a href="community-list.html">생존 전략</a></li>
+      <li><a href="community-list-ai.html" class="active">AI 실무</a></li>
+      <li><a href="community-list-career.html">커리어 토크</a></li>
+      <li><a href="community-portfolio.html">포트폴리오</a></li>
+      <li><a href="community-list-qa.html">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-r">
+      <button class="gnb-icon" onclick="if(window.innerWidth<=900){document.getElementById('mobSearch').classList.add('open')}else{location.href='community-search.html'}" aria-label="검색"><span class="material-icons-round">search</span></button>
+      <button class="gnb-icon" onclick="location.href='community-notifications.html'" aria-label="알림" style="position:relative"><span class="material-icons-round">notifications</span><span class="gnb-ndot"></span></button>
+      <a href="community-auth.html" class="gnb-login">로그인</a>
+      <a href="community-write.html" class="gnb-write"><span class="material-icons-round">edit</span>글쓰기</a>
+    </div>
+    <button class="gnb-mob-srch" onclick="document.getElementById('mobSearch').classList.add('open')" aria-label="검색"><span class="material-icons-round">search</span></button>
+    <button class="gnb-burger" onclick="document.getElementById('gnb-mob').classList.add('open')"><span class="material-icons-round">menu</span></button>
+  </div>
+</nav>
+<div class="mob-search" id="mobSearch" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mob-search-inner">
+    <div class="mob-search-bar">
+      <span class="material-icons-round">search</span>
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="mob-search-tags">
+      <span class="mob-stag" onclick="location.href='community-search.html'">프리랜서</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">Claude 프롬프트</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">연봉 협상</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">포트폴리오</span>
+    </div>
+  </div>
+</div>
+<div class="gnb-mob" id="gnb-mob">
+  <div class="gnb-mbd" onclick="document.getElementById('gnb-mob').classList.remove('open')"></div>
+  <div class="gnb-mdr">
+    <a href="index.html" class="gnb-mdr-logo">DESIGNR<span class="logo-dot"></span></a>
+    <a href="index.html"><span class="material-icons-round">home</span>홈</a>
+    <a href="community-list.html"><span class="material-icons-round">shield</span>생존 전략</a>
+    <a href="community-list-ai.html" class="active"><span class="material-icons-round">auto_awesome</span>AI 실무</a>
+    <a href="community-list-career.html"><span class="material-icons-round">work</span>커리어 토크</a>
+    <a href="community-portfolio.html"><span class="material-icons-round">palette</span>포트폴리오</a>
+    <a href="community-list-qa.html"><span class="material-icons-round">help_outline</span>Q&amp;A</a>
+    <div class="gnb-mdr-acts">
+      <a href="community-auth.html" style="display:flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:100px;border:1.5px solid #D0D2D6;font-size:14px;font-weight:600;color:#191919;text-decoration:none;">로그인</a>
+      <a href="community-write.html" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:100px;background:#1B64DA;font-size:14px;font-weight:600;color:#fff;text-decoration:none;"><span class="material-icons-round" style="font-size:16px">edit</span>글쓰기</a>
+    </div>
+  </div>
+</div>
+
+
+<div class="lay">
+  <div>
+    <div class="crumb">
+      <a href="index.html">홈</a><span class="material-icons-round">chevron_right</span>
+      <a href="community-list-ai.html">AI 실무</a><span class="material-icons-round">chevron_right</span>
+      <span>Figma + Claude 워크플로우</span>
+    </div>
+    <div class="art-tags">
+      <span class="tag tag-hot"><span class="material-icons-round">local_fire_department</span>인기</span>
+      <span class="tag tag-cat">AI 실무</span>
+      <span class="tag tag-sub">워크플로우</span>
+      <span class="tag tag-sub">프롬프트</span>
+    </div>
+    <h1 class="art-title">Figma + Claude로 하루 만에<br>UI 시안 12개 뽑은 방법</h1>
+    <div class="art-meta">
+      <div class="author-block">
+        <div class="av">김</div>
+        <div><div class="author-name">김민준</div><div class="author-role">AI 프로덕트 디자이너 · 5년차</div></div>
+      </div>
+      <button class="fol-btn">+ 팔로우</button>
+      <span class="meta-sep">·</span>
+      <div class="meta-item"><span class="material-icons-round">schedule</span>2026. 05. 07</div>
+      <div class="meta-item"><span class="material-icons-round">visibility</span>8,142</div>
+      <div class="meta-item"><span class="material-icons-round">schedule</span>읽기 9분</div>
+      <div class="meta-r">
+        <button class="meta-act"><span class="material-icons-round">share</span></button>
+        <button class="meta-act"><span class="material-icons-round">bookmark_border</span></button>
+      </div>
+    </div>
+
+    <div class="art-body">
+      <p>과장 없이 씁니다. 제가 실제로 사용하면서 경험한 것들만 공유할 거예요. AI 툴 관련 글들이 대부분 마케팅 느낌이라 이 글은 좋은 것도 나쁜 것도 모두 담겠습니다.</p>
+      <p>3주 전 클라이언트로부터 "헬스케어 앱 메인 화면 방향이 다른 3가지 컨셉을 보여달라"는 요청을 받았어요. 보통이라면 일주일은 잡아야 할 작업이었는데, 이번엔 Figma + Claude 조합으로 하루 만에 12개 시안을 뽑아낼 수 있었습니다.</p>
+      <hr>
+      <h2 id="premise">전제: 이 방법이 통하는 조건</h2>
+      <p>솔직히 말씀드리면, 이 워크플로우가 잘 작동하려면 몇 가지 전제가 필요합니다.</p>
+      <ul>
+        <li>피그마 컴포넌트 구조를 어느 정도 이해하고 있어야 합니다</li>
+        <li>Claude에게 맥락을 잘 전달하는 프롬프트 감각이 필요합니다</li>
+        <li>결과물을 평가하고 방향을 잡는 디자인 판단력은 여전히 사람의 몫입니다</li>
+      </ul>
+      <div class="hl-box">
+        <div class="hl-label">핵심 인사이트</div>
+        <p>AI는 아이디어를 빠르게 구체화하는 도구입니다. 아이디어를 만들거나 좋은 디자인을 판단하는 일은 여전히 디자이너의 역할이에요.</p>
+      </div>
+
+      <h2 id="step1">Step 1 — 피그마에서 컴포넌트 정리</h2>
+      <div class="step-box"><div class="step-n">1</div><div><div class="step-t">컬러 & 타이포그래피 변수 정의</div><div class="step-d">Primary, Secondary, Neutral 컬러와 스타일을 Variables로 정의합니다. Claude가 일관된 제안을 할 수 있어요.</div></div></div>
+      <div class="step-box"><div class="step-n">2</div><div><div class="step-t">기본 컴포넌트 7개만 먼저</div><div class="step-d">Button, Input, Card, Nav Bar, Tab, Badge, Icon만 만들면 됩니다. 나머지는 Claude가 조합해서 제안해요.</div></div></div>
+      <div class="step-box"><div class="step-n">3</div><div><div class="step-t">화면 구조만 와이어프레임으로</div><div class="step-d">FigJam에서 3분짜리 거친 와이어프레임을 먼저 그립니다. Claude에게 이 구조를 텍스트로 설명해요.</div></div></div>
+
+      <h2 id="step2">Step 2 — Claude에게 요청하는 방법</h2>
+      <p>막연하게 "UI 디자인해줘"가 아니라, 구체적인 맥락을 함께 제공해야 해요.</p>
+      <div class="prompt-box">
+        <div class="prompt-label">실제 사용 프롬프트 01</div>
+        <div class="prompt-text">헬스케어 앱 메인 화면을 디자인해야 해. 타깃은 40~60대, 핵심 기능은 증상 기록 + AI 분석 결과 확인이야. 컬러는 신뢰감 있는 블루 계열. 메인 화면의 정보 계층과 레이아웃 구조를 3가지 방향으로 제안해줘.</div>
+        <button class="prompt-copy" onclick="this.textContent='복사됨!'">복사</button>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">실제 사용 프롬프트 02</div>
+        <div class="prompt-text">위 방향 중 2번으로 진행할게. 이 레이아웃에서 시니어 사용자가 가장 헷갈릴 수 있는 UX 문제점 3가지와 개선 방향을 알려줘. WCAG 2.1 접근성 기준도 함께 체크해줘.</div>
+        <button class="prompt-copy" onclick="this.textContent='복사됨!'">복사</button>
+      </div>
+
+      <h2 id="result">결과: 실제로 어떻게 됐나</h2>
+      <table class="res-table">
+        <thead><tr><th>항목</th><th>기존 방식</th><th>Figma + Claude</th></tr></thead>
+        <tbody>
+          <tr><td>초기 시안 수</td><td>3~4개</td><td class="good">12개</td></tr>
+          <tr><td>소요 시간</td><td>5~7일</td><td class="good">1일</td></tr>
+          <tr><td>UX 문제점 체크</td><td>주관적</td><td class="good">WCAG 기반 자동 체크</td></tr>
+          <tr><td>디자인 감성·톤</td><td>통제 가능</td><td class="bad">추가 조율 필요</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="limit">한계와 주의점</h2>
+      <ul>
+        <li><strong>브랜드 감성 구현이 어렵습니다.</strong> "따뜻하고 신뢰감 있는 느낌"처럼 감성적 방향은 추가 조율이 필요해요.</li>
+        <li><strong>반복 작업에서 일관성이 떨어집니다.</strong> 대화가 길어질수록 앞서 제안한 내용을 놓치는 경향이 있어요.</li>
+        <li><strong>프롬프트를 잘못 쓰면 시간이 더 걸립니다.</strong> 모호한 요청에는 모호한 결과가 나와요.</li>
+      </ul>
+
+      <blockquote><p>"이 워크플로우는 '빠른 시안 다각화'와 'UX 구조 검토'에서 확실히 도움이 됩니다. 직접 써보시고 본인 스타일에 맞게 조정해보세요."</p></blockquote>
+    </div>
+
+    <div class="react-bar">
+      <button class="rbtn liked" onclick="this.classList.toggle('liked')"><span class="material-icons-round">favorite</span>좋아요 <strong>521</strong></button>
+      <button class="rbtn"><span class="material-icons-round">chat_bubble_outline</span>댓글 <strong>88</strong></button>
+      <button class="rbtn"><span class="material-icons-round">bookmark_border</span>저장</button>
+      <div class="react-r">
+        <button class="sbtn"><span class="material-icons-round">link</span></button>
+        <button class="sbtn"><span class="material-icons-round">share</span></button>
+      </div>
+    </div>
+
+    <div class="author-card" onclick="location.href='community-profile.html'">
+      <div class="ac-av">김</div>
+      <div style="flex:1">
+        <div class="ac-name">김민준</div>
+        <div class="ac-role">AI 프로덕트 디자이너 · 5년차</div>
+        <div class="ac-desc">AI 도구를 실무에 적용하면서 배운 것들을 솔직하게 기록합니다. 과장 없이, 실제로 써본 것만 씁니다.</div>
+        <div class="ac-stats"><span>글 <strong>18</strong></span><span>팔로워 <strong>512</strong></span><span>좋아요 <strong>3.2k</strong></span></div>
+      </div>
+      <button class="ac-fol">팔로우</button>
+    </div>
+
+    <div class="cm-h">
+      <div class="cm-title">댓글 <span class="cm-cnt">88</span></div>
+      <select class="cm-sort"><option>최신순</option><option>좋아요순</option></select>
+    </div>
+    <div class="cm-input">
+      <div class="cm-av">나</div>
+      <textarea class="cm-ta" placeholder="경험 공유나 질문 모두 환영해요."></textarea>
+      <button class="cm-sub">등록</button>
+    </div>
+    <div class="cm-list">
+      <div class="cm-item">
+        <div class="cm-top"><div class="ci-av ci-a2">박</div><div><div class="ci-name">박지은</div><div class="ci-role">UX 디자이너</div></div><div class="ci-date">1시간 전</div></div>
+        <div class="cm-body">프롬프트 예시가 정말 도움이 됐어요! WCAG 체크를 Claude에게 요청하는 건 생각 못 했는데 바로 써봐야겠어요.</div>
+        <div class="cm-acts"><button class="ca"><span class="material-icons-round">favorite_border</span>24</button><button class="ca"><span class="material-icons-round">reply</span>답글</button></div>
+      </div>
+      <div class="cm-item">
+        <div class="cm-top"><div class="ci-av ci-a3">이</div><div><div class="ci-name">이수연</div><div class="ci-role">브랜드 디자이너</div></div><div class="ci-date">3시간 전</div></div>
+        <div class="cm-body">한계 부분을 솔직하게 써주셔서 오히려 더 신뢰가 가요. 브랜드 감성 구현이 어렵다는 부분, 저도 같은 경험을 했거든요.</div>
+        <div class="cm-acts"><button class="ca"><span class="material-icons-round">favorite_border</span>31</button><button class="ca"><span class="material-icons-round">reply</span>답글</button></div>
+      </div>
+    </div>
+
+    <div class="rel-title">관련 글</div>
+    <div class="rel-list">
+      <div class="rel-item" onclick="location.href='community-ai-detail.html'"><span class="rel-n">01</span><span class="rel-text">Claude를 실무에 쓰기 시작한 이후 달라진 것들</span></div>
+      <div class="rel-item" onclick="location.href='community-ai-detail.html'"><span class="rel-n">02</span><span class="rel-text">UX 리서치 요약 프롬프트 모음 — 인터뷰 녹취록 자동화</span></div>
+      <div class="rel-item" onclick="location.href='community-ai-detail.html'"><span class="rel-n">03</span><span class="rel-text">Figma AI 기능 총정리 — 실제로 쓸 만한 것만</span></div>
+    </div>
+  </div>
+
+  <aside class="side">
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">toc</span>목차</div>
+      <div class="scard-b" style="padding:8px 12px">
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#premise" class="on">이 방법이 통하는 조건</a></li>
+          <li class="toc-item"><a href="#step1">Step 1 — 피그마 컴포넌트 정리</a></li>
+          <li class="toc-item"><a href="#step2">Step 2 — Claude 요청법</a></li>
+          <li class="toc-item"><a href="#result">실제 결과</a></li>
+          <li class="toc-item"><a href="#limit">한계와 주의점</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">bar_chart</span>이 글 반응</div>
+      <div class="scard-b">
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-n">521</span><span class="stat-l">좋아요</span></div>
+          <div class="stat-card"><span class="stat-n">88</span><span class="stat-l">댓글</span></div>
+          <div class="stat-card"><span class="stat-n">8.1k</span><span class="stat-l">조회</span></div>
+          <div class="stat-card"><span class="stat-n">214</span><span class="stat-l">저장</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">tag</span>관련 태그</div>
+      <div class="scard-b"><div class="tag-cloud"><span class="tg">#Claude</span><span class="tg">#Figma</span><span class="tg">#워크플로우</span><span class="tg">#프롬프트</span><span class="tg">#AI실무</span></div></div>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">article</span>다음으로 읽을 글</div>
+      <div class="scard-b" style="padding:8px 18px 14px">
+        <div class="next-list">
+          <div class="next-item" onclick="location.href='community-ai-detail.html'"><div class="next-t">Claude를 3개월 쓰고 달라진 것들</div><div class="next-m">최민혁 · 조회 6.2k</div></div>
+          <div class="next-item" onclick="location.href='community-ai-detail.html'"><div class="next-t">AI 디자인 도구 비교: Galileo, Framer</div><div class="next-m">박재원 · 조회 5.8k</div></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+<script>
+const hs=document.querySelectorAll('.art-body h2');
+const tls=document.querySelectorAll('.toc-item a');
+window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>=h.offsetTop-100)c=h.id});tls.forEach(a=>{a.classList.remove('on');if(a.getAttribute('href')==='#'+c)a.classList.add('on')})});
+</script>
+<footer class="gnb-footer">
+  <div class="gnb-footer-inner">
+    <div>
+      <div class="gnb-footer-brand">DESIGNR</div>
+      <p class="gnb-footer-desc">AI 시대, 디자이너로 살아남는 법을<br>함께 찾는 커뮤니티입니다.</p>
+      <div class="gnb-footer-sns">
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">rss_feed</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">send</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">link</span></button>
+      </div>
+    </div>
+    <div class="gnb-fcol"><h4>커뮤니티</h4><ul><li><a href="community-list.html">생존 전략</a></li><li><a href="community-list-ai.html">AI 실무 도구</a></li><li><a href="community-list-career.html">커리어 토크</a></li><li><a href="community-portfolio.html">포트폴리오</a></li><li><a href="community-list-qa.html">Q&amp;A 광장</a></li></ul></div>
+    <div class="gnb-fcol"><h4>서비스</h4><ul><li><a href="community-notifications.html">인사이트 레터</a></li><li><a href="community-list-career.html">스터디 모임</a></li><li><a href="community-list-career.html">멘토링</a></li><li><a href="community-list.html">수익화 실험실</a></li></ul></div>
+    <div class="gnb-fcol"><h4>안내</h4><ul><li><a href="index.html">소개</a></li><li><a href="index.html">운영 정책</a></li><li><a href="index.html">개인정보처리방침</a></li><li><a href="community-list-qa.html">문의하기</a></li></ul></div>
+  </div>
+  <div class="gnb-footer-bottom">
+    <span>© 2026 DESIGNR. All rights reserved.</span>
+    <span>AI 시대 디자이너를 위한 커뮤니티</span>
+  </div>
+</footer>
+</body>
+</html>

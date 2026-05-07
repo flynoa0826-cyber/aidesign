@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DESIGNR — AI 시대 디자이너 커뮤니티</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+:root {
+  --blue:#1B64DA; --blue-lt:#EEF4FF; --blue-dk:#1450B0;
+  --ink:#191919; --ink-2:#555; --ink-3:#999;
+  --bg:#FFFFFF; --bg-2:#F7F8FA; --bg-3:#EDEEF0;
+  --line:#E4E5E7; --line-2:#D0D2D6;
+  --c-sv:#FF6B35; --c-ai:#6C3BF5; --c-ca:#0BAD75; --c-pf:#E8335D; --c-qa:#E8930B;
+  --r-sm:4px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:100px;
+  --sh-1:0 1px 4px rgba(0,0,0,.07); --sh-2:0 4px 16px rgba(0,0,0,.09); --sh-3:0 8px 32px rgba(0,0,0,.11);
+  --sans:'Noto Sans KR',sans-serif; --serif:'Noto Serif KR',serif; --t:.18s ease;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6}
+
+
+
+
+
+
+
+
+
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r-full);font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;border:none;transition:all var(--t);text-decoration:none;white-space:nowrap}
+.btn-ol{background:transparent;border:1.5px solid var(--line-2);color:var(--ink)}
+.btn-ol:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-lt)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:var(--blue-dk);transform:translateY(-1px);box-shadow:var(--sh-2)}
+
+
+
+
+
+
+/* HERO */
+.hero{max-width:1160px;margin:0 auto;padding:64px 24px 56px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--r-full);background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:600;margin-bottom:20px}
+.hero-eyebrow .material-icons-round{font-size:14px}
+.hero-h1{font-family:var(--serif);font-size:clamp(30px,3.8vw,48px);font-weight:700;line-height:1.22;letter-spacing:-.8px;color:var(--ink);margin-bottom:18px}
+.hero-h1 em{font-style:normal;color:var(--blue)}
+.hero-sub{font-size:16px;line-height:1.8;color:var(--ink-2);margin-bottom:32px;max-width:420px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:32px;margin-top:44px;padding-top:28px;border-top:1px solid var(--line)}
+.hs{display:flex;flex-direction:column;gap:3px}
+.hs-n{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+.hs-l{font-size:12px;color:var(--ink-3)}
+
+/* 히어로 카드 패널 */
+.hero-panel{display:flex;flex-direction:column;gap:10px}
+.hcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);padding:18px 20px;cursor:pointer;transition:all var(--t);box-shadow:var(--sh-1)}
+.hcard:hover{box-shadow:var(--sh-3);transform:translateY(-2px);border-color:transparent}
+.hcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.hav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.hav-o{background:#FFF0E8;color:#FF6B35}
+.hav-p{background:#F0ECFE;color:#6C3BF5}
+.hav-g{background:#E6F9F3;color:#0BAD75}
+.hav-meta{flex:1}
+.hav-name{font-size:12px;font-weight:600;color:var(--ink)}
+.hav-time{font-size:11px;color:var(--ink-3)}
+.hc-tag{padding:3px 9px;border-radius:var(--r-full);font-size:11px;font-weight:600;flex-shrink:0}
+.tc-sv{background:#FFF0E8;color:#FF6B35}
+.tc-ai{background:#F0ECFE;color:#6C3BF5}
+.tc-ca{background:#E6F9F3;color:#0BAD75}
+.tc-pf{background:#FDEDF1;color:#E8335D}
+.tc-qa{background:#FFF8EC;color:#E8930B}
+.hc-title{font-size:14px;font-weight:500;color:var(--ink);line-height:1.5;margin-bottom:10px}
+.hc-foot{display:flex;gap:12px}
+.hc-st{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink-3)}
+.hc-st .material-icons-round{font-size:14px}
+
+/* 카테고리 탭 */
+.cat-bar{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:60px;z-index:90}
+.cat-bar-inner{max-width:1160px;margin:0 auto;padding:0 24px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.cat-bar-inner::-webkit-scrollbar{display:none}
+.cat-tab{display:flex;align-items:center;gap:6px;padding:14px 18px;font-size:14px;font-weight:500;color:var(--ink-2);border:none;background:transparent;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;font-family:var(--sans);transition:all var(--t)}
+.cat-tab:hover{color:var(--ink)}
+.cat-tab.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+/* 메인 레이아웃 */
+.main-wrap{max-width:1160px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start}
+
+/* 섹션 헤더 */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.sec-h-l{display:flex;flex-direction:column;gap:2px}
+.sec-eye{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3)}
+.sec-tit{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.sec-more{display:flex;align-items:center;gap:3px;font-size:13px;font-weight:600;color:var(--blue);text-decoration:none;transition:opacity var(--t)}
+.sec-more:hover{opacity:.75}
+.sec-more .material-icons-round{font-size:16px}
+
+/* 포스트 리스트 */
+.post-list{display:flex;flex-direction:column;gap:0}
+.pitem{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:background var(--t)}
+.pitem:last-child{border-bottom:none}
+.pitem:hover .pitem-title{color:var(--blue)}
+.pitem-body{flex:1;min-width:0}
+.pitem-tags{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.tag{padding:3px 10px;border-radius:var(--r-full);font-size:11px;font-weight:600}
+.tag-hot{background:var(--ink);color:#fff;display:flex;align-items:center;gap:2px}
+.tag-hot .material-icons-round{font-size:11px}
+.pitem-title{font-size:16px;font-weight:700;color:var(--ink);line-height:1.5;margin-bottom:6px;transition:color var(--t)}
+.pitem-excerpt{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pitem-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.p-author{display:flex;align-items:center;gap:6px}
+.pav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.pa1{background:#FFF0E8;color:#FF6B35}
+.pa2{background:#F0ECFE;color:#6C3BF5}
+.pa3{background:#E6F9F3;color:#0BAD75}
+.pa4{background:#E8F1FF;color:#1B64DA}
+.p-name{font-size:12px;font-weight:500;color:var(--ink)}
+.p-sep{color:var(--line-2);font-size:12px}
+.p-date{font-size:12px;color:var(--ink-3)}
+.p-stats{display:flex;gap:10px;margin-left:auto}
+.p-st{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink-3)}
+.p-st .material-icons-round{font-size:14px}
+.pitem-thumb{width:84px;height:60px;border-radius:var(--r-md);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-align:center;line-height:1.3}
+.th1{background:linear-gradient(135deg,#FF9E7A,#FF6B35);color:#fff}
+.th2{background:linear-gradient(135deg,#B4A0FF,#6C3BF5);color:#fff}
+.th3{background:linear-gradient(135deg,#7ADEBE,#0BAD75);color:#fff}
+.th4{background:linear-gradient(135deg,#7BB8FF,#1B64DA);color:#fff}
+.th5{background:linear-gradient(135deg,#FFD080,#F5A623);color:#fff}
+
+/* 인기글 */
+.hot-list{display:flex;flex-direction:column;gap:0;margin-bottom:40px}
+.hot-item{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:all var(--t)}
+.hot-item:last-child{border-bottom:none}
+.hot-item:hover .hot-title{color:var(--blue)}
+.hot-n{font-size:18px;font-weight:900;font-family:var(--serif);color:var(--bg-3);min-width:28px;line-height:1.2;flex-shrink:0}
+.hot-item:nth-child(1) .hot-n{color:#FF6B35}
+.hot-item:nth-child(2) .hot-n{color:var(--ink)}
+.hot-item:nth-child(3) .hot-n{color:var(--ink-2)}
+.hot-body{flex:1;min-width:0}
+.hot-title{font-size:14px;font-weight:600;color:var(--ink);line-height:1.55;margin-bottom:4px;transition:color var(--t)}
+.hot-meta{font-size:12px;color:var(--ink-3)}
+
+/* 사이드바 */
+.side{display:flex;flex-direction:column;gap:24px;position:sticky;top:120px}
+.scard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden}
+.scard-h{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
+.scard-b{padding:16px 18px}
+
+/* 뉴스레터 */
+.nl-card{background:var(--ink);border-radius:var(--r-xl);padding:24px 20px;position:relative;overflow:hidden}
+.nl-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(27,100,218,.3);pointer-events:none}
+.nl-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(27,100,218,.25);color:#7FB8FF;padding:4px 10px;border-radius:var(--r-full);font-size:11px;font-weight:700;margin-bottom:12px}
+.nl-badge .material-icons-round{font-size:13px}
+.nl-title{font-family:var(--serif);font-size:18px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:8px;letter-spacing:-.3px}
+.nl-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:16px}
+.nl-input{width:100%;padding:10px 14px;border-radius:var(--r-md);border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:var(--sans);outline:none;transition:border-color var(--t);margin-bottom:8px}
+.nl-input::placeholder{color:rgba(255,255,255,.3)}
+.nl-input:focus{border-color:var(--blue)}
+.nl-btn{width:100%;padding:10px;border-radius:var(--r-md);background:var(--blue);color:#fff;border:none;font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all var(--t)}
+.nl-btn:hover{background:var(--blue-dk)}
+
+/* 필자 */
+.writer-list{display:flex;flex-direction:column;gap:12px}
+.witem{display:flex;align-items:center;gap:10px;cursor:pointer}
+.witem:hover .w-name{color:var(--blue)}
+.wav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.w-info{flex:1;min-width:0}
+.w-name{font-size:13px;font-weight:600;color:var(--ink);transition:color var(--t)}
+.w-role{font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-cnt{font-size:11px;font-weight:700;color:var(--blue)}
+
+/* 태그 */
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tg{padding:5px 12px;border-radius:var(--r-full);background:var(--bg-2);border:1px solid var(--line);font-size:12px;color:var(--ink-2);cursor:pointer;transition:all var(--t)}
+.tg:hover{background:var(--blue-lt);border-color:var(--blue);color:var(--blue)}
+
+/* 추천 배너 */
+.promo-band{background:var(--blue)}
+.promo-inner{max-width:1160px;margin:0 auto;padding:48px 24px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.promo-eye{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:10px}
+.promo-h{font-family:var(--serif);font-size:clamp(22px,2.5vw,30px);font-weight:700;color:#fff;line-height:1.3;letter-spacing:-.3px}
+.promo-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.7}
+.promo-btns{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.btn-pw{background:#fff;color:var(--blue)}
+.btn-pw:hover{background:var(--blue-lt)}
+.btn-pol{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}
+.btn-pol:hover{background:rgba(255,255,255,.1)}
+
+/* 푸터 */
+footer{background:var(--bg-2);border-top:1px solid var(--line);padding:48px 24px 32px}
+.footer-in{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.f-brand{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:10px;letter-spacing:-.5px}
+.f-desc{font-size:13px;color:var(--ink-3);line-height:1.7;margin-bottom:16px}
+.f-sns{display:flex;gap:8px}
+.f-sns-btn{width:34px;height:34px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--ink-2);cursor:pointer;transition:all var(--t)}
+.f-sns-btn:hover{border-color:var(--blue);color:var(--blue)}
+.f-sns-btn .material-icons-round{font-size:17px}
+.f-col h4{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.f-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.f-col ul a{font-size:13px;color:var(--ink-3);text-decoration:none;transition:color var(--t)}
+.f-col ul a:hover{color:var(--ink)}
+.f-btm{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--line)}
+.f-copy{font-size:12px;color:var(--ink-3)}
+
+/* FAB */
+
+
+
+
+/* 모바일 NAV - cleaned */
+
+
+
+
+
+
+
+
+@media(max-width:900px){
+  
+  .hero-panel{display:none}
+  .main-wrap{grid-template-columns:1fr;padding:28px 20px 60px}
+  .side{display:none}
+  .footer-in{grid-template-columns:1fr 1fr;gap:28px}
+  .f-btm{flex-direction:column;gap:10px;text-align:center}
+.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.side{display:none!important}.ph-stats{display:none!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}}
+@media(max-width:600px){
+  .pitem-thumb,.p-stats{display:none}
+  .hero-cta{flex-direction:column}
+  .hero-cta .btn{justify-content:center}
+  .footer-in{grid-template-columns:1fr}
+}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
+.nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-right:40px;display:flex;align-items:flex-start;gap:3px;flex-shrink:0}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:#1B64DA;margin-top:4px;flex-shrink:0}
+.nm{display:flex;align-items:center;gap:2px;list-style:none;margin-right:auto}
+.nm a{display:block;padding:7px 14px;border-radius:100px;font-size:14px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease;white-space:nowrap}
+.nm a:hover{color:#191919;background:#F7F8FA}
+.nm a.active{background:#1B64DA;color:#fff;font-weight:600}
+.nav-r{display:flex;align-items:center;gap:8px}
+.gnb-icon{background:transparent;color:#555;border:none;padding:8px;cursor:pointer;border-radius:100px;position:relative;transition:all .18s ease;display:flex;align-items:center;justify-content:center}
+.gnb-icon:hover{background:#F7F8FA;color:#191919}
+.gnb-icon .material-icons-round{font-size:22px}
+.gnb-ndot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#FF4D4F;border-radius:50%;border:2px solid #fff}
+.gnb-login{display:inline-flex;align-items:center;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:1.5px solid #D0D2D6;background:transparent;color:#191919;text-decoration:none;transition:all .18s ease}
+.gnb-login:hover{border-color:#1B64DA;color:#1B64DA;background:#EEF4FF}
+.gnb-write{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;background:#1B64DA;color:#fff;text-decoration:none;transition:all .18s ease}
+.gnb-write:hover{background:#1450B0;transform:translateY(-1px)}
+.gnb-write .material-icons-round{font-size:16px}
+.gnb-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:#191919;margin-left:auto}
+.gnb-burger .material-icons-round{font-size:24px}
+.gnb-mob{display:none;position:fixed;inset:0;z-index:200}
+.gnb-mob.open{display:flex}
+.gnb-mbd{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.gnb-mdr{position:relative;width:280px;background:#fff;height:100%;padding:24px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;animation:gnb-si .2s ease}
+@keyframes gnb-si{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.gnb-mdr-logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-bottom:12px;display:flex;align-items:flex-start;gap:3px}
+.gnb-mdr a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;font-size:15px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease}
+.gnb-mdr a:hover{background:#F7F8FA;color:#191919}
+.gnb-mdr a.active{background:#EEF4FF;color:#1B64DA;font-weight:600}
+.gnb-mdr .material-icons-round{font-size:20px}
+.gnb-mdr-acts{margin-top:auto;padding-top:20px;border-top:1px solid #E4E5E7;display:flex;flex-direction:column;gap:8px}
+@media(max-width:900px){.nm,.nav-r{display:none!important}.gnb-burger{display:flex!important;margin-left:14px}.gnb-mob-srch{margin-left:auto;margin-right:-8px}}
+
+.gnb-footer{background:#F7F8FA;border-top:1px solid #E4E5E7;padding:48px 24px 32px}
+.gnb-footer-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.gnb-footer-brand{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#191919;margin-bottom:10px;letter-spacing:-.5px}
+.gnb-footer-desc{font-size:13px;color:#999;line-height:1.7;margin-bottom:16px}
+.gnb-footer-sns{display:flex;gap:8px}
+.gnb-footer-sns-btn{width:34px;height:34px;border-radius:8px;border:1px solid #E4E5E7;background:#fff;display:flex;align-items:center;justify-content:center;color:#555;cursor:pointer;transition:all .18s}
+.gnb-footer-sns-btn:hover{border-color:#1B64DA;color:#1B64DA}
+.gnb-footer-sns-btn .material-icons-round{font-size:17px}
+.gnb-fcol h4{font-size:13px;font-weight:700;color:#191919;margin-bottom:14px}
+.gnb-fcol ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.gnb-fcol ul a{font-size:13px;color:#999;text-decoration:none;transition:color .18s}
+.gnb-fcol ul a:hover{color:#191919}
+.gnb-footer-bottom{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #E4E5E7;font-size:12px;color:#999}
+@media(max-width:900px){.gnb-footer-inner{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:600px){.gnb-footer-inner{grid-template-columns:1fr}.gnb-footer-bottom{flex-direction:column;gap:8px;text-align:center}}
+.mob-search{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5)}
+.mob-search.open{display:flex;align-items:flex-start}
+.mob-search-inner{width:100%;background:#fff;padding:16px}
+.mob-search-bar{display:flex;align-items:center;gap:8px;border:2px solid #1B64DA;border-radius:100px;padding:0 14px;background:#F7F8FA}
+.mob-search-bar .material-icons-round{font-size:20px;color:#1B64DA;flex-shrink:0}
+.mob-search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Noto Sans KR',sans-serif;padding:12px 6px;background:transparent;color:#191919}
+.mob-search-bar input::placeholder{color:#999}
+.mob-search-bar button{background:none;border:none;cursor:pointer;color:#999;padding:4px;display:flex;align-items:center}
+.mob-search-bar button .material-icons-round{font-size:20px}
+.mob-search-tags{display:flex;gap:8px;flex-wrap:wrap;padding:12px 4px 4px}
+.mob-stag{padding:6px 14px;border-radius:100px;background:#F7F8FA;border:1px solid #E4E5E7;font-size:13px;color:#555;cursor:pointer}
+.mob-stag:hover{background:#EEF4FF;border-color:#1B64DA;color:#1B64DA}
+.gnb-mob-srch{display:none;background:transparent;border:none;padding:8px;cursor:pointer;color:#555;border-radius:100px;transition:all .18s;align-items:center;justify-content:center}.gnb-mob-srch .material-icons-round{font-size:22px}@media(max-width:900px){.gnb-mob-srch{display:flex}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nw">
+    <a href="index.html" class="logo">DESIGNR<span class="logo-dot"></span></a>
+    <ul class="nm">
+      <li><a href="index.html" class="active">홈</a></li>
+      <li><a href="community-list.html">생존 전략</a></li>
+      <li><a href="community-list-ai.html">AI 실무</a></li>
+      <li><a href="community-list-career.html">커리어 토크</a></li>
+      <li><a href="community-portfolio.html">포트폴리오</a></li>
+      <li><a href="community-list-qa.html">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-r">
+      <button class="gnb-icon" onclick="if(window.innerWidth<=900){document.getElementById('mobSearch').classList.add('open')}else{location.href='community-search.html'}" aria-label="검색"><span class="material-icons-round">search</span></button>
+      <button class="gnb-icon" onclick="location.href='community-notifications.html'" aria-label="알림" style="position:relative"><span class="material-icons-round">notifications</span><span class="gnb-ndot"></span></button>
+      <a href="community-auth.html" class="gnb-login">로그인</a>
+      <a href="community-write.html" class="gnb-write"><span class="material-icons-round">edit</span>글쓰기</a>
+    </div>
+    <button class="gnb-mob-srch" onclick="document.getElementById('mobSearch').classList.add('open')" aria-label="검색"><span class="material-icons-round">search</span></button>
+    <button class="gnb-burger" onclick="document.getElementById('gnb-mob').classList.add('open')"><span class="material-icons-round">menu</span></button>
+  </div>
+</nav>
+<div class="mob-search" id="mobSearch" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mob-search-inner">
+    <div class="mob-search-bar">
+      <span class="material-icons-round">search</span>
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="mob-search-tags">
+      <span class="mob-stag" onclick="location.href='community-search.html'">프리랜서</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">Claude 프롬프트</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">연봉 협상</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">포트폴리오</span>
+    </div>
+  </div>
+</div>
+<div class="gnb-mob" id="gnb-mob">
+  <div class="gnb-mbd" onclick="document.getElementById('gnb-mob').classList.remove('open')"></div>
+  <div class="gnb-mdr">
+    <a href="index.html" class="gnb-mdr-logo">DESIGNR<span class="logo-dot"></span></a>
+    <a href="index.html" class="active"><span class="material-icons-round">home</span>홈</a>
+    <a href="community-list.html"><span class="material-icons-round">shield</span>생존 전략</a>
+    <a href="community-list-ai.html"><span class="material-icons-round">auto_awesome</span>AI 실무</a>
+    <a href="community-list-career.html"><span class="material-icons-round">work</span>커리어 토크</a>
+    <a href="community-portfolio.html"><span class="material-icons-round">palette</span>포트폴리오</a>
+    <a href="community-list-qa.html"><span class="material-icons-round">help_outline</span>Q&amp;A</a>
+    <div class="gnb-mdr-acts">
+      <a href="community-auth.html" style="display:flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:100px;border:1.5px solid #D0D2D6;font-size:14px;font-weight:600;color:#191919;text-decoration:none;">로그인</a>
+      <a href="community-write.html" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:100px;background:#1B64DA;font-size:14px;font-weight:600;color:#fff;text-decoration:none;"><span class="material-icons-round" style="font-size:16px">edit</span>글쓰기</a>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow"><span class="material-icons-round">bolt</span>AI 시대 디자이너 커뮤니티</div>
+    <h1 class="hero-h1">AI 시대,<br>디자이너로<br><em>살아남는 법</em>을<br>함께 찾습니다</h1>
+    <p class="hero-sub">직장을 잃고, 방향을 잃어가는 디자이너들이 모여 현실적인 생존 전략과 새로운 가능성을 나누는 공간입니다.</p>
+    <div class="hero-cta">
+      <a href="community-write.html" class="btn btn-blue">커뮤니티 참여하기<span class="material-icons-round" style="font-size:16px">arrow_forward</span></a>
+      <a href="community-list.html" class="btn btn-ol">둘러보기</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><span class="hs-n">2,840</span><span class="hs-l">함께하는 디자이너</span></div>
+      <div class="hs"><span class="hs-n">1,240</span><span class="hs-l">실전 아티클</span></div>
+      <div class="hs"><span class="hs-n">94%</span><span class="hs-l">도움이 됐다는 응답</span></div>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <div class="hcard" onclick="location.href='community-detail.html'">
+      <div class="hcard-top"><div class="hav hav-o">박</div><div class="hav-meta"><div class="hav-name">박지은 · UX 디자이너</div><div class="hav-time">2시간 전</div></div><span class="hc-tag tc-sv">생존전략</span></div>
+      <div class="hc-title">3년차 UX가 프리랜서로 전환한 첫 달 수입을 공개합니다</div>
+      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>284</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>47</div><div class="hc-st"><span class="material-icons-round">visibility</span>3.2k</div></div>
+    </div>
+    <div class="hcard" onclick="location.href='community-ai-detail.html'">
+      <div class="hcard-top"><div class="hav hav-p">김</div><div class="hav-meta"><div class="hav-name">김민준 · AI 프로덕트 디자이너</div><div class="hav-time">5시간 전</div></div><span class="hc-tag tc-ai">AI 실무</span></div>
+      <div class="hc-title">Figma + Claude로 하루 만에 UI 시안 12개 뽑은 방법</div>
+      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>521</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>88</div><div class="hc-st"><span class="material-icons-round">visibility</span>8.1k</div></div>
+    </div>
+    <div class="hcard" onclick="location.href='community-career-detail.html'">
+      <div class="hcard-top"><div class="hav hav-g">이</div><div class="hav-meta"><div class="hav-name">이수연 · 브랜드 디자이너</div><div class="hav-time">어제</div></div><span class="hc-tag tc-ca">커리어</span></div>
+      <div class="hc-title">디자이너에서 PM으로 피벗 — 6개월 후기</div>
+      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>318</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>63</div><div class="hc-st"><span class="material-icons-round">visibility</span>5.4k</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-bar">
+  <div class="cat-bar-inner">
+    <button class="cat-tab on" onclick="setCat(this)">전체</button>
+    <button class="cat-tab" onclick="setCat(this)">생존 전략</button>
+    <button class="cat-tab" onclick="setCat(this)">AI 실무</button>
+    <button class="cat-tab" onclick="setCat(this)">커리어 토크</button>
+    <button class="cat-tab" onclick="setCat(this)">포트폴리오</button>
+    <button class="cat-tab" onclick="setCat(this)">Q&amp;A</button>
+  </div>
+</div>
+
+<div class="main-wrap">
+  <div>
+    <div class="sec-h">
+      <div class="sec-h-l"><span class="sec-eye">Latest</span><span class="sec-tit">최신 글</span></div>
+      <a href="community-list.html" class="sec-more">전체 보기<span class="material-icons-round">chevron_right</span></a>
+    </div>
+    <div class="post-list">
+      <div class="pitem" onclick="location.href='community-detail.html'">
+        <div class="pitem-body">
+          <div class="pitem-tags"><span class="tag tag-hot"><span class="material-icons-round">local_fire_department</span>인기</span><span class="tag tc-sv">생존 전략</span></div>
+          <div class="pitem-title">스타트업 디자이너 대량 해고 — 우리가 할 수 있는 현실적인 선택지</div>
+          <div class="pitem-excerpt">최근 3개월간 국내외 스타트업의 디자이너 해고 사례를 모아 분석했습니다. 공통점과 우리가 준비해야 할 것들을 정리했어요.</div>
+          <div class="pitem-foot"><div class="p-author"><div class="pav pa1">정</div><span class="p-name">정다은</span></div><span class="p-sep">·</span><span class="p-date">3일 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>441</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>72</div></div></div>
+        </div>
+        <div class="pitem-thumb th1">생존<br>전략</div>
+      </div>
+      <div class="pitem" onclick="location.href='community-ai-detail.html'">
+        <div class="pitem-body">
+          <div class="pitem-tags"><span class="tag tc-ai">AI 실무</span></div>
+          <div class="pitem-title">디자이너가 Claude를 실무에 쓰기 시작한 이후 달라진 것들</div>
+          <div class="pitem-excerpt">과장하지 않고 솔직하게 씁니다. 생산성이 오른 부분도 있고, 생각보다 별로인 부분도 있어요. 3개월 사용 후기를 공유합니다.</div>
+          <div class="pitem-foot"><div class="p-author"><div class="pav pa2">최</div><span class="p-name">최민혁</span></div><span class="p-sep">·</span><span class="p-date">5일 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>628</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>91</div></div></div>
+        </div>
+        <div class="pitem-thumb th2">Claude<br>실무</div>
+      </div>
+      <div class="pitem" onclick="location.href='community-career-detail.html'">
+        <div class="pitem-body">
+          <div class="pitem-tags"><span class="tag tc-ca">커리어 토크</span></div>
+          <div class="pitem-title">연봉 협상에서 디자이너가 불리한 이유와 바꾸는 방법</div>
+          <div class="pitem-excerpt">개발자 대비 낮은 협상력, 포트폴리오의 애매한 가치 측정. 구조적인 문제를 이해하고 협상 테이블에서 살아남는 법을 이야기합니다.</div>
+          <div class="pitem-foot"><div class="p-author"><div class="pav pa3">한</div><span class="p-name">한소희</span></div><span class="p-sep">·</span><span class="p-date">1주 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>387</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>54</div></div></div>
+        </div>
+        <div class="pitem-thumb th3">커리어<br>협상</div>
+      </div>
+      <div class="pitem" onclick="location.href='community-portfolio-detail.html'">
+        <div class="pitem-body">
+          <div class="pitem-tags"><span class="tag tc-pf">포트폴리오</span></div>
+          <div class="pitem-title">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가 케이스 스터디</div>
+          <div class="pitem-excerpt">피그마 + Claude로 3일 만에 완성한 12개 화면 시안. 실제 작업 과정과 피그마 파일을 공개합니다.</div>
+          <div class="pitem-foot"><div class="p-author"><div class="pav pa4">박</div><span class="p-name">박지은</span></div><span class="p-sep">·</span><span class="p-date">2주 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>284</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>42</div></div></div>
+        </div>
+        <div class="pitem-thumb th4">포트<br>폴리오</div>
+      </div>
+      <div class="pitem" onclick="location.href='community-qa-detail.html'">
+        <div class="pitem-body">
+          <div class="pitem-tags"><span class="tag tc-qa">Q&amp;A</span></div>
+          <div class="pitem-title">클라이언트가 계약서 쓰기를 꺼려하면 어떻게 해야 하나요?</div>
+          <div class="pitem-excerpt">소규모 클라이언트들이 "이 정도면 그냥 믿고 하면 되지 않나요?"라고 하는데, 자연스럽게 계약서를 도입하는 방법이 궁금합니다.</div>
+          <div class="pitem-foot"><div class="p-author"><div class="pav pa1">강</div><span class="p-name">강민서</span></div><span class="p-sep">·</span><span class="p-date">6시간 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>31</div><div class="p-st"><span class="material-icons-round">favorite_border</span>78</div></div></div>
+        </div>
+        <div class="pitem-thumb th5">Q&amp;A</div>
+      </div>
+    </div>
+
+    <div class="sec-h" style="margin-top:48px;margin-bottom:16px">
+      <div class="sec-h-l"><span class="sec-eye">Trending</span><span class="sec-tit">지금 뜨는 글</span></div>
+    </div>
+    <div class="hot-list">
+      <div class="hot-item" onclick="location.href='community-detail.html'">
+        <div class="hot-n">01</div><div class="hot-body"><div class="hot-title">AI가 내 일을 빼앗기 전에 내가 먼저 AI를 쓰는 법</div><div class="hot-meta">생존 전략 · 조회 12,400</div></div>
+        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
+      </div>
+      <div class="hot-item" onclick="location.href='community-portfolio.html'">
+        <div class="hot-n">02</div><div class="hot-body"><div class="hot-title">포트폴리오에 AI 프로젝트를 넣어야 할까 말아야 할까</div><div class="hot-meta">포트폴리오 · 조회 9,820</div></div>
+        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
+      </div>
+      <div class="hot-item" onclick="location.href='community-list.html'">
+        <div class="hot-n">03</div><div class="hot-body"><div class="hot-title">프리랜서 전환 후 세금 신고 — 디자이너를 위한 완전 정리</div><div class="hot-meta">수익화 · 조회 7,340</div></div>
+        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
+      </div>
+      <div class="hot-item" onclick="location.href='community-list-ai.html'">
+        <div class="hot-n">04</div><div class="hot-body"><div class="hot-title">Figma AI 기능 총정리 — 실제로 쓸 만한 것만</div><div class="hot-meta">AI 실무 · 조회 6,910</div></div>
+        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
+      </div>
+      <div class="hot-item" onclick="location.href='community-career-detail.html'">
+        <div class="hot-n">05</div><div class="hot-body"><div class="hot-title">번아웃 왔을 때 디자이너가 실제로 한 것들</div><div class="hot-meta">커리어 토크 · 조회 5,680</div></div>
+        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="side">
+    <div class="nl-card">
+      <div class="nl-badge"><span class="material-icons-round">mail</span>Weekly Letter</div>
+      <div class="nl-title">매주 월요일,<br>디자이너 생존 인사이트</div>
+      <div class="nl-desc">AI 업계 소식, 실전 전략, 새로운 기회를 과장 없이 정리해 드립니다.</div>
+      <input class="nl-input" type="email" placeholder="이메일 주소 입력">
+      <button class="nl-btn">구독 신청하기</button>
+    </div>
+    <div class="scard">
+      <div class="scard-h">이달의 필자 <a href="community-profile.html" style="font-size:12px;font-weight:600;color:var(--blue);text-decoration:none;">더보기</a></div>
+      <div class="scard-b">
+        <div class="writer-list">
+          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#FFF0E8;color:#FF6B35">한</div><div class="w-info"><div class="w-name">한소희</div><div class="w-role">시니어 UX · 협상 전문</div></div><div class="w-cnt">28개</div></div>
+          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#F0ECFE;color:#6C3BF5">김</div><div class="w-info"><div class="w-name">김민준</div><div class="w-role">AI 프로덕트 디자이너</div></div><div class="w-cnt">19개</div></div>
+          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#E6F9F3;color:#0BAD75">이</div><div class="w-info"><div class="w-name">이수연</div><div class="w-role">브랜드 디자이너</div></div><div class="w-cnt">15개</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-h">인기 태그</div>
+      <div class="scard-b">
+        <div class="tag-cloud"><span class="tg">#AI실무</span><span class="tg">#프리랜서</span><span class="tg">#연봉협상</span><span class="tg">#포트폴리오</span><span class="tg">#Claude</span><span class="tg">#번아웃</span><span class="tg">#피그마</span><span class="tg">#이직</span><span class="tg">#생존전략</span><span class="tg">#수입공개</span></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="promo-band">
+  <div class="promo-inner">
+    <div><div class="promo-eye">Join Community</div><div class="promo-h">함께 고민하면<br>더 빨리 살아남을 수 있어요</div><div class="promo-sub">2,840명의 디자이너가 이미 함께하고 있습니다</div></div>
+    <div class="promo-btns"><a href="community-auth.html" class="btn btn-pw">무료로 시작하기</a><a href="community-list.html" class="btn btn-pol">글 둘러보기</a></div>
+  </div>
+</div>
+
+
+
+<footer class="gnb-footer">
+  <div class="gnb-footer-inner">
+    <div>
+      <div class="gnb-footer-brand">DESIGNR</div>
+      <p class="gnb-footer-desc">AI 시대, 디자이너로 살아남는 법을<br>함께 찾는 커뮤니티입니다.</p>
+      <div class="gnb-footer-sns">
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">rss_feed</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">send</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">link</span></button>
+      </div>
+    </div>
+    <div class="gnb-fcol"><h4>커뮤니티</h4><ul><li><a href="community-list.html">생존 전략</a></li><li><a href="community-list-ai.html">AI 실무 도구</a></li><li><a href="community-list-career.html">커리어 토크</a></li><li><a href="community-portfolio.html">포트폴리오</a></li><li><a href="community-list-qa.html">Q&amp;A 광장</a></li></ul></div>
+    <div class="gnb-fcol"><h4>서비스</h4><ul><li><a href="community-notifications.html">인사이트 레터</a></li><li><a href="community-list-career.html">스터디 모임</a></li><li><a href="community-list-career.html">멘토링</a></li><li><a href="community-list.html">수익화 실험실</a></li></ul></div>
+    <div class="gnb-fcol"><h4>안내</h4><ul><li><a href="index.html">소개</a></li><li><a href="index.html">운영 정책</a></li><li><a href="index.html">개인정보처리방침</a></li><li><a href="community-list-qa.html">문의하기</a></li></ul></div>
+  </div>
+  <div class="gnb-footer-bottom">
+    <span>© 2026 DESIGNR. All rights reserved.</span>
+    <span>AI 시대 디자이너를 위한 커뮤니티</span>
+  </div>
+</footer>
+
+
+<script>
+function setCat(el){document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
+</script>
+</body>
+</html>

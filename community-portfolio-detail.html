@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>헬스케어 앱 UX 리디자인 — DESIGNR 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+:root{--blue:#1B64DA;--blue-lt:#EEF4FF;--blue-dk:#1450B0;--ink:#191919;--ink-2:#555;--ink-3:#999;--bg:#FFFFFF;--bg-2:#F7F8FA;--bg-3:#EDEEF0;--line:#E4E5E7;--line-2:#D0D2D6;--cat:#E8335D;--cat-lt:#FDEDF1;--cat-dk:#C41E45;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-full:100px;--sh-1:0 1px 4px rgba(0,0,0,.07);--sh-2:0 4px 16px rgba(0,0,0,.10);--sh-3:0 8px 32px rgba(0,0,0,.13);--sans:'Noto Sans KR',sans-serif;--serif:'Noto Serif KR',serif;--t:.18s ease}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:15px}
+
+
+
+
+
+
+
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r-full);font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;border:none;transition:all var(--t);text-decoration:none;white-space:nowrap}
+.btn-ol{background:transparent;border:1.5px solid var(--line-2);color:var(--ink)}.btn-ol:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-lt)}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-dk);transform:translateY(-1px)}
+
+
+
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#1B1B2F 0%,#2D1B4E 100%);padding:56px 24px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(232,51,93,.15);pointer-events:none}
+.hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1}
+.crumb{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px}
+.crumb a{color:rgba(255,255,255,.4);text-decoration:none}.crumb a:hover{color:rgba(255,255,255,.7)}
+.crumb .material-icons-round{font-size:14px}
+.hero-body{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-tags{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:var(--r-full);font-size:12px;font-weight:600}
+.tag-feat{background:rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;gap:4px}.tag-feat .material-icons-round{font-size:12px}
+.tag-cat{background:rgba(232,51,93,.25);color:#FF8FAA}.tag-sub{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.tag-s{background:var(--bg-2);color:var(--ink-2);font-size:11px}
+.hero-title{font-family:var(--serif);font-size:clamp(22px,3vw,34px);font-weight:700;color:#fff;line-height:1.3;letter-spacing:-.5px;margin-bottom:12px}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:24px}
+.hero-meta{display:flex;flex-direction:column;gap:10px}
+.hm-row{display:flex;align-items:center;gap:10px}
+.hm-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);width:60px;flex-shrink:0}
+.hm-val{font-size:13px;color:rgba(255,255,255,.8)}
+.hero-actions{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}
+.hbtn{padding:10px 22px;border-radius:var(--r-full);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:var(--sans);transition:all var(--t);display:flex;align-items:center;gap:7px}
+.hbtn-fill{background:var(--cat);color:#fff}.hbtn-fill:hover{background:var(--cat-dk);transform:translateY(-1px)}
+.hbtn-ol{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.85)}.hbtn-ol:hover{background:rgba(255,255,255,.1)}
+.hbtn .material-icons-round{font-size:17px}
+.hero-visual{border-radius:var(--r-xl);overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);aspect-ratio:4/3;background:linear-gradient(135deg,#7BB8FF,#1B64DA);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.5);font-weight:600;text-align:center;padding:20px}
+
+/* STATS BAR */
+.stats-bar{background:var(--bg-2);border-bottom:1px solid var(--line)}
+.stats-inner{max-width:1160px;margin:0 auto;padding:16px 24px;display:flex;gap:32px;align-items:center;flex-wrap:wrap}
+.si{display:flex;align-items:center;gap:8px}
+.si-icon{width:32px;height:32px;border-radius:var(--r-md);background:var(--cat-lt);color:var(--cat);display:flex;align-items:center;justify-content:center}.si-icon .material-icons-round{font-size:17px}
+.si-n{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink)}.si-l{font-size:12px;color:var(--ink-3)}
+.ssep{width:1px;height:32px;background:var(--line);margin:0 4px}
+
+/* LAYOUT */
+.lay{max-width:1160px;margin:0 auto;padding:36px 24px 80px;display:grid;grid-template-columns:1fr 280px;gap:40px;align-items:start}
+.sec-t{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.sec-t::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* SHOWCASE */
+.showcase{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+.sc-row{display:grid;gap:12px}
+.sc-1{grid-template-columns:1fr}.sc-2{grid-template-columns:1fr 1fr}.sc-3{grid-template-columns:2fr 1fr}
+.sc-img{border-radius:var(--r-xl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-align:center;padding:16px;cursor:pointer;transition:all var(--t)}
+.sc-img:hover{transform:scale(1.01);box-shadow:var(--sh-3)}
+.sh-tall{height:280px}.sh-med{height:200px}.sh-short{height:160px}
+.sc1{background:linear-gradient(135deg,#7BB8FF,#1B64DA)}.sc2{background:linear-gradient(135deg,#FF85A5,#E8335D)}
+.sc3{background:linear-gradient(135deg,#B4A0FF,#6C3BF5)}.sc4{background:linear-gradient(135deg,#7ADEBE,#0BAD75)}.sc5{background:linear-gradient(135deg,#FFD080,#F5A623)}
+
+/* CONTENT */
+.cbody{font-size:16px;line-height:1.9;color:#2C2C2C;margin-bottom:36px}
+.cbody p{margin-bottom:18px}.cbody h2{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);margin:36px 0 14px;letter-spacing:-.3px}
+.cbody h3{font-size:16px;font-weight:700;color:var(--ink);margin:24px 0 10px}
+.cbody ul{padding-left:22px;margin-bottom:18px;display:flex;flex-direction:column;gap:7px}.cbody li{line-height:1.8}
+.cbody blockquote{margin:24px 0;padding:18px 22px;background:var(--cat-lt);border-left:3px solid var(--cat);border-radius:0 var(--r-lg) var(--r-lg) 0;font-size:15px;line-height:1.8;color:var(--cat-dk)}.cbody blockquote p{margin:0}
+
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.rc{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-xl);padding:20px;text-align:center}
+.rc-n{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--cat);display:block;margin-bottom:4px}
+.rc-l{font-size:12px;color:var(--ink-2);line-height:1.5}
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.pc{background:var(--bg-2);border-radius:var(--r-lg);padding:16px;text-align:center;border:1px solid var(--line)}
+.pc-n{width:32px;height:32px;border-radius:50%;background:var(--cat);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin:0 auto 10px}
+.pc-t{font-size:13px;font-weight:700;margin-bottom:4px}.pc-d{font-size:11px;color:var(--ink-3);line-height:1.5}
+.tbadges{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.tb{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--r-full);background:var(--bg-2);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink)}.tb .material-icons-round{font-size:15px;color:var(--cat)}
+
+/* FEEDBACK */
+.fb-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.fb-title{font-family:var(--serif);font-size:18px;font-weight:700}.fb-cnt{color:var(--cat)}
+.fb-sort{padding:6px 12px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:12px;font-family:var(--sans);cursor:pointer;outline:none;color:var(--ink-2)}
+.fb-input{display:flex;gap:12px;margin-bottom:20px;align-items:flex-start}
+.fb-av{width:36px;height:36px;border-radius:50%;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.fb-ta{flex:1;padding:12px 16px;border:1.5px solid var(--line);border-radius:var(--r-lg);font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--bg);resize:none;min-height:80px;outline:none;transition:border-color var(--t);line-height:1.7}.fb-ta:focus{border-color:var(--cat)}.fb-ta::placeholder{color:var(--ink-3)}
+.fb-sub{padding:10px 20px;border-radius:var(--r-lg);background:var(--cat);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);align-self:flex-end;transition:all var(--t)}.fb-sub:hover{background:var(--cat-dk)}
+.fb-list{display:flex;flex-direction:column;gap:0}
+.fb-item{padding:16px 0;border-bottom:1px solid var(--bg-2)}.fb-item:last-child{border-bottom:none}
+.fi-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fi-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.fi-a1{background:var(--cat-lt);color:var(--cat)}.fi-a2{background:#F0ECFE;color:#6C3BF5}.fi-a3{background:#E6F9F3;color:#0BAD75}
+.fi-name{font-size:13px;font-weight:700}.fi-role{font-size:11px;color:var(--ink-3)}.fi-date{font-size:11px;color:var(--ink-3);margin-left:auto}
+.fi-body{font-size:14px;line-height:1.8;color:var(--ink);padding-left:42px;margin-bottom:8px}
+.fi-acts{display:flex;gap:12px;padding-left:42px}
+.fa{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-3);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color var(--t)}.fa:hover{color:var(--ink)}.fa .material-icons-round{font-size:14px}
+
+/* RELATED */
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+.ri{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden;cursor:pointer;transition:all var(--t)}.ri:hover{box-shadow:var(--sh-2);transform:translateY(-2px)}
+.ri:hover .ri-title{color:var(--cat)}
+.ri-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.5)}
+.ri-info{padding:12px}
+.ri-tags{display:flex;gap:4px;margin-bottom:6px}
+.ri-title{font-size:13px;font-weight:600;line-height:1.4;margin-bottom:6px;transition:color var(--t);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ri-author{font-size:11px;color:var(--ink-3)}
+
+/* SIDEBAR */
+.side{display:flex;flex-direction:column;gap:16px;position:sticky;top:88px}
+.scard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden}
+.scard-h{padding:14px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px}.scard-h .material-icons-round{font-size:16px;color:var(--cat)}
+.scard-b{padding:14px 18px}
+.react-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.rbtn{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);color:var(--ink-2);transition:all var(--t);justify-content:center}.rbtn:hover{border-color:var(--ink);color:var(--ink)}.rbtn.liked{background:var(--cat-lt);border-color:var(--cat);color:var(--cat)}.rbtn .material-icons-round{font-size:18px}
+.author-mini{display:flex;gap:12px;align-items:center;margin-bottom:12px;cursor:pointer}
+.am-av{width:48px;height:48px;border-radius:50%;background:var(--cat-lt);color:var(--cat);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:var(--serif)}
+.am-name{font-size:15px;font-weight:700;margin-bottom:2px}.am-role{font-size:12px;color:var(--ink-3)}
+.am-stats{display:flex;gap:14px;font-size:12px;color:var(--ink-3);padding-top:10px;border-top:1px solid var(--line)}
+.am-stats strong{color:var(--ink);font-weight:700;display:block;font-size:14px;font-family:var(--serif)}
+.fol-btn{width:100%;justify-content:center;padding:9px;border-radius:var(--r-full);border:1.5px solid var(--cat);background:var(--cat-lt);color:var(--cat);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all var(--t);margin-top:12px}.fol-btn:hover{background:var(--cat);color:#fff}
+.spec-list{display:flex;flex-direction:column;gap:10px}
+.spec-row{display:flex;align-items:flex-start;gap:8px}
+.spec-key{font-size:12px;color:var(--ink-3);font-weight:500;min-width:72px;flex-shrink:0}.spec-val{font-size:13px;color:var(--ink);line-height:1.5}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tg{padding:5px 12px;border-radius:var(--r-full);background:var(--bg-2);border:1px solid var(--line);font-size:12px;color:var(--ink-2);cursor:pointer;transition:all var(--t)}.tg:hover{background:var(--cat-lt);border-color:var(--cat);color:var(--cat)}
+
+/* MOBILE NAV */
+.m
+
+
+to{transform:translateX(0)}
+
+
+
+
+@media(max-width:900px){.hero-visual{display:none}.lay{grid-template-columns:1fr}.side{display:none}.process{grid-template-columns:1fr 1fr}.result-grid{grid-template-columns:1fr 1fr}.rel-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.lay{padding:20px 16px 48px}.process{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr}.sc-2,.sc-3{grid-template-columns:1fr}.stats-inner{gap:16px}}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
+.nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-right:40px;display:flex;align-items:flex-start;gap:3px;flex-shrink:0}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:#1B64DA;margin-top:4px;flex-shrink:0}
+.nm{display:flex;align-items:center;gap:2px;list-style:none;margin-right:auto}
+.nm a{display:block;padding:7px 14px;border-radius:100px;font-size:14px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease;white-space:nowrap}
+.nm a:hover{color:#191919;background:#F7F8FA}
+.nm a.active{background:#1B64DA;color:#fff;font-weight:600}
+.nav-r{display:flex;align-items:center;gap:8px}
+.gnb-icon{background:transparent;color:#555;border:none;padding:8px;cursor:pointer;border-radius:100px;position:relative;transition:all .18s ease;display:flex;align-items:center;justify-content:center}
+.gnb-icon:hover{background:#F7F8FA;color:#191919}
+.gnb-icon .material-icons-round{font-size:22px}
+.gnb-ndot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#FF4D4F;border-radius:50%;border:2px solid #fff}
+.gnb-login{display:inline-flex;align-items:center;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:1.5px solid #D0D2D6;background:transparent;color:#191919;text-decoration:none;transition:all .18s ease}
+.gnb-login:hover{border-color:#1B64DA;color:#1B64DA;background:#EEF4FF}
+.gnb-write{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:14px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;background:#1B64DA;color:#fff;text-decoration:none;transition:all .18s ease}
+.gnb-write:hover{background:#1450B0;transform:translateY(-1px)}
+.gnb-write .material-icons-round{font-size:16px}
+.gnb-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:#191919;margin-left:auto}
+.gnb-burger .material-icons-round{font-size:24px}
+.gnb-mob{display:none;position:fixed;inset:0;z-index:200}
+.gnb-mob.open{display:flex}
+.gnb-mbd{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.gnb-mdr{position:relative;width:280px;background:#fff;height:100%;padding:24px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;animation:gnb-si .2s ease}
+@keyframes gnb-si{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.gnb-mdr-logo{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:#191919;text-decoration:none;letter-spacing:-.5px;margin-bottom:12px;display:flex;align-items:flex-start;gap:3px}
+.gnb-mdr a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;font-size:15px;font-weight:500;color:#555;text-decoration:none;transition:all .18s ease}
+.gnb-mdr a:hover{background:#F7F8FA;color:#191919}
+.gnb-mdr a.active{background:#EEF4FF;color:#1B64DA;font-weight:600}
+.gnb-mdr .material-icons-round{font-size:20px}
+.gnb-mdr-acts{margin-top:auto;padding-top:20px;border-top:1px solid #E4E5E7;display:flex;flex-direction:column;gap:8px}
+@media(max-width:900px){.lay{grid-template-columns:1fr!important}.side{display:none!important}}
+@media(max-width:900px){.nm,.nav-r{display:none!important}.gnb-burger{display:flex!important;margin-left:14px}.gnb-mob-srch{margin-left:auto;margin-right:-8px}}
+
+.gnb-footer{background:#F7F8FA;border-top:1px solid #E4E5E7;padding:48px 24px 32px}
+.gnb-footer-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.gnb-footer-brand{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#191919;margin-bottom:10px;letter-spacing:-.5px}
+.gnb-footer-desc{font-size:13px;color:#999;line-height:1.7;margin-bottom:16px}
+.gnb-footer-sns{display:flex;gap:8px}
+.gnb-footer-sns-btn{width:34px;height:34px;border-radius:8px;border:1px solid #E4E5E7;background:#fff;display:flex;align-items:center;justify-content:center;color:#555;cursor:pointer;transition:all .18s}
+.gnb-footer-sns-btn:hover{border-color:#1B64DA;color:#1B64DA}
+.gnb-footer-sns-btn .material-icons-round{font-size:17px}
+.gnb-fcol h4{font-size:13px;font-weight:700;color:#191919;margin-bottom:14px}
+.gnb-fcol ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.gnb-fcol ul a{font-size:13px;color:#999;text-decoration:none;transition:color .18s}
+.gnb-fcol ul a:hover{color:#191919}
+.gnb-footer-bottom{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #E4E5E7;font-size:12px;color:#999}
+@media(max-width:900px){.gnb-footer-inner{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:600px){.gnb-footer-inner{grid-template-columns:1fr}.gnb-footer-bottom{flex-direction:column;gap:8px;text-align:center}}
+.mob-search{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5)}
+.mob-search.open{display:flex;align-items:flex-start}
+.mob-search-inner{width:100%;background:#fff;padding:16px}
+.mob-search-bar{display:flex;align-items:center;gap:8px;border:2px solid #1B64DA;border-radius:100px;padding:0 14px;background:#F7F8FA}
+.mob-search-bar .material-icons-round{font-size:20px;color:#1B64DA;flex-shrink:0}
+.mob-search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Noto Sans KR',sans-serif;padding:12px 6px;background:transparent;color:#191919}
+.mob-search-bar input::placeholder{color:#999}
+.mob-search-bar button{background:none;border:none;cursor:pointer;color:#999;padding:4px;display:flex;align-items:center}
+.mob-search-bar button .material-icons-round{font-size:20px}
+.mob-search-tags{display:flex;gap:8px;flex-wrap:wrap;padding:12px 4px 4px}
+.mob-stag{padding:6px 14px;border-radius:100px;background:#F7F8FA;border:1px solid #E4E5E7;font-size:13px;color:#555;cursor:pointer}
+.mob-stag:hover{background:#EEF4FF;border-color:#1B64DA;color:#1B64DA}
+.gnb-mob-srch{display:none;background:transparent;border:none;padding:8px;cursor:pointer;color:#555;border-radius:100px;transition:all .18s;align-items:center;justify-content:center}.gnb-mob-srch .material-icons-round{font-size:22px}@media(max-width:900px){.gnb-mob-srch{display:flex}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nw">
+    <a href="index.html" class="logo">DESIGNR<span class="logo-dot"></span></a>
+    <ul class="nm">
+      <li><a href="index.html">홈</a></li>
+      <li><a href="community-list.html">생존 전략</a></li>
+      <li><a href="community-list-ai.html">AI 실무</a></li>
+      <li><a href="community-list-career.html">커리어 토크</a></li>
+      <li><a href="community-portfolio.html" class="active">포트폴리오</a></li>
+      <li><a href="community-list-qa.html">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-r">
+      <button class="gnb-icon" onclick="if(window.innerWidth<=900){document.getElementById('mobSearch').classList.add('open')}else{location.href='community-search.html'}" aria-label="검색"><span class="material-icons-round">search</span></button>
+      <button class="gnb-icon" onclick="location.href='community-notifications.html'" aria-label="알림" style="position:relative"><span class="material-icons-round">notifications</span><span class="gnb-ndot"></span></button>
+      <a href="community-auth.html" class="gnb-login">로그인</a>
+      <a href="community-write.html" class="gnb-write"><span class="material-icons-round">edit</span>글쓰기</a>
+    </div>
+    <button class="gnb-mob-srch" onclick="document.getElementById('mobSearch').classList.add('open')" aria-label="검색"><span class="material-icons-round">search</span></button>
+    <button class="gnb-burger" onclick="document.getElementById('gnb-mob').classList.add('open')"><span class="material-icons-round">menu</span></button>
+  </div>
+</nav>
+<div class="mob-search" id="mobSearch" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mob-search-inner">
+    <div class="mob-search-bar">
+      <span class="material-icons-round">search</span>
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="mob-search-tags">
+      <span class="mob-stag" onclick="location.href='community-search.html'">프리랜서</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">Claude 프롬프트</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">연봉 협상</span>
+      <span class="mob-stag" onclick="location.href='community-search.html'">포트폴리오</span>
+    </div>
+  </div>
+</div>
+<div class="gnb-mob" id="gnb-mob">
+  <div class="gnb-mbd" onclick="document.getElementById('gnb-mob').classList.remove('open')"></div>
+  <div class="gnb-mdr">
+    <a href="index.html" class="gnb-mdr-logo">DESIGNR<span class="logo-dot"></span></a>
+    <a href="index.html"><span class="material-icons-round">home</span>홈</a>
+    <a href="community-list.html"><span class="material-icons-round">shield</span>생존 전략</a>
+    <a href="community-list-ai.html"><span class="material-icons-round">auto_awesome</span>AI 실무</a>
+    <a href="community-list-career.html"><span class="material-icons-round">work</span>커리어 토크</a>
+    <a href="community-portfolio.html" class="active"><span class="material-icons-round">palette</span>포트폴리오</a>
+    <a href="community-list-qa.html"><span class="material-icons-round">help_outline</span>Q&amp;A</a>
+    <div class="gnb-mdr-acts">
+      <a href="community-auth.html" style="display:flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:100px;border:1.5px solid #D0D2D6;font-size:14px;font-weight:600;color:#191919;text-decoration:none;">로그인</a>
+      <a href="community-write.html" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:100px;background:#1B64DA;font-size:14px;font-weight:600;color:#fff;text-decoration:none;"><span class="material-icons-round" style="font-size:16px">edit</span>글쓰기</a>
+    </div>
+  </div>
+</div>
+
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="crumb"><a href="index.html">홈</a><span class="material-icons-round">chevron_right</span><a href="community-portfolio.html">포트폴리오</a><span class="material-icons-round">chevron_right</span><span>헬스케어 UX 리디자인</span></div>
+    <div class="hero-body">
+      <div>
+        <div class="hero-tags"><span class="tag tag-feat"><span class="material-icons-round">star</span>이번 주 추천</span><span class="tag tag-cat">UX/UI</span><span class="tag tag-sub">케이스 스터디</span><span class="tag tag-sub">AI 활용</span></div>
+        <h1 class="hero-title">헬스케어 앱 UX 리디자인 —<br>AI 진단 기능 추가 케이스 스터디</h1>
+        <p class="hero-desc">Figma + Claude로 3일 만에 완성한 12개 화면. 실제 작업 과정과 의사결정 흐름을 모두 공개합니다.</p>
+        <div class="hero-meta">
+          <div class="hm-row"><span class="hm-label">클라이언트</span><span class="hm-val">헬스스타트업 A사 (비공개)</span></div>
+          <div class="hm-row"><span class="hm-label">기간</span><span class="hm-val">2026년 3월 — 3일 스프린트</span></div>
+          <div class="hm-row"><span class="hm-label">역할</span><span class="hm-val">UX 리서치, UI 디자인, 프로토타이핑</span></div>
+          <div class="hm-row"><span class="hm-label">툴</span><span class="hm-val">Figma, Claude, Principle</span></div>
+        </div>
+        <div class="hero-actions">
+          <button class="hbtn hbtn-fill"><span class="material-icons-round">favorite_border</span>좋아요 284</button>
+          <button class="hbtn hbtn-ol"><span class="material-icons-round">bookmark_border</span>저장</button>
+          <button class="hbtn hbtn-ol"><span class="material-icons-round">share</span>공유</button>
+        </div>
+      </div>
+      <div class="hero-visual">헬스케어 앱<br>메인 화면<br>리디자인<br>케이스 스터디</div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="si"><div class="si-icon"><span class="material-icons-round">favorite</span></div><div><div class="si-n">284</div><div class="si-l">좋아요</div></div></div>
+    <div class="ssep"></div>
+    <div class="si"><div class="si-icon"><span class="material-icons-round">chat_bubble_outline</span></div><div><div class="si-n">42</div><div class="si-l">피드백</div></div></div>
+    <div class="ssep"></div>
+    <div class="si"><div class="si-icon"><span class="material-icons-round">visibility</span></div><div><div class="si-n">4.1k</div><div class="si-l">조회</div></div></div>
+    <div class="ssep"></div>
+    <div class="si"><div class="si-icon"><span class="material-icons-round">bookmark</span></div><div><div class="si-n">128</div><div class="si-l">저장</div></div></div>
+  </div>
+</div>
+
+<div class="lay">
+  <div>
+    <div class="sec-t">작업 이미지</div>
+    <div class="showcase">
+      <div class="sc-row sc-1"><div class="sc-img sh-tall sc1">메인 화면 — Before &amp; After 비교</div></div>
+      <div class="sc-row sc-2"><div class="sc-img sh-med sc2">AI 진단 플로우 화면 (12개)</div><div class="sc-img sh-med sc3">컴포넌트 라이브러리</div></div>
+      <div class="sc-row sc-3"><div class="sc-img sh-short sc4">최종 프로토타입 플로우</div><div class="sc-img sh-short sc5">타이포그래피 시스템</div></div>
+    </div>
+
+    <div class="sec-t">프로젝트 개요</div>
+    <div class="cbody">
+      <p>헬스케어 스타트업으로부터 기존 앱에 AI 기반 증상 진단 기능을 추가하는 UX 작업을 의뢰받았어요. 클라이언트 요청은 "3일 안에 12개 화면 시안"이라는 타이트한 일정이었습니다.</p>
+      <p>기존 방식이라면 불가능한 일정이었는데, Figma + Claude 워크플로우로 실제로 완성했습니다. 과정을 공개합니다.</p>
+    </div>
+
+    <div class="sec-t">핵심 결과</div>
+    <div class="result-grid">
+      <div class="rc"><span class="rc-n">3일</span><span class="rc-l">12개 화면 완성<br>(기존 대비 5배 빠름)</span></div>
+      <div class="rc"><span class="rc-n">+42%</span><span class="rc-l">온보딩 완료율<br>향상 (A/B 테스트)</span></div>
+      <div class="rc"><span class="rc-n">98%</span><span class="rc-l">클라이언트<br>만족도</span></div>
+    </div>
+
+    <div class="sec-t" style="margin-top:32px">작업 프로세스</div>
+    <div class="process">
+      <div class="pc"><div class="pc-n">1</div><div class="pc-t">리서치</div><div class="pc-d">사용자 인터뷰 5명, 기존 앱 사용성 분석</div></div>
+      <div class="pc"><div class="pc-n">2</div><div class="pc-t">정의</div><div class="pc-d">핵심 문제 정의, HMW 질문 도출</div></div>
+      <div class="pc"><div class="pc-n">3</div><div class="pc-t">설계</div><div class="pc-d">Claude 보조로 12개 화면 구조 설계</div></div>
+      <div class="pc"><div class="pc-n">4</div><div class="pc-t">UI</div><div class="pc-d">Figma 고퀄리티 UI + 프로토타입</div></div>
+    </div>
+
+    <div class="cbody" style="margin-top:28px">
+      <h2>Claude를 어떻게 활용했나</h2>
+      <p>이 프로젝트에서 Claude는 크게 3가지 방식으로 활용했어요. 화면 흐름을 3가지 방향으로 제안받고 장단점 분석 후 선택했으며, WCAG 2.1 기준 접근성 검토를 자동화했고, 헬스케어 특화 마이크로카피를 제안받았어요.</p>
+      <h3>사용한 툴</h3>
+      <div class="tbadges">
+        <div class="tb"><span class="material-icons-round">design_services</span>Figma</div>
+        <div class="tb"><span class="material-icons-round">auto_awesome</span>Claude</div>
+        <div class="tb"><span class="material-icons-round">play_circle</span>Principle</div>
+        <div class="tb"><span class="material-icons-round">bar_chart</span>Maze</div>
+      </div>
+      <h2>배운 것들</h2>
+      <ul>
+        <li>AI는 아이디어 다각화에서 압도적으로 효과적입니다. 방향이 막힐 때 Claude에게 "다른 접근 방식 5가지"를 요청하면 빠르게 돌파구가 생겨요.</li>
+        <li>브랜드 감성과 미세한 UX 판단은 여전히 사람이 해야 합니다.</li>
+        <li>클라이언트에게 프로세스를 투명하게 공개했더니 오히려 신뢰가 높아졌어요.</li>
+      </ul>
+      <blockquote><p>"AI 툴을 잘 쓰는 디자이너가 못 쓰는 디자이너를 대체하게 됩니다."</p></blockquote>
+    </div>
+
+    <div class="fb-h"><div class="fb-title">피드백 <span class="fb-cnt">42</span></div><select class="fb-sort"><option>최신순</option><option>좋아요순</option></select></div>
+    <div class="fb-input">
+      <div class="fb-av">나</div>
+      <textarea class="fb-ta" placeholder="구체적인 피드백이 작가에게 가장 큰 도움이 됩니다."></textarea>
+      <button class="fb-sub">등록</button>
+    </div>
+    <div class="fb-list">
+      <div class="fb-item">
+        <div class="fi-top"><div class="fi-av fi-a2">김</div><div><div class="fi-name">김민준</div><div class="fi-role">AI 프로덕트 디자이너</div></div><div class="fi-date">1일 전</div></div>
+        <div class="fi-body">Claude 활용 방식이 정말 인상적이에요. 접근성 검토를 AI에게 요청한다는 발상이 좋았어요. AI 활용 사실을 클라이언트에게 처음부터 공개하셨나요?</div>
+        <div class="fi-acts"><button class="fa"><span class="material-icons-round">favorite_border</span>14</button><button class="fa"><span class="material-icons-round">reply</span>답글</button></div>
+      </div>
+      <div class="fb-item">
+        <div class="fi-top"><div class="fi-av fi-a3">한</div><div><div class="fi-name">한소희</div><div class="fi-role">시니어 UX 디자이너</div></div><div class="fi-date">2일 전</div></div>
+        <div class="fi-body">온보딩 완료율 42% 향상이 인상적이에요. A/B 테스트는 어떤 방식으로 진행하셨나요?</div>
+        <div class="fi-acts"><button class="fa"><span class="material-icons-round">favorite_border</span>21</button><button class="fa"><span class="material-icons-round">reply</span>답글</button></div>
+      </div>
+    </div>
+
+    <div class="sec-t" style="margin-top:40px">관련 작품</div>
+    <div class="rel-grid">
+      <div class="ri" onclick="location.href='community-portfolio-detail.html'"><div class="ri-img" style="background:linear-gradient(135deg,#B4A0FF,#6C3BF5)">핀테크 브랜딩</div><div class="ri-info"><div class="ri-tags"><span class="tag tag-s">브랜딩</span></div><div class="ri-title">핀테크 스타트업 브랜드 아이덴티티</div><div class="ri-author">김민준 · 4일 전</div></div></div>
+      <div class="ri" onclick="location.href='community-portfolio-detail.html'"><div class="ri-img" style="background:linear-gradient(135deg,#7ADEBE,#0BAD75)">교육 플랫폼</div><div class="ri-info"><div class="ri-tags"><span class="tag tag-s">케이스 스터디</span></div><div class="ri-title">교육 플랫폼 디자인 시스템 구축기</div><div class="ri-author">이수연 · 1주 전</div></div></div>
+      <div class="ri" onclick="location.href='community-portfolio-detail.html'"><div class="ri-img" style="background:linear-gradient(135deg,#7BB8FF,#1B64DA)">AI 추천 UX</div><div class="ri-info"><div class="ri-tags"><span class="tag tag-s">AI 활용</span></div><div class="ri-title">AI 기반 콘텐츠 추천 UX 설계</div><div class="ri-author">최민혁 · 2주 전</div></div></div>
+    </div>
+  </div>
+
+  <aside class="side">
+    <div class="react-card">
+      <button class="rbtn liked" onclick="this.classList.toggle('liked')"><span class="material-icons-round">favorite</span>좋아요 284</button>
+      <button class="rbtn"><span class="material-icons-round">bookmark_border</span>저장 128</button>
+      <button class="rbtn"><span class="material-icons-round">share</span>공유</button>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">person</span>작가</div>
+      <div class="scard-b">
+        <div class="author-mini" onclick="location.href='community-profile.html'"><div class="am-av">박</div><div><div class="am-name">박지은</div><div class="am-role">UX 디자이너 · 프리랜서</div></div></div>
+        <div class="am-stats"><div><strong>12</strong>작품</div><div><strong>341</strong>팔로워</div><div><strong>2.1k</strong>좋아요</div></div>
+        <button class="fol-btn">+ 팔로우</button>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">info</span>작업 스펙</div>
+      <div class="scard-b">
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">기간</span><span class="spec-val">3일 스프린트</span></div>
+          <div class="spec-row"><span class="spec-key">화면 수</span><span class="spec-val">12개 화면</span></div>
+          <div class="spec-row"><span class="spec-key">주요 툴</span><span class="spec-val">Figma, Claude</span></div>
+          <div class="spec-row"><span class="spec-key">분야</span><span class="spec-val">헬스케어 앱 UX</span></div>
+          <div class="spec-row"><span class="spec-key">결과</span><span class="spec-val">온보딩 완료율 +42%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-h"><span class="material-icons-round">tag</span>태그</div>
+      <div class="scard-b"><div class="tag-cloud"><span class="tg">#UX</span><span class="tg">#헬스케어</span><span class="tg">#케이스스터디</span><span class="tg">#Claude</span><span class="tg">#Figma</span><span class="tg">#AI활용</span><span class="tg">#접근성</span></div></div>
+    </div>
+  </aside>
+</div>
+<footer class="gnb-footer">
+  <div class="gnb-footer-inner">
+    <div>
+      <div class="gnb-footer-brand">DESIGNR</div>
+      <p class="gnb-footer-desc">AI 시대, 디자이너로 살아남는 법을<br>함께 찾는 커뮤니티입니다.</p>
+      <div class="gnb-footer-sns">
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">rss_feed</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">send</span></button>
+        <button class="gnb-footer-sns-btn"><span class="material-icons-round">link</span></button>
+      </div>
+    </div>
+    <div class="gnb-fcol"><h4>커뮤니티</h4><ul><li><a href="community-list.html">생존 전략</a></li><li><a href="community-list-ai.html">AI 실무 도구</a></li><li><a href="community-list-career.html">커리어 토크</a></li><li><a href="community-portfolio.html">포트폴리오</a></li><li><a href="community-list-qa.html">Q&amp;A 광장</a></li></ul></div>
+    <div class="gnb-fcol"><h4>서비스</h4><ul><li><a href="community-notifications.html">인사이트 레터</a></li><li><a href="community-list-career.html">스터디 모임</a></li><li><a href="community-list-career.html">멘토링</a></li><li><a href="community-list.html">수익화 실험실</a></li></ul></div>
+    <div class="gnb-fcol"><h4>안내</h4><ul><li><a href="index.html">소개</a></li><li><a href="index.html">운영 정책</a></li><li><a href="index.html">개인정보처리방침</a></li><li><a href="community-list-qa.html">문의하기</a></li></ul></div>
+  </div>
+  <div class="gnb-footer-bottom">
+    <span>© 2026 DESIGNR. All rights reserved.</span>
+    <span>AI 시대 디자이너를 위한 커뮤니티</span>
+  </div>
+</footer>
+</body>
+</html>
