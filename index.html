@@ -465,24 +465,43 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 
 <script>
-function setCat(el){document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
+const TAB_TO_CAT={'전체':null,'생존 전략':'on-sv','AI 실무':'on-ai','커리어 토크':'on-ca','포트폴리오':'on-pf','Q&A':'on-qa'};
+function setCat(el){
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  if(typeof renderLatestPosts==='function')renderLatestPosts();
+}
 </script>
 <script src="auth.js"></script>
 <script src="posts.js"></script>
 <script>
+let renderLatestPosts=function(){};
 (async function(){
   await window.DesignrPosts.ready;
-  const posts=window.DesignrPosts.loadAll();
-  const postCount=posts.length;
+  const allPosts=window.DesignrPosts.loadAll();
+  const postCount=allPosts.length;
   const userCount=(()=>{try{return (JSON.parse(localStorage.getItem('designr.users'))||[]).length}catch(e){return 0}})();
   const elU=document.getElementById('hs-users');if(elU)elU.textContent=userCount;
   const elP=document.getElementById('hs-posts');if(elP)elP.textContent=postCount;
-  if(postCount>0){
+  renderLatestPosts=function(){
     const list=document.querySelector('.post-list');
-    if(list)list.innerHTML=posts.slice(0,8).map(window.DesignrPosts.pitemHtml).join('');
+    if(!list)return;
+    const active=document.querySelector('.cat-tab.on');
+    const label=active?(active.textContent||'').trim():'전체';
+    const cat=TAB_TO_CAT[label]||null;
+    let posts=window.DesignrPosts.loadAll();
+    if(cat)posts=posts.filter(p=>p.category===cat);
+    if(!posts.length){
+      list.innerHTML='<div style="text-align:center;padding:60px 24px;background:#fff;border:1px solid #E4E5E7;border-radius:16px;color:#999;font-size:14px">'+(cat?'"'+window.DesignrPosts.escapeHtml(label)+'" 카테고리의 글이 아직 없어요.':'아직 작성된 글이 없어요.')+'</div>';
+      return;
+    }
+    list.innerHTML=posts.slice(0,8).map(window.DesignrPosts.pitemHtml).join('');
+  };
+  renderLatestPosts();
+  if(postCount>0){
     const hero=document.getElementById('heroPanel');
     if(hero){
-      const top3=posts.slice(0,3);
+      const top3=allPosts.slice(0,3);
       hero.innerHTML=top3.map(p=>{
         const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
         const esc=window.DesignrPosts.escapeHtml;
@@ -496,7 +515,7 @@ function setCat(el){document.querySelectorAll('.cat-tab').forEach(t=>t.classList
     }
     const hot=document.querySelector('.hot-list');
     if(hot){
-      const top5=posts.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
+      const top5=allPosts.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
       hot.innerHTML=top5.map((p,i)=>{
         const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
         const esc=window.DesignrPosts.escapeHtml;
