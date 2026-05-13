@@ -48,6 +48,14 @@
 
   function renderNav(){
     const user=getCurrentUser();
+    // 알림 벨의 빨간 점: 미로그인 또는 안 읽은 알림이 없으면 숨김
+    function updateBellDot(){
+      const hasUnread=user&&window.DesignrPosts&&typeof window.DesignrPosts.unreadCount==='function'&&window.DesignrPosts.unreadCount(user.email)>0;
+      document.querySelectorAll('.gnb-ndot').forEach(d=>{d.style.display=hasUnread?'':'none';});
+    }
+    if(window.DesignrPosts&&window.DesignrPosts.ready&&window.DesignrPosts.ready.then){
+      window.DesignrPosts.ready.then(updateBellDot);
+    }else{updateBellDot();}
     if(!user)return;
     document.querySelectorAll('.gnb-login').forEach(el=>{
       el.textContent='';
