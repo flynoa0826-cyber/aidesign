@@ -211,7 +211,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div class="mob-search-inner">
     <div class="mob-search-bar">
       <span class="material-icons-round">search</span>
-      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html?q='+encodeURIComponent(this.value)}">
       <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
     </div>
     <div class="mob-search-tags">
@@ -254,12 +254,16 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="cat-bar">
         <span class="cat-label">카테고리</span>
         <div class="cat-chips">
-          <button class="cc on-sv" onclick="selCat(this,'on-sv')">생존 전략</button>
-          <button class="cc" onclick="selCat(this,'on-ai')">AI 실무</button>
-          <button class="cc" onclick="selCat(this,'on-ca')">커리어 토크</button>
-          <button class="cc" onclick="selCat(this,'on-pf')">포트폴리오</button>
-          <button class="cc" onclick="selCat(this,'on-qa')">Q&amp;A</button>
+          <button type="button" class="cc on-sv" onclick="selCat(this,'on-sv')">생존 전략</button>
+          <button type="button" class="cc" onclick="selCat(this,'on-ai')">AI 실무</button>
+          <button type="button" class="cc" onclick="selCat(this,'on-ca')">커리어 토크</button>
+          <button type="button" class="cc" onclick="selCat(this,'on-pf')">포트폴리오</button>
+          <button type="button" class="cc" onclick="selCat(this,'on-qa')">Q&amp;A</button>
         </div>
+      </div>
+      <div class="cat-bar" id="subcatBar" style="padding-top:10px;padding-bottom:14px">
+        <span class="cat-label">세부 분류</span>
+        <div class="cat-chips" id="subcatChips"></div>
       </div>
 
       <!-- 툴바 -->
@@ -354,12 +358,29 @@ const MAX_FILES=5, MAX_BYTES=10*1024*1024;
 let attachedFileList=[];
 let tags=[];
 let selectedCat='on-sv';
+let selectedSub='';
 let editingId=null;
 
 function selCat(el,cls){
-  document.querySelectorAll('.cc').forEach(c=>{c.className='cc'});
+  document.querySelectorAll('.cat-chips .cc').forEach(c=>{c.className='cc'});
   el.classList.add(cls);
   selectedCat=cls;
+  selectedSub='';
+  renderSubcats();
+}
+function renderSubcats(){
+  const box=document.getElementById('subcatChips');
+  const bar=document.getElementById('subcatBar');
+  const list=(window.DesignrPosts&&window.DesignrPosts.SUBCATS&&window.DesignrPosts.SUBCATS[selectedCat])||[];
+  if(!list.length){bar.style.display='none';return;}
+  bar.style.display='';
+  box.innerHTML=list.map(s=>'<button type="button" class="cc'+(selectedSub===s?' '+selectedCat:'')+'" onclick="selSub(this,\''+s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">'+s+'</button>').join('');
+}
+function selSub(el,name){
+  if(selectedSub===name){selectedSub='';el.className='cc';return;}
+  selectedSub=name;
+  document.querySelectorAll('#subcatChips .cc').forEach(c=>c.className='cc');
+  el.classList.add(selectedCat);
 }
 
 const bodyEl=document.getElementById('editorBody');
@@ -444,6 +465,7 @@ function getFormData(){
     title:document.getElementById('titleInput').value.trim(),
     contentHtml:bodyEl.innerHTML,
     category:selectedCat,
+    subcategory:selectedSub,
     tags:tags.slice(),
     attachments:attachedFileList.slice()
   };
@@ -479,6 +501,17 @@ function cancelWrite(){
   if(confirm('작성 중인 내용을 버리고 나가시겠습니까?'))history.length>1?history.back():location.href='index.html';
 }
 
+function applyCategoryUI(cat){
+  document.querySelectorAll('.cat-chips .cc').forEach(c=>c.className='cc');
+  const idx=['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(cat);
+  const catBtn=document.querySelector('.cat-bar:first-of-type .cat-chips .cc:nth-child('+(idx+1)+')');
+  if(catBtn){catBtn.classList.add(cat);selectedCat=cat;}
+}
+function applySubcategoryUI(sub){
+  selectedSub=sub||'';
+  renderSubcats();
+}
+
 (async function init(){
   await window.DesignrPosts.ready;
   const params=new URLSearchParams(location.search);
@@ -497,10 +530,10 @@ function cancelWrite(){
     cnt.textContent=bodyEl.innerText.length+'자';
     tags=Array.isArray(p.tags)?p.tags.slice():[];renderTags();
     attachedFileList=Array.isArray(p.attachments)?p.attachments.map(a=>({...a})):[];renderAttachedFiles();
-    document.querySelectorAll('.cc').forEach(c=>c.className='cc');
-    const catBtn=document.querySelector('.cat-chips .cc:nth-child('+(['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(p.category)+1)+')');
-    if(catBtn){catBtn.classList.add(p.category);selectedCat=p.category;}
+    applyCategoryUI(p.category);
+    applySubcategoryUI(p.subcategory);
   }else{
+    renderSubcats();
     try{
       const draft=JSON.parse(localStorage.getItem('designr.draft')||'null');
       if(draft&&!draft.editingId&&(draft.title||draft.contentHtml)){
@@ -510,11 +543,8 @@ function cancelWrite(){
           cnt.textContent=bodyEl.innerText.length+'자';
           tags=draft.tags||[];renderTags();
           attachedFileList=draft.attachments||[];renderAttachedFiles();
-          if(draft.category){
-            document.querySelectorAll('.cc').forEach(c=>c.className='cc');
-            const btn=document.querySelector('.cat-chips .cc:nth-child('+(['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(draft.category)+1)+')');
-            if(btn){btn.classList.add(draft.category);selectedCat=draft.category;}
-          }
+          if(draft.category)applyCategoryUI(draft.category);
+          if(draft.subcategory)applySubcategoryUI(draft.subcategory);
         }
       }
     }catch(e){}

@@ -208,7 +208,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div class="mob-search-inner">
     <div class="mob-search-bar">
       <span class="material-icons-round">search</span>
-      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html?q='+encodeURIComponent(this.value)}">
       <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
     </div>
     <div class="mob-search-tags">
@@ -239,10 +239,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div class="search-sticky-inner">
     <div class="search-bar">
       <span class="material-icons-round">search</span>
-      <input class="search-input" id="q" type="text" placeholder="검색어를 입력하세요">
-      <button class="clear-btn" onclick="document.getElementById('q').value=''"><span class="material-icons-round">close</span></button>
+      <input class="search-input" id="q" type="text" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="clear-btn" onclick="document.getElementById('q').value='';doSearch()"><span class="material-icons-round">close</span></button>
     </div>
-    <button class="search-submit">검색</button>
+    <button class="search-submit" onclick="doSearch()">검색</button>
   </div>
 </div>
 
@@ -276,7 +276,59 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 <script>
 function setTab(el){document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
-function setSb(el){document.querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+let currentSort='rel';
+function setSb(el){
+  document.querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  const t=(el.textContent||'').trim();
+  currentSort=t==='최신순'?'new':t==='인기순'?'pop':'rel';
+  renderResults();
+}
+function doSearch(){
+  const v=document.getElementById('q').value.trim();
+  const sp=new URLSearchParams(location.search);
+  if(v)sp.set('q',v);else sp.delete('q');
+  history.replaceState(null,'','?'+sp.toString());
+  renderResults();
+}
+function highlight(text,q){
+  if(!q)return window.DesignrPosts.escapeHtml(text);
+  const esc=window.DesignrPosts.escapeHtml(text);
+  const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+  return esc.replace(re,m=>'<mark style="background:#FFF3B0;color:#191919">'+m+'</mark>');
+}
+function renderResults(){
+  const box=document.querySelector('.result-list');
+  if(!box||!window.DesignrPosts)return;
+  const q=document.getElementById('q').value.trim();
+  if(!q){box.innerHTML='<div style="text-align:center;padding:80px 24px;color:#999">검색어를 입력해 주세요</div>';return;}
+  let results=window.DesignrPosts.search(q);
+  if(currentSort==='new')results=results.slice().sort((a,b)=>b.createdAt-a.createdAt);
+  else if(currentSort==='pop')results=results.slice().sort((a,b)=>(b.views||0)-(a.views||0));
+  if(!results.length){box.innerHTML='<div style="text-align:center;padding:80px 24px;color:#999"><div style="font-family:\'Noto Serif KR\',serif;font-size:18px;color:#191919;margin-bottom:6px">"'+window.DesignrPosts.escapeHtml(q)+'" 검색 결과가 없어요</div><div style="font-size:13px">다른 검색어로 다시 시도해보세요.</div></div>';return;}
+  const esc=window.DesignrPosts.escapeHtml;
+  box.innerHTML='<div style="font-size:13px;color:#999;margin-bottom:14px"><strong style="color:#191919">'+results.length+'</strong>건의 결과</div>'+
+    results.map(p=>{
+      const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+      const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+      const snippet=window.DesignrPosts.plainText(p.contentHtml).slice(0,200);
+      return '<div onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="padding:18px 0;border-bottom:1px solid #E4E5E7;cursor:pointer">'+
+        '<div style="display:flex;gap:6px;margin-bottom:6px"><span style="padding:3px 10px;border-radius:100px;background:'+colors[p.category]+';font-size:11px;font-weight:600">'+esc(c.name)+'</span>'+
+        (p.subcategory?'<span style="padding:3px 10px;border-radius:100px;background:#F7F8FA;color:#555;font-size:11px;font-weight:500">'+esc(p.subcategory)+'</span>':'')+
+        '</div>'+
+        '<div style="font-size:16px;font-weight:700;color:#191919;margin-bottom:4px">'+highlight(p.title,q)+'</div>'+
+        '<div style="font-size:13px;color:#555;line-height:1.7;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+highlight(snippet,q)+'</div>'+
+        '<div style="font-size:12px;color:#999">'+esc(p.authorNickname)+' · '+window.DesignrPosts.relativeTime(p.createdAt)+' · 조회 '+(p.views||0)+'</div>'+
+      '</div>';
+    }).join('');
+}
+(async function(){
+  await window.DesignrPosts.ready;
+  const sp=new URLSearchParams(location.search);
+  const q=sp.get('q')||'';
+  document.getElementById('q').value=q;
+  renderResults();
+})();
 </script>
 <div style="display:none">
 <a href="community-auth.html">로그인</a>
@@ -307,5 +359,6 @@ function setSb(el){document.querySelectorAll('.sb').forEach(b=>b.classList.remov
   </div>
 </footer>
 <script src="auth.js"></script>
+<script src="posts.js"></script>
 </body>
 </html>

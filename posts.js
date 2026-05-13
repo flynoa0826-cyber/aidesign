@@ -12,6 +12,13 @@
     'on-pf':{name:'포트폴리오',list:'community-portfolio.html',detail:'community-portfolio-detail.html'},
     'on-qa':{name:'Q&A',list:'community-list-qa.html',detail:'community-qa-detail.html'}
   };
+  const SUBCATS={
+    'on-sv':['프리랜서','수익화','AI 대응','부업·사이드'],
+    'on-ai':['툴 리뷰','프롬프트','워크플로우','피그마 AI'],
+    'on-ca':['연봉·협상','이직·전환','번아웃','멘토링'],
+    'on-pf':['UX/UI','브랜딩','모션','케이스 스터디','AI 활용','타이포'],
+    'on-qa':['미답변','툴 사용법','커리어','계약·정산']
+  };
 
   let _db=null;
   let _cache=[];
@@ -93,8 +100,18 @@
 
   function loadAll(){return _cache.slice()}
   function getById(id){return _cache.find(p=>p.id===id)||null}
-  function listByCategory(c){return _cache.filter(p=>p.category===c)}
+  function listByCategory(c,sub){
+    return _cache.filter(p=>p.category===c&&(!sub||sub==='전체'||p.subcategory===sub));
+  }
   function listByAuthor(email){return _cache.filter(p=>p.authorEmail===email)}
+  function search(query){
+    const q=String(query||'').toLowerCase().trim();
+    if(!q)return[];
+    return _cache.filter(p=>{
+      const text=(p.title||'').toLowerCase()+' '+plainText(p.contentHtml).toLowerCase()+' '+(p.tags||[]).join(' ').toLowerCase();
+      return text.includes(q);
+    });
+  }
 
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
@@ -105,6 +122,7 @@
       title:data.title||'',
       contentHtml:data.contentHtml||'',
       category:data.category||'on-sv',
+      subcategory:data.subcategory||'',
       tags:Array.isArray(data.tags)?data.tags:[],
       attachments:Array.isArray(data.attachments)?data.attachments:[],
       authorEmail:u?u.email:'guest@local',
@@ -128,6 +146,7 @@
       title:data.title??cur.title,
       contentHtml:data.contentHtml??cur.contentHtml,
       category:data.category??cur.category,
+      subcategory:data.subcategory??cur.subcategory,
       tags:Array.isArray(data.tags)?data.tags:cur.tags,
       attachments:Array.isArray(data.attachments)?data.attachments:cur.attachments,
       updatedAt:Date.now()
@@ -243,7 +262,7 @@
     const initial=escapeHtml((p.authorNickname||'?').charAt(0));
     return '<div class="pitem" onclick="location.href=\''+detailUrl+'\'">'+
       '<div class="pitem-body">'+
-        '<div class="pitem-tags"><span class="tag tag-mine" style="background:#EEF4FF;color:#1B64DA;font-weight:600">내 글</span>'+catBadge(p.category)+tagsHtml+'</div>'+
+        '<div class="pitem-tags"><span class="tag tag-mine" style="background:#EEF4FF;color:#1B64DA;font-weight:600">내 글</span>'+catBadge(p.category)+(p.subcategory?'<span class="tag tag-sub">'+escapeHtml(p.subcategory)+'</span>':'')+tagsHtml+'</div>'+
         '<div class="pitem-title">'+escapeHtml(p.title)+'</div>'+
         '<div class="pitem-exc">'+escapeHtml(excerpt)+'</div>'+
         '<div class="pitem-foot"><div class="p-auth"><div class="pav">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>'+
@@ -256,27 +275,68 @@
     'community-list.html':'on-sv',
     'community-list-ai.html':'on-ai',
     'community-list-career.html':'on-ca',
-    'community-list-qa.html':'on-qa'
+    'community-list-qa.html':'on-qa',
+    'community-portfolio.html':'on-pf'
   };
+  const PER_PAGE=10;
+
+  function renderPagination(total,page){
+    const pagi=document.querySelector('.pagi');
+    if(!pagi)return;
+    const pages=Math.ceil(total/PER_PAGE);
+    if(pages<=1){pagi.style.display='none';pagi.innerHTML='';return;}
+    pagi.style.display='';
+    const params=new URLSearchParams(location.search);
+    const linkFor=p=>{const sp=new URLSearchParams(params);sp.set('p',p);return location.pathname+'?'+sp.toString();};
+    let html='';
+    html+='<button class="pgb"'+(page<=1?' disabled':' onclick="location.href=\''+linkFor(page-1)+'\'"')+'><span class="material-icons-round">chevron_left</span></button>';
+    for(let i=1;i<=pages;i++){
+      html+='<button class="pgb'+(i===page?' on':'')+'" onclick="location.href=\''+linkFor(i)+'\'">'+i+'</button>';
+    }
+    html+='<button class="pgb"'+(page>=pages?' disabled':' onclick="location.href=\''+linkFor(page+1)+'\'"')+'><span class="material-icons-round">chevron_right</span></button>';
+    pagi.innerHTML=html;
+  }
+
   async function injectIntoListPage(){
     await ready;
     const file=location.pathname.split('/').pop()||'';
     const cat=PAGE_CAT[file];
-    if(!cat)return;
+    if(!cat){renderPagination(0,1);return;}
     const list=document.querySelector('.post-list');
-    if(!list)return;
-    const posts=listByCategory(cat);
-    if(!posts.length)return;
-    const frag=document.createElement('div');
-    frag.innerHTML=posts.map(pitemHtml).join('');
-    while(frag.firstChild)list.insertBefore(frag.firstChild,list.firstChild);
+    if(!list){renderPagination(0,1);return;}
+    const params=new URLSearchParams(location.search);
+    const sub=params.get('sub')||'';
+    document.querySelectorAll('.chips .chip, .ftabs .ftab').forEach(c=>{
+      const t=(c.textContent||'').trim();
+      const active=(!sub&&t==='전체')||(sub&&t===sub);
+      c.classList.toggle('on',active);
+      c.onclick=(()=>{const sp=new URLSearchParams(location.search);if(t==='전체'){sp.delete('sub');}else{sp.set('sub',t);}sp.delete('p');location.search=sp.toString();});
+    });
+    const all=listByCategory(cat,sub);
+    const total=all.length;
+    let page=parseInt(params.get('p'),10)||1;
+    const pages=Math.max(1,Math.ceil(total/PER_PAGE));
+    if(page<1)page=1;if(page>pages)page=pages;
+    renderPagination(total,page);
+    if(!total){
+      const empty=list.querySelector('#emptyState');
+      if(empty){
+        const title=empty.querySelector('div');
+        if(title&&sub)title.textContent='"'+sub+'" 분류의 글이 아직 없어요';
+      }
+      return;
+    }
+    const empty=list.querySelector('#emptyState');
+    if(empty)empty.remove();
+    const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
+    list.innerHTML=slice.map(pitemHtml).join('');
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
   else{injectIntoListPage()}
 
   window.DesignrPosts={
-    MAX_FILES,MAX_BYTES,CATEGORIES,ready,
-    loadAll,getById,listByCategory,listByAuthor,listBookmarked,
+    MAX_FILES,MAX_BYTES,CATEGORIES,SUBCATS,ready,
+    loadAll,getById,listByCategory,listByAuthor,listBookmarked,search,
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
