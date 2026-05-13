@@ -121,13 +121,12 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
   .ri-stats{display:none}
   .my-nav{margin-bottom:8px}
   .my-profile{padding:14px}
-  .my-menu{padding:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-  .mm-section{display:none}
-  .mm-item{font-size:12px;padding:8px 6px;justify-content:center;border-radius:var(--r-md);text-align:center}
+  .my-menu{padding:10px;display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:0}
+  .mm-group{display:flex;flex-direction:column;gap:2px}
+  .mm-section{font-size:11px;font-weight:700;color:var(--ink-3);padding:6px 10px 4px;margin:0;letter-spacing:.5px}
+  .mm-item{font-size:13px;padding:8px 10px;justify-content:flex-start;text-align:left;width:100%}
   .mm-item .material-icons-round{font-size:16px}
-  .mm-item span:not(.material-icons-round){font-size:12px}
   .mm-badge{display:none}
-  .mm-item[style*="color:var(--cat)"]{grid-column:1/-1}
   .page-title{font-size:22px!important}
   .stat-grid .sg-n{font-size:24px}
   .scard-b{padding:14px 16px}
@@ -266,15 +265,19 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <button class="my-btn" onclick="location.href='community-profile.html'">공개 프로필 보기</button>
     </div>
     <div class="my-menu">
-      <div class="mm-section">콘텐츠</div>
-      <button class="mm-item on" onclick="showSection('overview',this)"><span class="material-icons-round">dashboard</span>개요</button>
-      <button class="mm-item" onclick="showSection('posts',this)"><span class="material-icons-round">article</span>내 글</button>
-      <button class="mm-item" onclick="showSection('drafts',this)"><span class="material-icons-round">edit_note</span>임시저장</button>
-      <button class="mm-item" onclick="showSection('saved',this)"><span class="material-icons-round">bookmark</span>저장한 글</button>
-      <div class="mm-section">설정</div>
-      <button class="mm-item" onclick="showSection('profile',this)"><span class="material-icons-round">person</span>프로필 편집</button>
-      <button class="mm-item" onclick="showSection('notifications',this)"><span class="material-icons-round">notifications</span>알림 설정</button>
-      <button class="mm-item" style="color:var(--cat)" onclick="if(confirm('로그아웃 하시겠습니까?')){window.DesignrAuth.logout();location.href='index.html';}"><span class="material-icons-round">logout</span>로그아웃</button>
+      <div class="mm-group">
+        <div class="mm-section">콘텐츠</div>
+        <button class="mm-item on" onclick="showSection('overview',this)"><span class="material-icons-round">dashboard</span>개요</button>
+        <button class="mm-item" onclick="showSection('posts',this)"><span class="material-icons-round">article</span>내 글</button>
+        <button class="mm-item" onclick="showSection('drafts',this)"><span class="material-icons-round">edit_note</span>임시저장</button>
+        <button class="mm-item" onclick="showSection('saved',this)"><span class="material-icons-round">bookmark</span>저장한 글</button>
+      </div>
+      <div class="mm-group">
+        <div class="mm-section">설정</div>
+        <button class="mm-item" onclick="showSection('profile',this)"><span class="material-icons-round">person</span>프로필 편집</button>
+        <button class="mm-item" onclick="showSection('notifications',this)"><span class="material-icons-round">notifications</span>알림 설정</button>
+        <button class="mm-item" style="color:var(--cat)" onclick="if(confirm('로그아웃 하시겠습니까?')){window.DesignrAuth.logout();location.href='index.html';}"><span class="material-icons-round">logout</span>로그아웃</button>
+      </div>
     </div>
   </div>
 
