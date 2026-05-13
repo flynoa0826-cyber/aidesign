@@ -302,6 +302,38 @@
     const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
     return '<span class="tag tag-cat" style="background:'+colors[catKey]+'">'+escapeHtml(c.name)+'</span>';
   }
+  function gitemHtml(p){
+    const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
+    const thumb=firstImage(p);
+    const colorIdx=(p.id.split('').reduce((s,c)=>s+c.charCodeAt(0),0)%8)+1;
+    const heights=['gt-tall','gt-med','gt-short','gt-wide'];
+    const heightCls=heights[Math.abs(p.id.length+p.title.length)%heights.length];
+    const thumbHtml=thumb
+      ? '<img class="g-thumb-img" src="'+thumb+'" alt="'+escapeHtml(p.title)+'" style="height:auto;max-height:340px;object-fit:cover">'
+      : '<div class="g-thumb-img gc-'+colorIdx+' '+heightCls+'">'+escapeHtml(p.title.slice(0,40))+'</div>';
+    const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    return '<div class="gitem" onclick="location.href=\''+detailUrl+'\'">'+
+      '<div class="g-thumb">'+thumbHtml+
+        '<div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div>'+
+      '</div>'+
+      '<div class="g-info">'+
+        '<div class="g-tags"><span class="tag tag-new">내 글</span>'+
+          (p.subcategory?'<span class="tag tag-cat">'+escapeHtml(p.subcategory)+'</span>':'')+
+          tagsHtml+
+        '</div>'+
+        '<div class="g-title">'+escapeHtml(p.title)+'</div>'+
+        '<div class="g-foot">'+
+          '<div class="g-name">'+initial+' '+escapeHtml(p.authorNickname)+'</div>'+
+          '<span class="g-sep">·</span>'+
+          '<span class="g-date">'+relativeTime(p.createdAt)+'</span>'+
+          '<span class="g-sep">·</span>'+
+          '<span class="g-date"><span class="material-icons-round" style="font-size:13px;vertical-align:-2px">visibility</span> '+(p.views||0)+'</span>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
   function pitemHtml(p){
     const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
     const excerpt=plainText(p.contentHtml).slice(0,140);
@@ -380,7 +412,8 @@
     const empty=list.querySelector('#emptyState');
     if(empty)empty.remove();
     const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
-    list.innerHTML=slice.map(pitemHtml).join('');
+    const useGallery=cat==='on-pf';
+    list.innerHTML=slice.map(useGallery?gitemHtml:pitemHtml).join('');
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
   else{injectIntoListPage()}
@@ -392,6 +425,6 @@
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
-    plainText,firstImage,catBadge,pitemHtml
+    plainText,firstImage,catBadge,pitemHtml,gitemHtml
   };
 })();
