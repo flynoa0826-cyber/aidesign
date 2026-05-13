@@ -146,6 +146,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 .ci-date{font-size:11px;color:var(--ink-3);margin-left:auto}
 .cm-body{font-size:14px;line-height:1.8;color:var(--ink);padding-left:42px;margin-bottom:8px}
 .cm-acts{display:flex;gap:12px;padding-left:42px}
+.cm-thread{padding-bottom:6px}
+.cm-replies{margin-left:42px;border-left:2px solid var(--bg-2);padding-left:14px;margin-top:4px}
+.cm-reply-item{padding:14px 0}
+.cm-reply-item .cm-acts{padding-left:42px}
+.cm-reply-input{margin:8px 0 14px 42px;display:flex;flex-direction:column;gap:8px;background:var(--bg-2);border-radius:var(--r-md);padding:12px 14px}
+.cm-reply-input .cm-ta{min-height:60px;background:var(--bg);padding:10px 12px;border-radius:var(--r-md);border:1.5px solid var(--line);font-size:13px;font-family:var(--sans);color:var(--ink);resize:none;outline:none;line-height:1.6}
+.cm-reply-input .cm-ta:focus{border-color:var(--cat)}
+.cm-reply-acts{display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.cm-sub-reply{padding:7px 16px;border-radius:var(--r-md);background:var(--cat);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);min-height:0;align-self:auto}
+.cm-sub-reply:hover{background:var(--cat-dk)}
+.ci-author-badge{display:inline-block;margin-left:4px;padding:2px 6px;border-radius:var(--r-sm);background:var(--cat-lt);color:var(--cat);font-size:10px;font-weight:700}
 .ca{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-3);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color var(--t)}
 .ca:hover{color:var(--ink)}
 .ca .material-icons-round{font-size:14px}
@@ -624,27 +635,71 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   const cmSub=document.querySelector('.cm-sub');
   const cmSort=document.querySelector('.cm-sort');
   if(!Array.isArray(p.comments))p.comments=[];
+  let openReplyFor=null;
   function renderComments(){
     const sort=cmSort?cmSort.value:'최신순';
-    const list=p.comments.slice().sort((a,b)=>sort==='좋아요순'?(b.likes||0)-(a.likes||0):b.createdAt-a.createdAt);
+    const all=p.comments.slice();
+    const tops=all.filter(c=>!c.parentId).sort((a,b)=>sort==='좋아요순'?(b.likes||0)-(a.likes||0):b.createdAt-a.createdAt);
+    const repliesOf=id=>all.filter(c=>c.parentId===id).sort((a,b)=>a.createdAt-b.createdAt);
     document.querySelectorAll('.cmt-count').forEach(el=>el.textContent=p.comments.length);
-    if(!list.length){cmList.innerHTML='<div style="text-align:center;padding:40px 24px;color:#999;font-size:13px">아직 댓글이 없어요.</div>';return;}
+    if(!tops.length){cmList.innerHTML='<div style="text-align:center;padding:40px 24px;color:#999;font-size:13px">아직 댓글이 없어요.</div>';return;}
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
-    cmList.innerHTML=list.map(c=>{
+    function renderItem(c,isReply){
       const initial=esc((c.authorNickname||'?').charAt(0).toUpperCase());
       const cmBg=window.DesignrPosts.authorColor(c.authorEmail||c.authorNickname);
       const canDel=u&&(c.authorEmail===u.email||p.authorEmail===u.email);
-      return '<div class="cm-item">'+
-        '<div class="cm-top"><div class="ci-av" style="background:'+cmBg+';color:#fff;font-weight:700">'+initial+'</div><div class="ci-name">'+esc(c.authorNickname)+'</div><div class="ci-date">'+window.DesignrPosts.relativeTime(c.createdAt)+'</div></div>'+
+      const isOwner=c.authorEmail===p.authorEmail;
+      return '<div class="cm-item'+(isReply?' cm-reply-item':'')+'">'+
+        '<div class="cm-top">'+
+          '<div class="ci-av" style="background:'+cmBg+';color:#fff;font-weight:700">'+initial+'</div>'+
+          '<div class="ci-name">'+esc(c.authorNickname)+(isOwner?' <span class="ci-author-badge">작성자</span>':'')+'</div>'+
+          '<div class="ci-date">'+window.DesignrPosts.relativeTime(c.createdAt)+'</div>'+
+        '</div>'+
         '<div class="cm-body">'+esc(c.text).replace(/\n/g,'<br>')+'</div>'+
-        (canDel?'<div class="cm-acts"><button type="button" class="ca" data-cid="'+c.id+'"><span class="material-icons-round">delete_outline</span>삭제</button></div>':'')+
+        '<div class="cm-acts">'+
+          (isReply?'':'<button type="button" class="ca ca-reply" data-cid="'+c.id+'"><span class="material-icons-round">reply</span>답글</button>')+
+          (canDel?'<button type="button" class="ca ca-del" data-cid="'+c.id+'"><span class="material-icons-round">delete_outline</span>삭제</button>':'')+
+        '</div>'+
       '</div>';
+    }
+    cmList.innerHTML=tops.map(c=>{
+      const reps=repliesOf(c.id);
+      const repliesHtml=reps.length?'<div class="cm-replies">'+reps.map(r=>renderItem(r,true)).join('')+'</div>':'';
+      const replyBox=openReplyFor===c.id?
+        '<div class="cm-reply-input"><textarea class="cm-ta cm-ta-reply" data-cid="'+c.id+'" placeholder="답글을 입력하세요"></textarea><div class="cm-reply-acts"><button type="button" class="ca ca-reply-cancel">취소</button><button type="button" class="cm-sub cm-sub-reply" data-cid="'+c.id+'">등록</button></div></div>':'';
+      return '<div class="cm-thread">'+renderItem(c,false)+repliesHtml+replyBox+'</div>';
     }).join('');
-    cmList.querySelectorAll('.ca[data-cid]').forEach(btn=>{
+    cmList.querySelectorAll('.ca-del[data-cid]').forEach(btn=>{
       btn.addEventListener('click',async()=>{
         if(!confirm('정말 삭제하시겠습니까?'))return;
-        const ok=await window.DesignrPosts.removeComment(id,btn.dataset.cid);
-        if(ok){p.comments=p.comments.filter(x=>x.id!==btn.dataset.cid);renderComments();window.DesignrPosts.toast('댓글이 삭제되었어요');}
+        const cid=btn.dataset.cid;
+        const ok=await window.DesignrPosts.removeComment(id,cid);
+        if(ok){p.comments=p.comments.filter(x=>x.id!==cid&&x.parentId!==cid);renderComments();window.DesignrPosts.toast('댓글이 삭제되었어요');}
+      });
+    });
+    cmList.querySelectorAll('.ca-reply[data-cid]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        if(!requireLogin())return;
+        openReplyFor=openReplyFor===btn.dataset.cid?null:btn.dataset.cid;
+        renderComments();
+        if(openReplyFor){
+          const ta=cmList.querySelector('.cm-ta-reply[data-cid="'+openReplyFor+'"]');
+          if(ta)ta.focus();
+        }
+      });
+    });
+    cmList.querySelectorAll('.ca-reply-cancel').forEach(btn=>{
+      btn.addEventListener('click',()=>{openReplyFor=null;renderComments();});
+    });
+    cmList.querySelectorAll('.cm-sub-reply[data-cid]').forEach(btn=>{
+      btn.addEventListener('click',async()=>{
+        if(!requireLogin())return;
+        const cid=btn.dataset.cid;
+        const ta=cmList.querySelector('.cm-ta-reply[data-cid="'+cid+'"]');
+        const text=ta?ta.value.trim():'';
+        if(!text){window.DesignrPosts.toast('답글 내용을 입력해주세요');if(ta)ta.focus();return;}
+        const c=await window.DesignrPosts.addComment(id,text,cid);
+        if(c){openReplyFor=null;renderComments();window.DesignrPosts.toast('답글이 등록되었어요');}
       });
     });
   }
