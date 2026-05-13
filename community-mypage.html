@@ -428,7 +428,7 @@ async function renderMyPage(){
   const pfNick=document.getElementById('pfNickname');if(pfNick&&!pfNick.value)pfNick.value=u.nickname||'';
   const pfEmail=document.getElementById('pfEmail');if(pfEmail)pfEmail.value=u.email||'';
   const pfCareer=document.getElementById('pfCareer');if(pfCareer&&u.career){for(const o of pfCareer.options){if(o.textContent===u.career){o.selected=true;break;}}}
-  const posts=window.DesignrPosts.listByAuthor(u.id);
+  const posts=window.DesignrPosts.listByAuthor(u);
   document.getElementById('stat-posts').textContent=posts.length;
   document.getElementById('stat-likes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
   document.getElementById('stat-views').textContent=posts.reduce((s,p)=>s+(p.views||0),0);
