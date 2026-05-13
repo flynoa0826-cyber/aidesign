@@ -483,7 +483,13 @@ let renderLatestPosts=function(){};
   await window.DesignrPosts.ready;
   const allPosts=window.DesignrPosts.loadAll();
   const postCount=allPosts.length;
-  const userCount=(()=>{try{return (JSON.parse(localStorage.getItem('designr.users'))||[]).length}catch(e){return 0}})();
+  let userCount=0;
+  try{
+    if(window.sb){
+      const {count}=await sb.from('profiles').select('*',{count:'exact',head:true});
+      userCount=count||0;
+    }
+  }catch(e){}
   const elU=document.getElementById('hs-users');if(elU)elU.textContent=userCount;
   const elP=document.getElementById('hs-posts');if(elP)elP.textContent=postCount;
   renderLatestPosts=function(){
