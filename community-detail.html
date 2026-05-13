@@ -347,12 +347,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
     <!-- 반응 -->
     <div class="react-bar">
-      <button class="rbtn" onclick="this.classList.toggle(&#39;liked&#39;)"><span class="material-icons-round">favorite_border</span>좋아요 <strong class="like-count">0</strong></button>
-      <button class="rbtn"><span class="material-icons-round">chat_bubble_outline</span>댓글 <strong class="cmt-count">0</strong></button>
-      <button class="rbtn"><span class="material-icons-round">bookmark_border</span>저장</button>
+      <button id="likeBtn" class="rbtn"><span class="material-icons-round">favorite_border</span>좋아요 <strong class="like-count">0</strong></button>
+      <button id="cmtBtn" class="rbtn"><span class="material-icons-round">chat_bubble_outline</span>댓글 <strong class="cmt-count">0</strong></button>
+      <button id="saveBtn" class="rbtn"><span class="material-icons-round">bookmark_border</span>저장</button>
       <div class="react-r">
-        <button class="sbtn"><span class="material-icons-round">link</span></button>
-        <button class="sbtn"><span class="material-icons-round">share</span></button>
+        <button id="linkBtn" class="sbtn" title="링크 복사"><span class="material-icons-round">link</span></button>
+        <button id="shareBtn" class="sbtn" title="공유"><span class="material-icons-round">share</span></button>
       </div>
     </div>
 
@@ -429,6 +429,56 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   window.DesignrPosts.incView(id);
   document.querySelectorAll('.like-count').forEach(el=>el.textContent=(p.likes||0));
   document.querySelectorAll('.cmt-count').forEach(el=>el.textContent=(p.comments||0));
+
+  const likeBtn=document.getElementById('likeBtn');
+  const saveBtn=document.getElementById('saveBtn');
+  const linkBtn=document.getElementById('linkBtn');
+  const shareBtn=document.getElementById('shareBtn');
+  function setLikeUI(liked,count){
+    likeBtn.classList.toggle('liked',liked);
+    likeBtn.querySelector('.material-icons-round').textContent=liked?'favorite':'favorite_border';
+    if(count!=null)likeBtn.querySelector('.like-count').textContent=count;
+  }
+  function setSaveUI(saved){
+    saveBtn.classList.toggle('liked',saved);
+    saveBtn.querySelector('.material-icons-round').textContent=saved?'bookmark':'bookmark_border';
+    const label=saveBtn.childNodes[saveBtn.childNodes.length-1];
+    if(label&&label.nodeType===3)label.textContent=saved?' 저장됨':' 저장';
+  }
+  setLikeUI(window.DesignrPosts.hasLiked(id),p.likes||0);
+  setSaveUI(window.DesignrPosts.hasBookmarked(id));
+  function requireLogin(){
+    if(window.DesignrAuth&&window.DesignrAuth.getCurrentUser())return true;
+    if(confirm('로그인이 필요합니다. 로그인 페이지로 이동할까요?'))location.href='community-auth.html';
+    return false;
+  }
+  likeBtn.addEventListener('click',async()=>{
+    if(!requireLogin())return;
+    const r=await window.DesignrPosts.toggleLike(id);
+    if(r)setLikeUI(r.liked,r.count);
+  });
+  saveBtn.addEventListener('click',()=>{
+    if(!requireLogin())return;
+    const on=window.DesignrPosts.toggleBookmark(id);
+    if(on!=null)setSaveUI(on);
+  });
+  async function copyUrl(){
+    try{await navigator.clipboard.writeText(location.href);return true;}
+    catch(e){
+      const ta=document.createElement('textarea');ta.value=location.href;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();
+      let ok=false;try{ok=document.execCommand('copy');}catch(e2){}
+      document.body.removeChild(ta);return ok;
+    }
+  }
+  linkBtn.addEventListener('click',async()=>{
+    const ok=await copyUrl();
+    alert(ok?'링크가 복사되었습니다.':location.href);
+  });
+  shareBtn.addEventListener('click',async()=>{
+    if(navigator.share){try{await navigator.share({title:document.title,url:location.href});return;}catch(e){}}
+    linkBtn.click();
+  });
   const esc=window.DesignrPosts.escapeHtml;
   const cats=window.DesignrPosts.CATEGORIES;
   const catInfo=cats[p.category]||cats['on-sv'];
