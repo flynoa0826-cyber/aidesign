@@ -48,10 +48,13 @@
 
   function renderNav(){
     const user=getCurrentUser();
-    // 알림 벨의 빨간 점: 미로그인 또는 안 읽은 알림이 없으면 숨김
+    // 알림 벨의 숫자 뱃지: 미로그인이거나 안 읽은 알림이 없으면 숨김
     function updateBellDot(){
-      const hasUnread=user&&window.DesignrPosts&&typeof window.DesignrPosts.unreadCount==='function'&&window.DesignrPosts.unreadCount(user.email)>0;
-      document.querySelectorAll('.gnb-ndot').forEach(d=>{d.style.display=hasUnread?'':'none';});
+      const count=user&&window.DesignrPosts&&typeof window.DesignrPosts.unreadCount==='function'?window.DesignrPosts.unreadCount(user.email):0;
+      document.querySelectorAll('.gnb-ndot').forEach(d=>{
+        if(count>0){d.style.display='';d.textContent=count>99?'99+':String(count);}
+        else{d.style.display='none';d.textContent='';}
+      });
     }
     if(window.DesignrPosts&&window.DesignrPosts.ready&&window.DesignrPosts.ready.then){
       window.DesignrPosts.ready.then(updateBellDot);
