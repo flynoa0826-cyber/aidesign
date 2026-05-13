@@ -488,16 +488,21 @@ async function publishPost(){
   if(!u){if(confirm('로그인이 필요합니다. 로그인 페이지로 이동할까요?'))location.href='community-auth.html';return;}
   const d=getFormData();
   const err=validate(d);if(err){alert(err);return;}
+  const btn=document.getElementById('publishBtn');
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
   try{
     await window.DesignrPosts.ready;
     let post;
     if(editingId){post=await window.DesignrPosts.update(editingId,d);if(!post){alert('수정 권한이 없거나 글을 찾을 수 없습니다.');return;}}
     else{post=await window.DesignrPosts.create(d);}
+    if(!post||!post.id)throw new Error('글 저장 결과가 비어 있습니다.');
     try{localStorage.removeItem('designr.draft');}catch(e){}
     location.href='community-detail.html?id='+post.id;
   }catch(e){
-    console.error(e);
-    alert('저장 중 오류가 발생했습니다. 첨부 파일이 너무 큰지 확인해주세요.');
+    console.error('publish error',e);
+    alert('발행 실패: '+(e&&e.message?e.message:'알 수 없는 오류'));
+  }finally{
+    if(btn){btn.disabled=false;btn.style.opacity='';}
   }
 }
 function saveDraft(){

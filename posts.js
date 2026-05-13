@@ -172,7 +172,7 @@
       const ext=(name.match(/\.[^.]+$/)||[''])[0];
       const path=u.id+'/'+(postIdHint||'tmp')+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,7)+ext;
       const {data,error}=await sb.storage.from('attachments').upload(path,blob,{cacheControl:'31536000',upsert:false,contentType:mime});
-      if(error){console.error('upload',error);continue}
+      if(error){console.error('upload',error);throw new Error('파일 업로드 실패: '+(error.message||name))}
       const {data:pub}=sb.storage.from('attachments').getPublicUrl(data.path);
       out.push({name,size,type:mime,isImage,dataUrl:pub.publicUrl,path:data.path});
     }
@@ -180,7 +180,7 @@
   }
 
   async function create(d){
-    const u=_user();if(!u)return null;
+    const u=_user();if(!u)throw new Error('로그인이 필요합니다.');
     const attachments=await uploadAttachments(d.attachments||[]);
     const {data,error}=await sb.from('posts').insert({
       author_id:u.id,
@@ -191,7 +191,7 @@
       tags:d.tags||[],
       attachments
     }).select('*,profiles!posts_author_id_fkey(email,nickname)').single();
-    if(error){console.error(error);return null}
+    if(error){console.error('create post',error);throw new Error(error.message||'글 작성에 실패했습니다.')}
     const post=mapPost(data);
     _cache.unshift(post);
     return post;
