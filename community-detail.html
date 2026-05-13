@@ -569,6 +569,13 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
         '</div>';
     }
     bodyEl.innerHTML=html;
+    // 외부에서 복붙된 ul/ol/li에 묻어 들어온 class/style을 제거해 우리 들여쓰기 CSS가 살아나도록
+    bodyEl.querySelectorAll('ul,ol,li').forEach(el=>{
+      el.removeAttribute('class');
+      el.removeAttribute('style');
+      el.removeAttribute('dir');
+      el.removeAttribute('role');
+    });
 
     function dataUrlToBlob(dataUrl){
       const m=/^data:([^;,]+)?(;base64)?,(.*)$/.exec(dataUrl);
