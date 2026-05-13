@@ -384,25 +384,19 @@
     const file=location.pathname.split('/').pop()||'';
     const cat=PAGE_CAT[file];
     if(!cat)return;
-    document.querySelectorAll('a.gnb-write, .gnb-mdr-acts a[href*="community-write.html"]').forEach(a=>{
+    document.querySelectorAll('a').forEach(a=>{
+      const href=a.getAttribute('href');
+      if(!href||!/(^|\/)community-write\.html(\?|$)/.test(href))return;
       try{
-        const u=new URL(a.getAttribute('href'),location.href);
-        if(u.pathname.endsWith('community-write.html')){
-          u.searchParams.set('cat',cat);
-          a.setAttribute('href',u.pathname.split('/').pop()+(u.search?u.search:''));
-        }
-      }catch(e){}
-    });
-    document.querySelectorAll('#emptyState a[href*="community-write.html"]').forEach(a=>{
-      try{
-        const u=new URL(a.getAttribute('href'),location.href);
-        if(u.pathname.endsWith('community-write.html')){
-          u.searchParams.set('cat',cat);
-          a.setAttribute('href',u.pathname.split('/').pop()+(u.search?u.search:''));
-        }
+        const u=new URL(href,location.href);
+        if(u.searchParams.get('id'))return;
+        u.searchParams.set('cat',cat);
+        a.setAttribute('href',u.pathname.split('/').pop()+(u.search?u.search:''));
       }catch(e){}
     });
   }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',rewriteWriteLinks)}
+  else{rewriteWriteLinks()}
 
   async function injectIntoListPage(){
     await ready;
