@@ -523,6 +523,11 @@ function applySubcategoryUI(sub){
   await window.DesignrPosts.ready;
   const params=new URLSearchParams(location.search);
   const editId=params.get('id');
+  const presetCat=params.get('cat');
+  if(presetCat&&window.DesignrPosts.CATEGORIES&&window.DesignrPosts.CATEGORIES[presetCat]){
+    applyCategoryUI(presetCat);
+    renderSubcats();
+  }
   if(editId){
     const p=window.DesignrPosts.getById(editId);
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
