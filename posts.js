@@ -138,7 +138,7 @@
   function loadAll(){return _cache.slice()}
   function getById(id){return _cache.find(p=>p.id===id)||null}
   function listByCategory(c,sub){return _cache.filter(p=>p.category===c&&(!sub||sub==='전체'||p.subcategory===sub))}
-  function listByAuthor(email){return _cache.filter(p=>p.authorEmail===email)}
+  function listByAuthor(key){return _cache.filter(p=>p.authorId===key||p.authorEmail===key)}
   function search(q){q=String(q||'').toLowerCase().trim();if(!q)return[];return _cache.filter(p=>{const t=(p.title||'').toLowerCase()+' '+plainText(p.contentHtml).toLowerCase()+' '+(p.tags||[]).join(' ').toLowerCase();return t.includes(q)})}
 
   // ===== writes =====
