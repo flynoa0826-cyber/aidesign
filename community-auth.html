@@ -240,9 +240,9 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
         <button type="submit" class="submit-btn">로그인</button>
         <div class="divider"><div class="div-line"></div><span class="div-txt">또는</span><div class="div-line"></div></div>
         <div class="social-btns">
-          <button class="social-btn"><div class="social-icon si-k">K</div>카카오로 계속하기</button>
-          <button class="social-btn"><div class="social-icon si-g" style="font-size:13px;font-weight:700">G</div>Google로 계속하기</button>
-          <button class="social-btn"><div class="social-icon si-n" style="font-size:11px">N</div>네이버로 계속하기</button>
+          <button type="button" class="social-btn" onclick="alert('소셜 로그인은 데모에서 지원되지 않습니다. 이메일로 로그인해 주세요.')"><div class="social-icon si-k">K</div>카카오로 계속하기</button>
+          <button type="button" class="social-btn" onclick="alert('소셜 로그인은 데모에서 지원되지 않습니다. 이메일로 로그인해 주세요.')"><div class="social-icon si-g" style="font-size:13px;font-weight:700">G</div>Google로 계속하기</button>
+          <button type="button" class="social-btn" onclick="alert('소셜 로그인은 데모에서 지원되지 않습니다. 이메일로 로그인해 주세요.')"><div class="social-icon si-n" style="font-size:11px">N</div>네이버로 계속하기</button>
         </div>
         <div class="auth-footer">아직 계정이 없으신가요? <a href="community-auth.html" onclick="switchTabDirect('signup');return false;">회원가입</a></div>
       </form>
@@ -279,20 +279,20 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
             <option>학생</option>
           </select>
         </div>
-        <div class="agree-all">
+        <label class="agree-all" for="all">
           <input type="checkbox" id="all">
-          <label for="all" style="cursor:pointer"><span>약관 전체 동의</span></label>
-        </div>
+          <span>약관 전체 동의</span>
+        </label>
         <div class="agree-list">
-          <div class="agree-item"><input type="checkbox" class="agree-req" data-required="1"><span>이용약관 동의<span class="req">필수</span></span><a href="index.html" target="_blank">보기</a></div>
-          <div class="agree-item"><input type="checkbox" class="agree-req" data-required="1"><span>개인정보 수집·이용 동의<span class="req">필수</span></span><a href="index.html" target="_blank">보기</a></div>
-          <div class="agree-item"><input type="checkbox"><span>마케팅 정보 수신 동의 (선택)</span><a href="index.html" target="_blank">보기</a></div>
+          <label class="agree-item"><input type="checkbox" class="agree-req" id="agree1"><span>이용약관 동의<span class="req">필수</span></span><a href="index.html" target="_blank" onclick="event.stopPropagation()">보기</a></label>
+          <label class="agree-item"><input type="checkbox" class="agree-req" id="agree2"><span>개인정보 수집·이용 동의<span class="req">필수</span></span><a href="index.html" target="_blank" onclick="event.stopPropagation()">보기</a></label>
+          <label class="agree-item"><input type="checkbox" id="agree3"><span>마케팅 정보 수신 동의 (선택)</span><a href="index.html" target="_blank" onclick="event.stopPropagation()">보기</a></label>
         </div>
         <button type="submit" class="submit-btn">회원가입</button>
         <div class="divider"><div class="div-line"></div><span class="div-txt">또는 소셜 계정으로</span><div class="div-line"></div></div>
         <div class="social-btns">
-          <button class="social-btn"><div class="social-icon si-k">K</div>카카오로 시작하기</button>
-          <button class="social-btn"><div class="social-icon si-g" style="font-size:13px;font-weight:700">G</div>Google로 시작하기</button>
+          <button type="button" class="social-btn" onclick="alert('소셜 가입은 데모에서 지원되지 않습니다. 이메일로 가입해 주세요.')"><div class="social-icon si-k">K</div>카카오로 시작하기</button>
+          <button type="button" class="social-btn" onclick="alert('소셜 가입은 데모에서 지원되지 않습니다. 이메일로 가입해 주세요.')"><div class="social-icon si-g" style="font-size:13px;font-weight:700">G</div>Google로 시작하기</button>
         </div>
         <div class="auth-footer">이미 계정이 있으신가요? <a href="community-auth.html" onclick="switchTabDirect('login');return false;">로그인</a></div>
       </form>
@@ -339,7 +339,7 @@ function togglePw(id,btn){
 }
 function showErr(boxId,textId,msg){
   const box=document.getElementById(boxId);const t=document.getElementById(textId);
-  if(msg){t.textContent=msg;box.style.display='flex';}else{box.style.display='none';}
+  if(msg){t.textContent=msg;box.style.display='flex';box.scrollIntoView({behavior:'smooth',block:'center'});}else{box.style.display='none';}
 }
 function handleLogin(e){
   e.preventDefault();
@@ -368,6 +368,13 @@ function handleSignup(e){
 }
 document.getElementById('all').addEventListener('change',function(){
   document.querySelectorAll('.agree-list input').forEach(c=>c.checked=this.checked);
+});
+document.querySelectorAll('.agree-list input').forEach(cb=>{
+  cb.addEventListener('change',function(){
+    const items=document.querySelectorAll('.agree-list input');
+    const allChecked=Array.from(items).every(c=>c.checked);
+    document.getElementById('all').checked=allChecked;
+  });
 });
 // 이미 로그인된 사용자가 진입하면 마이페이지로 보냄
 (function(){
