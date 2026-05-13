@@ -637,14 +637,15 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   const cmTa=document.querySelector('.cm-ta');
   const cmSub=document.querySelector('.cm-sub');
   const cmSort=document.querySelector('.cm-sort');
-  if(!Array.isArray(p.comments))p.comments=[];
+  let comments=[];
+  try{comments=await window.DesignrPosts.listComments(id);}catch(e){console.error('load comments',e);}
   let openReplyFor=null;
   function renderComments(){
     const sort=cmSort?cmSort.value:'최신순';
-    const all=p.comments.slice();
+    const all=comments.slice();
     const tops=all.filter(c=>!c.parentId).sort((a,b)=>sort==='좋아요순'?(b.likes||0)-(a.likes||0):b.createdAt-a.createdAt);
     const repliesOf=id=>all.filter(c=>c.parentId===id).sort((a,b)=>a.createdAt-b.createdAt);
-    document.querySelectorAll('.cmt-count').forEach(el=>el.textContent=p.comments.length);
+    document.querySelectorAll('.cmt-count').forEach(el=>el.textContent=comments.length);
     if(!tops.length){cmList.innerHTML='<div style="text-align:center;padding:40px 24px;color:#999;font-size:13px">아직 댓글이 없어요.</div>';return;}
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     function renderItem(c,isReply){
@@ -677,7 +678,7 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
         if(!confirm('정말 삭제하시겠습니까?'))return;
         const cid=btn.dataset.cid;
         const ok=await window.DesignrPosts.removeComment(id,cid);
-        if(ok){p.comments=p.comments.filter(x=>x.id!==cid&&x.parentId!==cid);renderComments();window.DesignrPosts.toast('댓글이 삭제되었어요');}
+        if(ok){comments=comments.filter(x=>x.id!==cid&&x.parentId!==cid);renderComments();window.DesignrPosts.toast('댓글이 삭제되었어요');}
       });
     });
     cmList.querySelectorAll('.ca-reply[data-cid]').forEach(btn=>{
@@ -702,7 +703,8 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
         const text=ta?ta.value.trim():'';
         if(!text){window.DesignrPosts.toast('답글 내용을 입력해주세요');if(ta)ta.focus();return;}
         const c=await window.DesignrPosts.addComment(id,text,cid);
-        if(c){openReplyFor=null;renderComments();window.DesignrPosts.toast('답글이 등록되었어요');}
+        if(c){comments.push(c);openReplyFor=null;renderComments();window.DesignrPosts.toast('답글이 등록되었어요');}
+        else{window.DesignrPosts.toast('답글 등록에 실패했어요');}
       });
     });
   }
@@ -712,7 +714,8 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
       const text=cmTa.value.trim();
       if(!text){window.DesignrPosts.toast('댓글 내용을 입력해주세요');cmTa.focus();return;}
       const c=await window.DesignrPosts.addComment(id,text);
-      if(c){cmTa.value='';renderComments();window.DesignrPosts.toast('댓글이 등록되었어요');}
+      if(c){comments.push(c);cmTa.value='';renderComments();window.DesignrPosts.toast('댓글이 등록되었어요');}
+      else{window.DesignrPosts.toast('댓글 등록에 실패했어요');}
     });
   }
   if(cmSort)cmSort.addEventListener('change',renderComments);
