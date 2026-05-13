@@ -285,7 +285,7 @@ function setTab(el){document.querySelectorAll('.ptab').forEach(t=>t.classList.re
 
   box.innerHTML=
     '<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">'+
-      '<div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#FF9E7A,#FF6B35);color:#fff;display:flex;align-items:center;justify-content:center;font-family:\'Noto Serif KR\',serif;font-size:36px;font-weight:700;flex-shrink:0">'+initial+'</div>'+
+      '<div style="width:96px;height:96px;border-radius:50%;background:'+window.DesignrPosts.authorColor(u.email||u.nickname)+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:\'Noto Serif KR\',serif;font-size:36px;font-weight:700;flex-shrink:0">'+initial.toUpperCase()+'</div>'+
       '<div style="flex:1;min-width:200px">'+
         '<div style="font-family:\'Noto Serif KR\',serif;font-size:26px;font-weight:700;color:#191919;margin-bottom:4px">'+esc(u.nickname)+'</div>'+
         '<div style="font-size:13px;color:#999;margin-bottom:14px">'+esc(u.email)+(u.career?' · '+esc(u.career):'')+'</div>'+
