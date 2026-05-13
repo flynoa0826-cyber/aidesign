@@ -349,8 +349,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
     </div>
 
     <div class="react-bar">
-      <button class="rbtn liked" onclick="this.classList.toggle('liked')"><span class="material-icons-round">favorite</span>좋아요 <strong>387</strong></button>
-      <button class="rbtn"><span class="material-icons-round">chat_bubble_outline</span>댓글 <strong>54</strong></button>
+      <button class="rbtn" onclick="this.classList.toggle(&#39;liked&#39;)"><span class="material-icons-round">favorite_border</span>좋아요 <strong class="like-count">0</strong></button>
+      <button class="rbtn"><span class="material-icons-round">chat_bubble_outline</span>댓글 <strong class="cmt-count">0</strong></button>
       <button class="rbtn"><span class="material-icons-round">bookmark_border</span>저장</button>
       <div class="react-r">
         <button class="sbtn"><span class="material-icons-round">link</span></button>
@@ -360,7 +360,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 
     <div class="cm-h">
-      <div class="cm-title">댓글 <span class="cm-cnt">54</span></div>
+      <div class="cm-title">댓글 <span class="cm-cnt cmt-count">0</span></div>
       <select class="cm-sort"><option>최신순</option><option>좋아요순</option></select>
     </div>
     <div class="cm-input">
