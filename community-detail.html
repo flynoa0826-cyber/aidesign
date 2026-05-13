@@ -575,7 +575,7 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
       const text=cmTa.value.trim();
       if(!text){window.DesignrPosts.toast('댓글 내용을 입력해주세요');cmTa.focus();return;}
       const c=await window.DesignrPosts.addComment(id,text);
-      if(c){p.comments.push(c);cmTa.value='';renderComments();window.DesignrPosts.toast('댓글이 등록되었어요');}
+      if(c){cmTa.value='';renderComments();window.DesignrPosts.toast('댓글이 등록되었어요');}
     });
   }
   if(cmSort)cmSort.addEventListener('change',renderComments);
