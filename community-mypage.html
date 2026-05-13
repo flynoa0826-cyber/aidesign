@@ -30,11 +30,13 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 
 /* SIDEBAR NAV */
 .my-
-.my-profile{padding:22px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
-.my-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#FF9E7A,#FF6B35);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:26px;font-weight:700}
-.my-name{font-size:16px;font-weight:700;color:var(--ink)}
-.my-email{font-size:12px;color:var(--ink-3)}
-.my-btn{width:100%;justify-content:center;padding:7px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t)}
+.my-profile{padding:18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.my-profile-row{display:flex;align-items:center;gap:12px;min-width:0}
+.my-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FF9E7A,#FF6B35);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:700;flex-shrink:0}
+.my-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.my-name{font-size:15px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my-email{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my-btn{width:100%;justify-content:center;padding:8px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t)}
 .my-btn:hover{border-color:var(--blue);color:var(--blue)}
 .my-menu{padding:8px}
 .mm-section{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);padding:10px 12px 4px}
@@ -229,10 +231,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <!-- 사이드 네비 -->
   <div class="my-nav">
     <div class="my-profile">
-      <div class="my-av" id="myAv">?</div>
-      <div>
-        <div class="my-name" id="myName">게스트</div>
-        <div class="my-email" id="myEmail">로그인이 필요합니다</div>
+      <div class="my-profile-row">
+        <div class="my-av" id="myAv">?</div>
+        <div class="my-id">
+          <div class="my-name" id="myName">게스트</div>
+          <div class="my-email" id="myEmail">로그인이 필요합니다</div>
+        </div>
       </div>
       <button class="my-btn" onclick="location.href='community-profile.html'">공개 프로필 보기</button>
     </div>
