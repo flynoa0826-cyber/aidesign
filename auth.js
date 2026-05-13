@@ -27,12 +27,34 @@
     try{document.dispatchEvent(new CustomEvent('designr:auth-changed',{detail:{user:currentUser}}));}catch(e){}
   }
 
+  // 일회성 정리: 이전 로그아웃 버그로 인해 끊기지 않은 세션이 있을 수 있으니 한 번만 강제 로그아웃 시킴
+  const CLEANUP_KEY='designr.cleanup_v';
+  const CLEANUP_VERSION='2';
+  async function oneTimeCleanup(){
+    let v=null;try{v=localStorage.getItem(CLEANUP_KEY);}catch(e){}
+    if(v===CLEANUP_VERSION)return;
+    try{
+      if(window.sb)await sb.auth.signOut();
+    }catch(e){}
+    try{
+      Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k));
+      localStorage.setItem(CLEANUP_KEY,CLEANUP_VERSION);
+    }catch(e){}
+  }
+
   async function init(){
     if(!window.sb){_resolveReady();return;}
+    await oneTimeCleanup();
     const {data}=await sb.auth.getSession();
     if(data.session){
       const p=await loadProfile(data.session.user.id);
-      setUserFromSession(data.session,p);
+      if(!p){
+        // 세션은 있지만 프로필이 없음 (계정 삭제 등) → 강제 로그아웃
+        try{await sb.auth.signOut();}catch(e){}
+        currentUser=null;
+      }else{
+        setUserFromSession(data.session,p);
+      }
     }
     renderNav();
     _resolveReady();
@@ -42,6 +64,7 @@
         setUserFromSession(session,p);
       }else{
         currentUser=null;
+        try{document.dispatchEvent(new CustomEvent('designr:auth-changed',{detail:{user:null}}));}catch(e){}
       }
       renderNav();
     });
