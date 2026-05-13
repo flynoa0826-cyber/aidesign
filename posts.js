@@ -97,10 +97,81 @@
     return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
 
+  function relativeTime(ts){
+    const s=Math.floor((Date.now()-ts)/1000);
+    if(s<60)return '방금 전';
+    if(s<3600)return Math.floor(s/60)+'분 전';
+    if(s<86400)return Math.floor(s/3600)+'시간 전';
+    if(s<86400*7)return Math.floor(s/86400)+'일 전';
+    return formatDate(ts);
+  }
+
+  function plainText(html){
+    const d=document.createElement('div');d.innerHTML=html||'';
+    return (d.textContent||'').replace(/\s+/g,' ').trim();
+  }
+
+  function firstImage(post){
+    const a=(post.attachments||[]).find(x=>x.isImage);
+    return a?a.dataUrl:null;
+  }
+
+  function catBadge(catKey){
+    const c=CATEGORIES[catKey]||CATEGORIES['on-sv'];
+    const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+    return '<span class="tag tag-cat" style="background:'+colors[catKey]+'">'+escapeHtml(c.name)+'</span>';
+  }
+
+  function pitemHtml(p){
+    const c=CATEGORIES[p.category]||CATEGORIES['on-sv'];
+    const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
+    const excerpt=plainText(p.contentHtml).slice(0,140);
+    const thumb=firstImage(p);
+    const thumbHtml=thumb
+      ? '<div class="pitem-thumb" style="background-image:url(\''+thumb+'\');background-size:cover;background-position:center"></div>'
+      : '<div class="pitem-thumb th1">'+escapeHtml(p.title.slice(0,2))+'</div>';
+    const tagsHtml=(p.tags||[]).slice(0,2).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    return '<div class="pitem" onclick="location.href=\''+detailUrl+'\'">'+
+      '<div class="pitem-body">'+
+        '<div class="pitem-tags"><span class="tag tag-mine" style="background:#EEF4FF;color:#1B64DA;font-weight:600">내 글</span>'+catBadge(p.category)+tagsHtml+'</div>'+
+        '<div class="pitem-title">'+escapeHtml(p.title)+'</div>'+
+        '<div class="pitem-exc">'+escapeHtml(excerpt)+'</div>'+
+        '<div class="pitem-foot"><div class="p-auth"><div class="pav">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>'+
+      '</div>'+
+      thumbHtml+
+    '</div>';
+  }
+
+  const PAGE_CAT={
+    'community-list.html':'on-sv',
+    'community-list-ai.html':'on-ai',
+    'community-list-career.html':'on-ca',
+    'community-portfolio.html':'on-pf',
+    'community-list-qa.html':'on-qa'
+  };
+
+  function injectIntoListPage(){
+    const file=location.pathname.split('/').pop()||'';
+    const cat=PAGE_CAT[file];
+    if(!cat)return;
+    const list=document.querySelector('.post-list');
+    if(!list)return;
+    const posts=listByCategory(cat);
+    if(!posts.length)return;
+    const frag=document.createElement('div');
+    frag.innerHTML=posts.map(pitemHtml).join('');
+    while(frag.firstChild)list.insertBefore(frag.firstChild,list.firstChild);
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
+  else{injectIntoListPage()}
+
   window.DesignrPosts={
     MAX_FILES,MAX_BYTES,CATEGORIES,
     loadAll,getById,listByCategory,listByAuthor,
     create,update,remove,incView,
-    readFileAsDataURL,formatSize,formatDate,escapeHtml
+    readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
+    plainText,firstImage,catBadge,pitemHtml
   };
 })();
