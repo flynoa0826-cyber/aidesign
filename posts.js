@@ -422,7 +422,7 @@
     const heightCls=heights[Math.abs(p.id.length+p.title.length)%heights.length];
     const thumbHtml=thumb
       ? '<img class="g-thumb-img" src="'+thumb+'" alt="'+escapeHtml(p.title)+'" style="width:100%;height:auto;display:block">'
-      : '<div class="g-thumb-img gc-'+colorIdx+' '+heightCls+'">'+escapeHtml(p.title.slice(0,40))+'</div>';
+      : '<div class="g-thumb-img gc-'+colorIdx+' '+heightCls+'">'+escapeHtml((CATEGORIES[p.category]||CATEGORIES['on-sv']).name||'')+'</div>';
     const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
     const initial=escapeHtml((p.authorNickname||'?').charAt(0).toUpperCase());
     const color=authorColor(p.authorEmail||p.authorNickname);
@@ -484,7 +484,7 @@
     const thumb=firstImage(p);
     const thumbHtml=thumb
       ? '<div class="pitem-thumb" style="background-image:url(\''+thumb+'\');background-size:cover;background-position:center"></div>'
-      : '<div class="pitem-thumb th1">'+escapeHtml(p.title.slice(0,2))+'</div>';
+      : '<div class="pitem-thumb th1">'+escapeHtml((CATEGORIES[p.category]||CATEGORIES['on-sv']).name||'').replace(/\s+/g,'<br>')+'</div>';
     const tagsHtml=(p.tags||[]).slice(0,2).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
     const initial=escapeHtml((p.authorNickname||'?').charAt(0).toUpperCase());
     const color=authorColor(p.authorEmail||p.authorNickname);
