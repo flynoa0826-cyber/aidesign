@@ -473,9 +473,9 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
     const r=await window.DesignrPosts.toggleLike(id);
     if(r){setLikeUI(r.liked,r.count);window.DesignrPosts.toast(r.liked?'좋아요를 눌렀어요':'좋아요를 취소했어요');}
   });
-  saveBtn.addEventListener('click',()=>{
+  saveBtn.addEventListener('click',async()=>{
     if(!requireLogin())return;
-    const on=window.DesignrPosts.toggleBookmark(id);
+    const on=await window.DesignrPosts.toggleBookmark(id);
     if(on!=null){setSaveUI(on);window.DesignrPosts.toast(on?'저장되었어요':'저장이 해제되었어요');}
   });
   async function copyUrl(){
@@ -549,9 +549,9 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
       else{topSave.style.borderColor='';topSave.style.color='';}
     }
     setTopSaveUI(window.DesignrPosts.hasBookmarked(id));
-    if(topSave)topSave.addEventListener('click',()=>{
+    if(topSave)topSave.addEventListener('click',async()=>{
       if(!requireLogin())return;
-      const on=window.DesignrPosts.toggleBookmark(id);
+      const on=await window.DesignrPosts.toggleBookmark(id);
       if(on!=null){setTopSaveUI(on);setSaveUI(on);window.DesignrPosts.toast(on?'저장되었어요':'저장이 해제되었어요');}
     });
   }
@@ -768,9 +768,9 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
         (otherPosts.length?'<a href="community-profile.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:14px;font-size:13px;font-weight:600;color:var(--cat);text-decoration:none">작가의 콘텐츠 더 보기<span class="material-icons-round" style="font-size:16px">chevron_right</span></a>':'');
       const fb=document.getElementById('followBtn');
       if(fb){
-        fb.addEventListener('click',()=>{
+        fb.addEventListener('click',async()=>{
           if(!requireLogin())return;
-          const res=window.DesignrPosts.toggleFollow(p.authorEmail);
+          const res=await window.DesignrPosts.toggleFollow(p.authorEmail);
           if(res==null)return;
           window.DesignrPosts.toast(res?'이제 알림을 받아요':'알림을 해제했어요');
           paint();
