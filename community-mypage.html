@@ -106,7 +106,32 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 .toggle input:checked+.slider::before{transform:translateX(20px)}
 
 .field-row{grid-template-columns:1fr}
-@media(max-width:600px){.lay{padding:20px 16px 48px}.stat-grid{grid-template-columns:repeat(2,1fr)}.ri-stats{display:none}}
+/* 내 글 카드 */
+.my-post{padding:16px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.my-post:last-child{border-bottom:none}
+.mp-head{display:flex;align-items:center;gap:8px}
+.mp-cat{padding:3px 10px;border-radius:var(--r-full);font-size:11px;font-weight:600;background:#EEF4FF;color:#1B64DA;flex-shrink:0}
+.mp-date{font-size:12px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
+.mp-title{font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color var(--t)}
+.mp-title:hover{color:var(--blue)}
+.mp-acts{display:flex;gap:6px;justify-content:flex-end}
+@media(max-width:600px){
+  .lay{padding:20px 12px 48px}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .ri-stats{display:none}
+  .my-nav{margin-bottom:8px}
+  .my-profile{padding:14px}
+  .my-menu{padding:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+  .mm-section{display:none}
+  .mm-item{font-size:12px;padding:8px 6px;justify-content:center;border-radius:var(--r-md);text-align:center}
+  .mm-item .material-icons-round{font-size:16px}
+  .mm-item span:not(.material-icons-round){font-size:12px}
+  .mm-badge{display:none}
+  .mm-item[style*="color:var(--cat)"]{grid-column:1/-1}
+  .page-title{font-size:22px!important}
+  .stat-grid .sg-n{font-size:24px}
+  .scard-b{padding:14px 16px}
+}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
 .nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
@@ -368,12 +393,16 @@ function recentRowHtml(p){
 function myPostRowHtml(p){
   const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
   const esc=window.DesignrPosts.escapeHtml;
-  return '<div class="ri" style="padding:14px 0">'+
-    '<span class="ri-tag" style="background:#EEF4FF;color:#1B64DA">'+esc(c.name)+'</span>'+
-    '<span class="ri-t" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">'+esc(p.title)+'</span>'+
-    '<span style="color:#999;font-size:12px;margin-right:10px">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span>'+
-    '<button class="di-btn" onclick="location.href=\'community-write.html?id='+encodeURIComponent(p.id)+'\'">수정</button>'+
-    '<button class="di-btn di-del" onclick="if(confirm(\'정말 삭제하시겠습니까?\'))window.DesignrPosts.remove(\''+esc(p.id)+'\').then(renderMyPage)">삭제</button>'+
+  return '<div class="my-post">'+
+    '<div class="mp-head">'+
+      '<span class="mp-cat">'+esc(c.name)+'</span>'+
+      '<span class="mp-date">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span>'+
+    '</div>'+
+    '<a class="mp-title" href="community-detail.html?id='+encodeURIComponent(p.id)+'">'+esc(p.title)+'</a>'+
+    '<div class="mp-acts">'+
+      '<button class="di-btn" onclick="location.href=\'community-write.html?id='+encodeURIComponent(p.id)+'\'">수정</button>'+
+      '<button class="di-btn di-del" onclick="if(confirm(\'정말 삭제하시겠습니까?\'))window.DesignrPosts.remove(\''+esc(p.id)+'\').then(renderMyPage)">삭제</button>'+
+    '</div>'+
   '</div>';
 }
 
