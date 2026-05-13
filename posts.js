@@ -172,6 +172,56 @@
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     return u?u.email:null;
   }
+  function _currentUser(){return window.DesignrAuth&&window.DesignrAuth.getCurrentUser()}
+
+  function _notiKey(email){return 'designr.notifications.'+email}
+  function getNotifications(email){
+    if(!email){const u=_currentUser();email=u?u.email:null}
+    if(!email)return[];
+    try{return JSON.parse(localStorage.getItem(_notiKey(email)))||[]}catch(e){return[]}
+  }
+  function saveNotifications(email,list){
+    try{localStorage.setItem(_notiKey(email),JSON.stringify(list.slice(0,200)));}catch(e){}
+  }
+  function addNotification(recipientEmail,type,data){
+    if(!recipientEmail)return null;
+    const list=getNotifications(recipientEmail);
+    const n={
+      id:'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+      type,
+      actorEmail:data.actorEmail||'',
+      actorNickname:data.actorNickname||'',
+      postId:data.postId||null,
+      postTitle:data.postTitle||'',
+      commentId:data.commentId||null,
+      text:data.text||'',
+      createdAt:Date.now(),
+      read:false
+    };
+    list.unshift(n);
+    saveNotifications(recipientEmail,list);
+    return n;
+  }
+  function unreadCount(email){
+    if(!email){const u=_currentUser();email=u?u.email:null}
+    if(!email)return 0;
+    return getNotifications(email).filter(n=>!n.read).length;
+  }
+  function markAllRead(email){
+    if(!email){const u=_currentUser();email=u?u.email:null}
+    if(!email)return;
+    const list=getNotifications(email);list.forEach(n=>n.read=true);saveNotifications(email,list);
+  }
+  function removeNotification(email,id){
+    if(!email){const u=_currentUser();email=u?u.email:null}
+    if(!email)return;
+    saveNotifications(email,getNotifications(email).filter(n=>n.id!==id));
+  }
+  function clearAllNotifications(email){
+    if(!email){const u=_currentUser();email=u?u.email:null}
+    if(!email)return;
+    saveNotifications(email,[]);
+  }
   function _readSet(key){try{return new Set(JSON.parse(localStorage.getItem(key))||[])}catch(e){return new Set()}}
   function _writeSet(key,set){localStorage.setItem(key,JSON.stringify([...set]))}
   function _likeKey(){const e=_currentUserEmail();return e?'designr.likes.'+e:null}
@@ -189,6 +239,12 @@
     else{set.add(id);post.likes=(post.likes||0)+1;liked=true;}
     _writeSet(k,set);
     try{await dbPut(post);}catch(e){}
+    try{
+      const u=_currentUser();
+      if(liked&&u&&post.authorEmail&&post.authorEmail!==u.email){
+        addNotification(post.authorEmail,'like',{actorEmail:u.email,actorNickname:u.nickname,postId:post.id,postTitle:post.title});
+      }
+    }catch(e){}
     return {liked,count:post.likes};
   }
   function toggleBookmark(id){
@@ -223,6 +279,16 @@
     };
     post.comments.push(c);
     try{await dbPut(post);}catch(e){}
+    try{
+      if(parentId){
+        const parent=post.comments.find(x=>x.id===parentId);
+        if(parent&&parent.authorEmail&&parent.authorEmail!==u.email){
+          addNotification(parent.authorEmail,'reply',{actorEmail:u.email,actorNickname:u.nickname,postId:post.id,postTitle:post.title,commentId:c.id,text:c.text});
+        }
+      }else if(post.authorEmail&&post.authorEmail!==u.email){
+        addNotification(post.authorEmail,'comment',{actorEmail:u.email,actorNickname:u.nickname,postId:post.id,postTitle:post.title,commentId:c.id,text:c.text});
+      }
+    }catch(e){}
     return c;
   }
   async function removeComment(postId,commentId){
@@ -249,7 +315,14 @@
     const k=_followKey();if(!k)return null;
     const set=_readSet(k);
     let on;if(set.has(authorEmail)){set.delete(authorEmail);on=false;}else{set.add(authorEmail);on=true;}
-    _writeSet(k,set);return on;
+    _writeSet(k,set);
+    try{
+      const u=_currentUser();
+      if(on&&u&&authorEmail&&authorEmail!==u.email){
+        addNotification(authorEmail,'follow',{actorEmail:u.email,actorNickname:u.nickname});
+      }
+    }catch(e){}
+    return on;
   }
   function followerCount(authorEmail){
     let n=0;
@@ -589,6 +662,7 @@
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
+    getNotifications,addNotification,unreadCount,markAllRead,removeNotification,clearAllNotifications,
     isFollowing,toggleFollow,followerCount,neighborPosts,
     recordSearch,getRecentSearches,removeRecentSearch,clearRecentSearches,getPopularSearches,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
