@@ -297,6 +297,61 @@
   }
   function firstImage(p){const a=(p.attachments||[]).find(x=>x.isImage);return a?a.dataUrl:null}
 
+  const AVATAR_PALETTE=['#1B64DA','#FF6B35','#0BAD75','#E8335D','#6C3BF5','#E8930B','#089960','#D94F1A','#5429D4','#1450B0','#C41E45','#7B61FF'];
+  function authorColor(seed){
+    const s=String(seed||'?');
+    let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}
+    return AVATAR_PALETTE[Math.abs(h)%AVATAR_PALETTE.length];
+  }
+  function avatarHtml(post,opts){
+    opts=opts||{};
+    const size=opts.size||24;
+    const seed=post.authorEmail||post.authorNickname||'?';
+    const color=authorColor(seed);
+    const initial=escapeHtml((post.authorNickname||'?').charAt(0).toUpperCase());
+    const fs=Math.max(10,Math.round(size*0.45));
+    const cls=opts.cls?(' class="'+opts.cls+'"'):'';
+    return '<div'+cls+' style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:'+fs+'px;font-weight:700;font-family:\'Noto Sans KR\',sans-serif;flex-shrink:0;line-height:1">'+initial+'</div>';
+  }
+
+  function enhanceYoutube(html){
+    if(!html||!/youtu/.test(html))return html||'';
+    const tmp=document.createElement('div');
+    tmp.innerHTML=html;
+    const ytRe=/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+    function makeCard(id,url){
+      const thumb='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
+      const wrap=document.createElement('div');
+      wrap.innerHTML='<a href="'+url+'" target="_blank" rel="noopener" style="display:block;position:relative;text-decoration:none;margin:16px 0;border-radius:12px;overflow:hidden;border:1px solid #E4E5E7;background:#000;max-width:560px"><img src="'+thumb+'" alt="YouTube" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><div style="width:64px;height:64px;border-radius:50%;background:rgba(255,0,0,.92);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4)"><span class="material-icons-round" style="font-size:36px;color:#fff;margin-left:4px">play_arrow</span></div></div><div style="position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px"><span class="material-icons-round" style="font-size:14px">smart_display</span>YouTube에서 보기</div></a>';
+      return wrap.firstChild;
+    }
+    tmp.querySelectorAll('a').forEach(a=>{
+      const href=a.getAttribute('href')||a.href||'';
+      const m=ytRe.exec(href);
+      if(m)a.parentNode.replaceChild(makeCard(m[1],href),a);
+    });
+    const walker=document.createTreeWalker(tmp,NodeFilter.SHOW_TEXT,null);
+    const nodes=[];let n;while((n=walker.nextNode()))nodes.push(n);
+    const urlRe=/https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=[A-Za-z0-9_-]+|embed\/[A-Za-z0-9_-]+|shorts\/[A-Za-z0-9_-]+)|youtu\.be\/[A-Za-z0-9_-]+)[^\s<>"']*/g;
+    nodes.forEach(node=>{
+      const txt=node.nodeValue;
+      if(!txt||!ytRe.test(txt))return;
+      urlRe.lastIndex=0;
+      let last=0,mm;const frag=document.createDocumentFragment();let touched=false;
+      while((mm=urlRe.exec(txt))){
+        const idm=ytRe.exec(mm[0]);if(!idm)continue;
+        if(mm.index>last)frag.appendChild(document.createTextNode(txt.slice(last,mm.index)));
+        frag.appendChild(makeCard(idm[1],mm[0]));
+        last=mm.index+mm[0].length;touched=true;
+      }
+      if(touched){
+        if(last<txt.length)frag.appendChild(document.createTextNode(txt.slice(last)));
+        node.parentNode.replaceChild(frag,node);
+      }
+    });
+    return tmp.innerHTML;
+  }
+
   function catBadge(catKey){
     const c=CATEGORIES[catKey]||CATEGORIES['on-sv'];
     const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
@@ -312,7 +367,8 @@
       ? '<img class="g-thumb-img" src="'+thumb+'" alt="'+escapeHtml(p.title)+'" style="width:100%;height:auto;display:block">'
       : '<div class="g-thumb-img gc-'+colorIdx+' '+heightCls+'">'+escapeHtml(p.title.slice(0,40))+'</div>';
     const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
-    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0).toUpperCase());
+    const color=authorColor(p.authorEmail||p.authorNickname);
     return '<div class="gitem" onclick="location.href=\''+detailUrl+'\'">'+
       '<div class="g-thumb">'+thumbHtml+
         '<div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div>'+
@@ -324,7 +380,7 @@
         '</div>'+
         '<div class="g-title">'+escapeHtml(p.title)+'</div>'+
         '<div class="g-foot">'+
-          '<div class="g-name">'+initial+' '+escapeHtml(p.authorNickname)+'</div>'+
+          '<div class="g-name" style="display:flex;align-items:center;gap:6px"><span style="width:20px;height:20px;border-radius:50%;background:'+color+';color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;line-height:1">'+initial+'</span>'+escapeHtml(p.authorNickname)+'</div>'+
           '<span class="g-sep">·</span>'+
           '<span class="g-date">'+relativeTime(p.createdAt)+'</span>'+
           '<span class="g-sep">·</span>'+
@@ -338,7 +394,8 @@
     const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
     const excerpt=plainText(p.contentHtml).slice(0,160);
     const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
-    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0).toUpperCase());
+    const color=authorColor(p.authorEmail||p.authorNickname);
     const commentsCount=Array.isArray(p.comments)?p.comments.length:0;
     return '<div class="qi" onclick="location.href=\''+detailUrl+'\'">'+
       '<div class="qi-top">'+
@@ -351,7 +408,7 @@
           '<div class="qi-title">'+escapeHtml(p.title)+'</div>'+
           '<div class="qi-body">'+escapeHtml(excerpt)+'</div>'+
           '<div class="qi-foot">'+
-            '<div class="p-auth"><div class="pav">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div>'+
+            '<div class="p-auth"><div class="pav" style="background:'+color+';color:#fff;font-weight:700">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div>'+
             '<span class="p-sep">·</span>'+
             '<span class="p-date">'+relativeTime(p.createdAt)+'</span>'+
             '<div class="qi-stats">'+
@@ -372,13 +429,14 @@
       ? '<div class="pitem-thumb" style="background-image:url(\''+thumb+'\');background-size:cover;background-position:center"></div>'
       : '<div class="pitem-thumb th1">'+escapeHtml(p.title.slice(0,2))+'</div>';
     const tagsHtml=(p.tags||[]).slice(0,2).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
-    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0).toUpperCase());
+    const color=authorColor(p.authorEmail||p.authorNickname);
     return '<div class="pitem" onclick="location.href=\''+detailUrl+'\'">'+
       '<div class="pitem-body">'+
         '<div class="pitem-tags"><span class="tag tag-mine" style="background:#EEF4FF;color:#1B64DA;font-weight:600">내 글</span>'+catBadge(p.category)+(p.subcategory?'<span class="tag tag-sub">'+escapeHtml(p.subcategory)+'</span>':'')+tagsHtml+'</div>'+
         '<div class="pitem-title">'+escapeHtml(p.title)+'</div>'+
         '<div class="pitem-exc">'+escapeHtml(excerpt)+'</div>'+
-        '<div class="pitem-foot"><div class="p-auth"><div class="pav">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>'+
+        '<div class="pitem-foot"><div class="p-auth"><div class="pav" style="background:'+color+';color:#fff;font-weight:700">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>'+
       '</div>'+
       thumbHtml+
     '</div>';
@@ -474,6 +532,7 @@
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
-    plainText,firstImage,catBadge,pitemHtml,gitemHtml
+    plainText,firstImage,catBadge,pitemHtml,gitemHtml,qitemHtml,
+    authorColor,avatarHtml,enhanceYoutube
   };
 })();

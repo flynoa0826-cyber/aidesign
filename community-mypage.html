@@ -385,8 +385,12 @@ async function renderMyPage(){
     return;
   }
   document.getElementById('welcomeTitle').textContent='안녕하세요, '+u.nickname+'님 👋';
-  const initial=(u.nickname||'?').charAt(0);
-  const elAv=document.getElementById('myAv');if(elAv)elAv.textContent=initial;
+  const initial=(u.nickname||'?').charAt(0).toUpperCase();
+  const elAv=document.getElementById('myAv');
+  if(elAv){
+    elAv.textContent=initial;
+    elAv.style.background=window.DesignrPosts.authorColor(u.email||u.nickname);
+  }
   const elName=document.getElementById('myName');if(elName)elName.textContent=u.nickname;
   const elEmail=document.getElementById('myEmail');if(elEmail)elEmail.textContent=u.email;
   const pfNick=document.getElementById('pfNickname');if(pfNick&&!pfNick.value)pfNick.value=u.nickname||'';

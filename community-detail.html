@@ -499,14 +499,15 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
   const isOwner=u&&u.email===p.authorEmail;
   if(meta){
-    const initial=esc((p.authorNickname||'?').charAt(0));
+    const initial=esc((p.authorNickname||'?').charAt(0).toUpperCase());
+    const authorBg=window.DesignrPosts.authorColor(p.authorEmail||p.authorNickname);
     const ownerActions=isOwner
       ? '<button class="meta-act" title="수정" onclick="location.href=\'community-write.html?id='+esc(p.id)+'\'"><span class="material-icons-round">edit</span></button>'+
         '<button class="meta-act" title="삭제" onclick="if(confirm(\'정말 삭제하시겠습니까?\'))window.DesignrPosts.remove(\''+esc(p.id)+'\').then(()=>location.href=\''+catInfo.list+'\')"><span class="material-icons-round">delete</span></button>'
       : '';
     meta.innerHTML=
       '<div class="author-block">'+
-        '<div class="av">'+initial+'</div>'+
+        '<div class="av" style="background:'+authorBg+';color:#fff;font-weight:700">'+initial+'</div>'+
         '<div><div class="author-name">'+esc(p.authorNickname)+'</div><div class="author-role">'+esc(p.authorEmail)+'</div></div>'+
       '</div>'+
       (isOwner?'':'<button class="fol-btn">+ 팔로우</button>')+
@@ -535,7 +536,7 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
         }).join('')+
         '</div>';
     }
-    html+=(p.contentHtml||'');
+    html+=window.DesignrPosts.enhanceYoutube(p.contentHtml||'');
     if(files.length){
       html+='<div style="margin-top:24px;display:flex;flex-direction:column;gap:6px">'+
         files.map(a=>{
@@ -602,10 +603,11 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
     if(!list.length){cmList.innerHTML='<div style="text-align:center;padding:40px 24px;color:#999;font-size:13px">아직 댓글이 없어요.</div>';return;}
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     cmList.innerHTML=list.map(c=>{
-      const initial=esc((c.authorNickname||'?').charAt(0));
+      const initial=esc((c.authorNickname||'?').charAt(0).toUpperCase());
+      const cmBg=window.DesignrPosts.authorColor(c.authorEmail||c.authorNickname);
       const canDel=u&&(c.authorEmail===u.email||p.authorEmail===u.email);
       return '<div class="cm-item">'+
-        '<div class="cm-top"><div class="ci-av ci-a1">'+initial+'</div><div class="ci-name">'+esc(c.authorNickname)+'</div><div class="ci-date">'+window.DesignrPosts.relativeTime(c.createdAt)+'</div></div>'+
+        '<div class="cm-top"><div class="ci-av" style="background:'+cmBg+';color:#fff;font-weight:700">'+initial+'</div><div class="ci-name">'+esc(c.authorNickname)+'</div><div class="ci-date">'+window.DesignrPosts.relativeTime(c.createdAt)+'</div></div>'+
         '<div class="cm-body">'+esc(c.text).replace(/\n/g,'<br>')+'</div>'+
         (canDel?'<div class="cm-acts"><button type="button" class="ca" data-cid="'+c.id+'"><span class="material-icons-round">delete_outline</span>삭제</button></div>':'')+
       '</div>';
