@@ -276,7 +276,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
         <div class="mm-section">설정</div>
         <button class="mm-item" onclick="showSection('profile',this)"><span class="material-icons-round">person</span>프로필 편집</button>
         <button class="mm-item" onclick="showSection('notifications',this)"><span class="material-icons-round">notifications</span>알림 설정</button>
-        <button class="mm-item" style="color:var(--cat)" onclick="if(confirm('로그아웃 하시겠습니까?')){window.DesignrAuth.logout();location.href='index.html';}"><span class="material-icons-round">logout</span>로그아웃</button>
+        <button class="mm-item" style="color:var(--cat)" onclick="doLogout(this)"><span class="material-icons-round">logout</span>로그아웃</button>
       </div>
     </div>
   </div>
@@ -450,6 +450,18 @@ async function renderMyPage(){
   }
 }
 
+async function doLogout(btn){
+  if(!confirm('로그아웃 하시겠습니까?'))return;
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
+  try{
+    await window.DesignrAuth.logout();
+  }catch(e){console.error(e);}
+  // Hard-clear any stale supabase tokens just in case
+  try{
+    Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+  location.href='index.html';
+}
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderMyPage)}
 else{renderMyPage()}
 document.addEventListener('designr:auth-changed',renderMyPage);
