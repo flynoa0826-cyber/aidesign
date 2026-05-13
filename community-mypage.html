@@ -429,6 +429,32 @@ async function renderMyPage(){
   const pfEmail=document.getElementById('pfEmail');if(pfEmail)pfEmail.value=u.email||'';
   const pfCareer=document.getElementById('pfCareer');if(pfCareer&&u.career){for(const o of pfCareer.options){if(o.textContent===u.career){o.selected=true;break;}}}
   const posts=window.DesignrPosts.listByAuthor(u);
+
+  // ===== TEMP DIAGNOSTIC (자동 제거 예정) =====
+  if(posts.length===0){
+    const all=window.DesignrPosts.loadAll();
+    const dump=all.slice(0,8).map(p=>{
+      return '• 글ID: '+(p.id||'').slice(0,8)
+        +' / authorId: '+(p.authorId||'').slice(0,8)
+        +' / email: '+(p.authorEmail||'(빈값)')
+        +' / nickname: '+(p.authorNickname||'(빈값)')
+        +' / title: '+(p.title||'').slice(0,20);
+    }).join('<br>');
+    const html='<div style="background:#FEF3C7;border:2px solid #F59E0B;border-radius:12px;padding:16px;margin-bottom:24px;font-size:12px;line-height:1.7;color:#78350F;font-family:monospace">'
+      +'<div style="font-weight:700;font-size:13px;margin-bottom:8px;font-family:var(--sans)">🔍 진단 정보 (이걸 캡쳐해서 Claude에게 보내주세요)</div>'
+      +'<b>현재 사용자:</b><br>'
+      +'• id: '+(u.id||'').slice(0,8)+'<br>'
+      +'• email: '+(u.email||'(빈값)')+'<br>'
+      +'• nickname: '+(u.nickname||'(빈값)')+'<br><br>'
+      +'<b>캐시에 로드된 글 총 '+all.length+'개 중 상위 '+Math.min(8,all.length)+'개:</b><br>'
+      +(dump||'(글 캐시가 비어 있음)')
+      +'</div>';
+    const target=document.querySelector('.my-main')||document.body;
+    const box=document.createElement('div');box.innerHTML=html;
+    target.insertBefore(box,target.firstChild);
+  }
+  // ===== /TEMP DIAGNOSTIC =====
+
   document.getElementById('stat-posts').textContent=posts.length;
   document.getElementById('stat-likes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
   document.getElementById('stat-views').textContent=posts.reduce((s,p)=>s+(p.views||0),0);
