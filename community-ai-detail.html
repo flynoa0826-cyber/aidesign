@@ -63,6 +63,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 .meta-sep{color:var(--line-2)}
 .meta-item{font-size:13px;color:var(--ink-3);display:flex;align-items:center;gap:4px}
 .meta-item .material-icons-round{font-size:15px}
+.meta-side{display:contents}
 .meta-r{margin-left:auto;display:flex;gap:8px}
 .meta-act{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-3);transition:all var(--t)}
 .meta-act:hover{border-color:var(--ink);color:var(--ink)}
@@ -198,7 +199,7 @@ to{transform:translateX(0)}
 
 
 @media(max-width:900px){.side{display:none}.react-r{display:none}.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.side{display:none!important}.ph-stats{display:none!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}}
-@media(max-width:600px){.lay{padding:20px 16px 48px}.art-meta{flex-direction:column;align-items:flex-start;gap:6px;padding:14px 0}.meta-r{display:none}.meta-sep{display:none}.meta-item{font-size:12px;gap:3px}.meta-item .material-icons-round{font-size:13px}.author-name{font-size:13px}.author-role{font-size:11px}.av{width:34px;height:34px;font-size:12px}}
+@media(max-width:600px){.lay{padding:20px 16px 48px}.art-meta{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:8px;padding:14px 0}.meta-r{display:none}.meta-sep{display:none}.fol-btn{display:none}.meta-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-left:auto;flex-shrink:0}.meta-item{font-size:11px;gap:3px}.meta-item .material-icons-round{font-size:13px}.author-name{font-size:13px}.author-role{font-size:11px}.av{width:34px;height:34px;font-size:12px}}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
 .nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
