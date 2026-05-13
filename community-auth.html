@@ -344,29 +344,41 @@ function showErr(boxId,textId,msg){
   const box=document.getElementById(boxId);const t=document.getElementById(textId);
   if(msg){t.textContent=msg;box.style.display='flex';box.scrollIntoView({behavior:'smooth',block:'center'});}else{box.style.display='none';}
 }
-function handleLogin(e){
+async function handleLogin(e){
   e.preventDefault();
-  const res=window.DesignrAuth.login({
-    email:document.getElementById('loginEmail').value,
-    password:document.getElementById('pw1').value
-  });
-  if(!res.ok){showErr('loginErr','loginErrText',res.err);return false;}
-  location.href='index.html';
+  const submitBtn=document.querySelector('#login .submit-btn');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.style.opacity='.6';}
+  try{
+    const res=await window.DesignrAuth.login({
+      email:document.getElementById('loginEmail').value,
+      password:document.getElementById('pw1').value
+    });
+    if(!res.ok){showErr('loginErr','loginErrText',res.err);return false;}
+    location.href='index.html';
+  }finally{
+    if(submitBtn){submitBtn.disabled=false;submitBtn.style.opacity='';}
+  }
   return false;
 }
-function handleSignup(e){
+async function handleSignup(e){
   e.preventDefault();
   const reqAll=Array.from(document.querySelectorAll('.agree-req')).every(c=>c.checked);
-  const res=window.DesignrAuth.signup({
-    email:document.getElementById('signupEmail').value,
-    nickname:document.getElementById('signupNickname').value,
-    password:document.getElementById('pw2').value,
-    career:document.getElementById('signupCareer').value,
-    agreeRequired:reqAll
-  });
-  if(!res.ok){showErr('signupErr','signupErrText',res.err);return false;}
-  alert('회원가입이 완료되었습니다. 환영합니다, '+res.user.nickname+'님!');
-  location.href='index.html';
+  const submitBtn=document.querySelector('#signup .submit-btn');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.style.opacity='.6';}
+  try{
+    const res=await window.DesignrAuth.signup({
+      email:document.getElementById('signupEmail').value,
+      nickname:document.getElementById('signupNickname').value,
+      password:document.getElementById('pw2').value,
+      career:document.getElementById('signupCareer').value,
+      agreeRequired:reqAll
+    });
+    if(!res.ok){showErr('signupErr','signupErrText',res.err);return false;}
+    alert('회원가입이 완료되었습니다. 환영합니다, '+(res.user.nickname||'')+'님!');
+    location.href='index.html';
+  }finally{
+    if(submitBtn){submitBtn.disabled=false;submitBtn.style.opacity='';}
+  }
   return false;
 }
 document.getElementById('all').addEventListener('change',function(){
