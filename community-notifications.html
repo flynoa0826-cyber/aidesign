@@ -199,9 +199,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 <div class="lay">
   <div class="noti-header">
-    <div class="nh-title">알림 <span class="nh-badge">7</span></div>
+    <div class="nh-title">알림</div>
     <div class="nh-actions">
-      <button class="nh-btn" onclick="markAll()">모두 읽음</button>
       <button class="nh-btn" onclick="location.href='community-mypage.html'">알림 설정</button>
     </div>
   </div>
@@ -215,101 +214,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   </div>
 
   <div class="noti-list">
-    <div class="noti-date">오늘</div>
-
-    <!-- 읽지 않은 알림 -->
-    <div class="ni unread" onclick="location.href='community-detail.html'">
-      <div class="ni-icon ni-comment"><span class="material-icons-round">chat_bubble</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>한소희</strong>님이 내 글에 댓글을 남겼어요</div>
-        <div class="ni-post">"노션 템플릿 62만원이 정말 인상적이네요. 어떤 종류의 템플릿인지..."</div>
-        <div class="ni-time">2시간 전</div>
-      </div>
-      <div class="ni-thumb" style="background:linear-gradient(135deg,#FF9E7A,#FF6B35)">글</div>
-      <div class="unread-dot"></div>
-    </div>
-
-    <div class="ni unread" onclick="location.href='community-detail.html'">
-      <div class="ni-icon ni-like"><span class="material-icons-round">favorite</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>김민준</strong>님이 내 글을 좋아해요</div>
-        <div class="ni-post">3년차 UX가 프리랜서로 전환한 첫 달 수입을 공개합니다</div>
-        <div class="ni-time">3시간 전</div>
-      </div>
-      <div class="ni-thumb" style="background:linear-gradient(135deg,#FF9E7A,#FF6B35)">글</div>
-      <div class="unread-dot"></div>
-    </div>
-
-    <div class="ni unread" onclick="location.href='community-profile.html'">
-      <div class="ni-icon ni-follow"><span class="material-icons-round">person_add</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>이수연</strong>님이 팔로우를 시작했어요</div>
-        <div class="ni-time">5시간 전</div>
-      </div>
-      <div class="unread-dot"></div>
-    </div>
-
-    <div class="ni unread" onclick="location.href='community-portfolio-detail.html'">
-      <div class="ni-icon ni-like"><span class="material-icons-round">favorite</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>정다은</strong>님 외 <strong>12명</strong>이 내 포트폴리오를 좋아해요</div>
-        <div class="ni-post">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가</div>
-        <div class="ni-time">6시간 전</div>
-      </div>
-      <div class="ni-thumb" style="background:linear-gradient(135deg,#7BB8FF,#1B64DA)">포폴</div>
-      <div class="unread-dot"></div>
-    </div>
-
-    <div class="ni unread">
-      <div class="ni-icon ni-system"><span class="material-icons-round">mail</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>🎉 주간 레터가 도착했어요</strong></div>
-        <div class="ni-post">이번 주 AI 디자인 툴 TOP 5 + 프리랜서 세금 가이드</div>
-        <div class="ni-time">오전 9:00</div>
-      </div>
-      <div class="unread-dot"></div>
-    </div>
-
-    <div class="noti-date">어제</div>
-
-    <div class="ni" onclick="location.href='community-detail.html'">
-      <div class="ni-icon ni-comment"><span class="material-icons-round">chat_bubble</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>강민서</strong>님이 내 댓글에 답글을 남겼어요</div>
-        <div class="ni-post">"계약서 얘기에 공감해요. 저도 첫 번째 클라이언트를..."</div>
-        <div class="ni-time">어제 오후 3:21</div>
-      </div>
-      <div class="ni-thumb" style="background:linear-gradient(135deg,#FF9E7A,#FF6B35)">글</div>
-    </div>
-
-    <div class="ni" onclick="location.href='community-profile.html'">
-      <div class="ni-icon ni-follow"><span class="material-icons-round">person_add</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>최민혁</strong>님이 팔로우를 시작했어요</div>
-        <div class="ni-time">어제 오전 11:14</div>
-      </div>
-    </div>
-
-    <div class="ni" onclick="location.href='community-detail.html'">
-      <div class="ni-icon ni-like"><span class="material-icons-round">favorite</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>박현우</strong>님 외 <strong>28명</strong>이 내 글을 좋아해요</div>
-        <div class="ni-post">Claude로 UX 리서치 시간을 60% 줄인 방법</div>
-        <div class="ni-time">어제 오전 8:30</div>
-      </div>
-      <div class="ni-thumb" style="background:linear-gradient(135deg,#B4A0FF,#6C3BF5)">글</div>
-    </div>
-
-    <div class="noti-date">2일 전</div>
-
-    <div class="ni">
-      <div class="ni-icon ni-system"><span class="material-icons-round">star</span></div>
-      <div class="ni-body">
-        <div class="ni-text"><strong>🏆 이번 주 추천 작품으로 선정됐어요!</strong></div>
-        <div class="ni-post">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가</div>
-        <div class="ni-time">2일 전</div>
-      </div>
-    </div>
+    <div style="text-align:center;padding:80px 24px;color:#999">새 알림이 없어요</div>
   </div>
 
   <div class="noti-setting" onclick="location.href='community-mypage.html'">

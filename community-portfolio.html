@@ -364,105 +364,15 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 <!-- MAIN -->
 <div class="main">
   <div>
-    <!-- 이번 주 추천 -->
-    <div class="feat-banner" onclick="location.href='community-portfolio-detail.html'">
-      <div class="feat-img gc-4">
-        <div class="feat-badge">🏆 이번 주 추천</div>
-        헬스케어 앱<br>UX 리디자인<br>케이스 스터디
-      </div>
-      <div class="feat-info">
-        <div class="feat-label">Featured Work</div>
-        <div class="feat-title">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가 케이스 스터디</div>
-        <div class="feat-desc">Figma + Claude로 3일 만에 완성한 12개 화면. 실제 작업 과정과 의사결정 흐름을 모두 공개합니다.</div>
-        <div class="feat-author">
-          <div class="fav">박</div>
-          <div><div class="fa-name">박지은</div><div class="fa-role">UX 디자이너</div></div>
-        </div>
-        <div class="feat-stats">
-          <div class="fst"><span class="material-icons-round">favorite_border</span>284</div>
-          <div class="fst"><span class="material-icons-round">chat_bubble_outline</span>42</div>
-          <div class="fst"><span class="material-icons-round">visibility</span>4.1k</div>
-        </div>
-      </div>
-    </div>
-
     <div class="sec-t">전체 작품</div>
 
     <!-- 갤러리 그리드 -->
-    <div class="gallery" id="gallery">
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-tall gc-1">헬스케어 앱<br>UX 리디자인</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">UX/UI</span><span class="tag tag-sub">AI 활용</span><span class="tag tag-new">New</span></div>
-          <div class="g-title">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가</div>
-          <div class="g-foot"><div class="gav ga1">박</div><span class="g-name">박지은</span><span class="g-sep">·</span><span class="g-date">2일 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>284</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>42</div></div></div>
-        </div>
+    <div class="gallery post-list" id="gallery">
+      <div id="emptyState" style="text-align:center;padding:80px 24px;background:#fff;border:1px solid #E4E5E7;border-radius:16px">
+        <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:#191919;margin-bottom:6px">아직 작품이 없어요</div>
+        <div style="font-size:13px;color:#999;margin-bottom:16px">포트폴리오를 첫 번째로 공유해보세요</div>
+        <a href="community-write.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:100px;background:#1B64DA;color:#fff;font-size:14px;font-weight:600;text-decoration:none"><span class="material-icons-round" style="font-size:18px">add</span>업로드하기</a>
       </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-med gc-2">핀테크 앱<br>브랜딩</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">브랜딩</span></div>
-          <div class="g-title">핀테크 스타트업 브랜드 아이덴티티 — 로고부터 모션까지</div>
-          <div class="g-foot"><div class="gav ga2">김</div><span class="g-name">김민준</span><span class="g-sep">·</span><span class="g-date">4일 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>198</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>28</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-short gc-3">교육 플랫폼<br>디자인시스템</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">케이스 스터디</span><span class="tag tag-sub">UX</span></div>
-          <div class="g-title">교육 플랫폼 디자인 시스템 — 컴포넌트 80개 구축기</div>
-          <div class="g-foot"><div class="gav ga3">이</div><span class="g-name">이수연</span><span class="g-sep">·</span><span class="g-date">1주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>156</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>19</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-med gc-5">푸드테크<br>앱 리브랜딩</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">브랜딩</span><span class="tag tag-sub">모션</span></div>
-          <div class="g-title">푸드테크 앱 리브랜딩 — 일관성 있는 UX 시스템 구축</div>
-          <div class="g-foot"><div class="gav ga5">정</div><span class="g-name">정다은</span><span class="g-sep">·</span><span class="g-date">1주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>213</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>31</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-tall gc-7">AI 기반<br>추천 UX</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">AI 활용</span><span class="tag tag-sub">UX/UI</span></div>
-          <div class="g-title">AI 기반 콘텐츠 추천 UX — Claude로 개인화 플로우 설계</div>
-          <div class="g-foot"><div class="gav ga4">최</div><span class="g-name">최민혁</span><span class="g-sep">·</span><span class="g-date">2주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>341</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>57</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-short gc-6">여행 앱<br>온보딩</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">UX/UI</span></div>
-          <div class="g-title">여행 앱 온보딩 개선 — 완료율 42% 향상 케이스</div>
-          <div class="g-foot"><div class="gav ga1">강</div><span class="g-name">강민서</span><span class="g-sep">·</span><span class="g-date">2주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>178</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>24</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-med gc-8">SaaS 대시보드<br>UI</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">UX/UI</span><span class="tag tag-sub">SaaS</span></div>
-          <div class="g-title">SaaS 데이터 대시보드 리뉴얼 — 복잡성 줄이기 프로젝트</div>
-          <div class="g-foot"><div class="gav ga3">윤</div><span class="g-name">윤하은</span><span class="g-sep">·</span><span class="g-date">3주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>142</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>18</div></div></div>
-        </div>
-      </div>
-
-      <div class="gitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="g-thumb"><div class="g-thumb-img gt-tall gc-2">이커머스<br>리디자인</div><div class="g-overlay"><button class="g-ov-btn">자세히 보기</button></div></div>
-        <div class="g-info">
-          <div class="g-tags"><span class="tag tag-cat">케이스 스터디</span><span class="tag tag-sub">UX</span></div>
-          <div class="g-title">이커머스 결제 플로우 리디자인 — 전환율 31% 향상</div>
-          <div class="g-foot"><div class="gav ga2">한</div><span class="g-name">한소희</span><span class="g-sep">·</span><span class="g-date">3주 전</span><div class="g-stats"><div class="g-st"><span class="material-icons-round">favorite_border</span>267</div><div class="g-st"><span class="material-icons-round">chat_bubble_outline</span>38</div></div></div>
-        </div>
-      </div>
-
     </div>
 
     <div class="pagi">
@@ -484,14 +394,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
     </div>
 
     <div class="scard">
-      <div class="scard-h">이달의 인기 작가 <a href="community-profile.html" style="font-size:12px;font-weight:600;color:var(--cat);text-decoration:none;">더보기</a></div>
-      <div class="scard-b">
-        <div class="writer-list">
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:var(--cat-lt);color:var(--cat)">박</div><div class="w-info"><div class="w-name">박지은</div><div class="w-role">UX 디자이너</div></div><div class="w-cnt">작품 12</div></div>
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#F0ECFE;color:#6C3BF5">최</div><div class="w-info"><div class="w-name">최민혁</div><div class="w-role">AI 프로덕트 디자이너</div></div><div class="w-cnt">작품 8</div></div>
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#E6F9F3;color:#0BAD75">한</div><div class="w-info"><div class="w-name">한소희</div><div class="w-role">시니어 UX</div></div><div class="w-cnt">작품 7</div></div>
-        </div>
-      </div>
+      <div class="scard-h">이달의 인기 작가</div>
+      <div style='padding:14px 18px;color:#999;font-size:13px'>인기 작가가 모일 예정이에요</div>
     </div>
 
     <div class="scard">
