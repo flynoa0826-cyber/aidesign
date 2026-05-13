@@ -334,6 +334,36 @@
     '</div>';
   }
 
+  function qitemHtml(p){
+    const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
+    const excerpt=plainText(p.contentHtml).slice(0,160);
+    const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
+    const initial=escapeHtml((p.authorNickname||'?').charAt(0));
+    const commentsCount=Array.isArray(p.comments)?p.comments.length:0;
+    return '<div class="qi" onclick="location.href=\''+detailUrl+'\'">'+
+      '<div class="qi-top">'+
+        '<div class="qi-icon"><span class="material-icons-round">help_outline</span></div>'+
+        '<div class="qi-content">'+
+          '<div class="qi-tags"><span class="tag tag-sub" style="background:#EEF4FF;color:#1B64DA;font-weight:600">내 글</span>'+
+            (p.subcategory?'<span class="tag tag-sub" style="background:#FFF8EC;color:#E8930B">'+escapeHtml(p.subcategory)+'</span>':'')+
+            tagsHtml+
+          '</div>'+
+          '<div class="qi-title">'+escapeHtml(p.title)+'</div>'+
+          '<div class="qi-body">'+escapeHtml(excerpt)+'</div>'+
+          '<div class="qi-foot">'+
+            '<div class="p-auth"><div class="pav">'+initial+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div>'+
+            '<span class="p-sep">·</span>'+
+            '<span class="p-date">'+relativeTime(p.createdAt)+'</span>'+
+            '<div class="qi-stats">'+
+              '<div class="qst"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div>'+
+              '<div class="qst"><span class="material-icons-round">chat_bubble_outline</span>'+commentsCount+'</div>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
   function pitemHtml(p){
     const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
     const excerpt=plainText(p.contentHtml).slice(0,140);
@@ -431,8 +461,8 @@
     const empty=list.querySelector('#emptyState');
     if(empty)empty.remove();
     const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
-    const useGallery=cat==='on-pf';
-    list.innerHTML=slice.map(useGallery?gitemHtml:pitemHtml).join('');
+    const tpl=cat==='on-pf'?gitemHtml:cat==='on-qa'?qitemHtml:pitemHtml;
+    list.innerHTML=slice.map(tpl).join('');
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
   else{injectIntoListPage()}
