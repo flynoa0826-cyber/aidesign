@@ -205,7 +205,7 @@
     return _cache.filter(p=>set.has(p.id));
   }
 
-  async function addComment(postId,text){
+  async function addComment(postId,text,parentId){
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     if(!u)return null;
     text=String(text||'').trim();
@@ -218,7 +218,8 @@
       authorEmail:u.email,
       authorNickname:u.nickname,
       text,
-      createdAt:Date.now()
+      createdAt:Date.now(),
+      parentId:parentId||null
     };
     post.comments.push(c);
     try{await dbPut(post);}catch(e){}
