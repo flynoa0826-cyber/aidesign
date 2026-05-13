@@ -309,7 +309,7 @@
     const heights=['gt-tall','gt-med','gt-short','gt-wide'];
     const heightCls=heights[Math.abs(p.id.length+p.title.length)%heights.length];
     const thumbHtml=thumb
-      ? '<img class="g-thumb-img" src="'+thumb+'" alt="'+escapeHtml(p.title)+'" style="height:auto;max-height:340px;object-fit:cover">'
+      ? '<img class="g-thumb-img" src="'+thumb+'" alt="'+escapeHtml(p.title)+'" style="width:100%;height:auto;display:block">'
       : '<div class="g-thumb-img gc-'+colorIdx+' '+heightCls+'">'+escapeHtml(p.title.slice(0,40))+'</div>';
     const tagsHtml=(p.tags||[]).slice(0,3).map(t=>'<span class="tag tag-sub">'+escapeHtml(t)+'</span>').join('');
     const initial=escapeHtml((p.authorNickname||'?').charAt(0));
