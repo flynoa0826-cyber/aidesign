@@ -148,6 +148,43 @@
     return true;
   }
 
+  function _currentUserEmail(){
+    const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+    return u?u.email:null;
+  }
+  function _readSet(key){try{return new Set(JSON.parse(localStorage.getItem(key))||[])}catch(e){return new Set()}}
+  function _writeSet(key,set){localStorage.setItem(key,JSON.stringify([...set]))}
+  function _likeKey(){const e=_currentUserEmail();return e?'designr.likes.'+e:null}
+  function _bmKey(){const e=_currentUserEmail();return e?'designr.bookmarks.'+e:null}
+
+  function hasLiked(id){const k=_likeKey();return k?_readSet(k).has(id):false}
+  function hasBookmarked(id){const k=_bmKey();return k?_readSet(k).has(id):false}
+
+  async function toggleLike(id){
+    const k=_likeKey();if(!k)return null;
+    const post=getById(id);if(!post)return null;
+    const set=_readSet(k);
+    let liked;
+    if(set.has(id)){set.delete(id);post.likes=Math.max(0,(post.likes||0)-1);liked=false;}
+    else{set.add(id);post.likes=(post.likes||0)+1;liked=true;}
+    _writeSet(k,set);
+    try{await dbPut(post);}catch(e){}
+    return {liked,count:post.likes};
+  }
+  function toggleBookmark(id){
+    const k=_bmKey();if(!k)return null;
+    const set=_readSet(k);
+    let on;
+    if(set.has(id)){set.delete(id);on=false;}else{set.add(id);on=true;}
+    _writeSet(k,set);
+    return on;
+  }
+  function listBookmarked(){
+    const k=_bmKey();if(!k)return[];
+    const set=_readSet(k);
+    return _cache.filter(p=>set.has(p.id));
+  }
+
   async function incView(id){
     const cur=getById(id);
     if(!cur)return;
@@ -239,8 +276,9 @@
 
   window.DesignrPosts={
     MAX_FILES,MAX_BYTES,CATEGORIES,ready,
-    loadAll,getById,listByCategory,listByAuthor,
+    loadAll,getById,listByCategory,listByAuthor,listBookmarked,
     create,update,remove,incView,refreshCache,
+    hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
     plainText,firstImage,catBadge,pitemHtml
   };
