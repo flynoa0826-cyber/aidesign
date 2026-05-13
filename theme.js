@@ -122,13 +122,13 @@
 #themeToggle:hover{transform:rotate(15deg)}
 
 /* === Dadalla top banner === */
-#dadalla-banner{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 20px;background:linear-gradient(90deg,#FF6B35 0%,#E8335D 100%);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;line-height:1.5;text-align:center;z-index:101}
-#dadalla-banner .dadalla-link{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+#dadalla-banner{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 20px;background:#15CFA1;color:#0A2F26;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;line-height:1.5;text-align:center;z-index:101}
+#dadalla-banner .dadalla-link{color:#0A2F26;text-decoration:none;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
 #dadalla-banner .dadalla-link:hover{text-decoration:underline}
 #dadalla-banner .dadalla-emoji{font-size:16px}
-#dadalla-banner .dadalla-cta{font-weight:700;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:100px;backdrop-filter:blur(4px)}
-#dadalla-banner .dadalla-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:#fff;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;opacity:.8;transition:opacity .15s,background .15s}
-#dadalla-banner .dadalla-close:hover{opacity:1;background:rgba(0,0,0,.15)}
+#dadalla-banner .dadalla-cta{font-weight:700;background:#0A2F26;color:#15CFA1;padding:3px 10px;border-radius:100px}
+#dadalla-banner .dadalla-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:#0A2F26;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;opacity:.7;transition:opacity .15s,background .15s}
+#dadalla-banner .dadalla-close:hover{opacity:1;background:rgba(0,0,0,.1)}
 @media (max-width:640px){
   #dadalla-banner{font-size:12px;padding:9px 40px 9px 14px;gap:8px}
   #dadalla-banner .dadalla-cta{font-size:11px;padding:2px 8px}
