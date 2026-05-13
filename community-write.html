@@ -158,19 +158,28 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 .mob-stag:hover{background:#EEF4FF;border-color:#1B64DA;color:#1B64DA}
 .gnb-mob-srch{display:none;background:transparent;border:none;padding:8px;cursor:pointer;color:#555;border-radius:100px;transition:all .18s;align-items:center;justify-content:center}.gnb-mob-srch .material-icons-round{font-size:22px}@media(max-width:900px){.gnb-mob-srch{display:flex}}
 
-.attached-files{padding:0 24px 12px;display:flex;flex-direction:column;gap:6px}
+.attached-files{padding:0 24px 12px;display:flex;flex-wrap:wrap;gap:8px}
 .attached-files:empty{display:none}
-.af-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:#F7F8FA;border:1px solid #E4E5E7}
-.af-icon{font-size:18px!important;color:#1B64DA;flex-shrink:0}
-.af-name{flex:1;font-size:13px;color:#191919;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.af-size{font-size:12px;color:#999;flex-shrink:0}
-.af-del{background:none;border:none;cursor:pointer;color:#999;padding:2px;display:flex;align-items:center;border-radius:50%;flex-shrink:0;transition:all .18s}
+.af-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:#F7F8FA;border:1px solid #E4E5E7;width:100%}
+.af-thumb{width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid #E4E5E7;flex-shrink:0;background:#fff;cursor:zoom-in}
+.af-icon-box{width:44px;height:44px;border-radius:6px;background:#EEF4FF;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.af-icon{font-size:22px!important;color:#1B64DA}
+.af-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.af-name{font-size:13px;color:#191919;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.af-size{font-size:12px;color:#999}
+.af-del{background:none;border:none;cursor:pointer;color:#999;padding:4px;display:flex;align-items:center;border-radius:50%;flex-shrink:0;transition:all .18s}
 .af-del:hover{background:#FEE;color:#E8335D}
-.af-del .material-icons-round{font-size:16px}
+.af-del .material-icons-round{font-size:18px}
 .attach-alert{margin:0 24px 12px;padding:10px 14px;border-radius:8px;background:#FEE;border:1px solid #FCC;color:#C41E45;font-size:13px;font-weight:500;display:none}
 .attach-alert.show{display:block;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){.attached-files{padding:0 16px 10px}.attach-alert{margin:0 16px 10px;font-size:12px}.af-name{font-size:12px}.af-size{font-size:11px}}
+
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+.eh-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.eh-actions{display:flex;gap:8px}
+.eh-actions .btn{padding:9px 22px}
+
+@media(max-width:600px){.attached-files{padding:0 16px 10px}.attach-alert{margin:0 16px 10px;font-size:12px}.af-name{font-size:12px}.af-size{font-size:11px}.editor-header{flex-direction:column;align-items:stretch}.eh-actions{justify-content:flex-end}}
 
 </style>
 </head>
@@ -230,6 +239,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 <div class="lay">
   <div>
+    <div class="editor-header">
+      <div class="eh-title" id="ehTitle">새 글 작성</div>
+      <div class="eh-actions">
+        <button type="button" class="btn btn-ol" onclick="cancelWrite()">취소</button>
+        <button type="button" class="btn btn-ol" id="saveDraftBtn" onclick="saveDraft()"><span class="material-icons-round" style="font-size:16px">save</span>임시저장</button>
+        <button type="button" class="btn btn-blue" id="publishBtn" onclick="publishPost()"><span class="material-icons-round" style="font-size:16px">send</span><span id="publishLabel">발행</span></button>
+      </div>
+    </div>
     <div class="editor-card">
       <!-- 카테고리 -->
       <div class="cat-bar">
@@ -245,26 +262,26 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
       <!-- 툴바 -->
       <div class="toolbar">
-        <button class="tb-btn bold">B</button>
-        <button class="tb-btn" style="font-style:italic;font-family:serif">I</button>
-        <button class="tb-btn" style="text-decoration:underline">U</button>
-        <button class="tb-btn" style="text-decoration:line-through;font-size:12px">S</button>
+        <button type="button" class="tb-btn bold" data-cmd="bold" title="굵게">B</button>
+        <button type="button" class="tb-btn" style="font-style:italic;font-family:serif" data-cmd="italic" title="기울임">I</button>
+        <button type="button" class="tb-btn" style="text-decoration:underline" data-cmd="underline" title="밑줄">U</button>
+        <button type="button" class="tb-btn" style="text-decoration:line-through;font-size:12px" data-cmd="strikeThrough" title="취소선">S</button>
         <div class="tb-sep"></div>
-        <button class="tb-btn" title="제목 1" style="font-size:14px;font-weight:700">H1</button>
-        <button class="tb-btn" title="제목 2" style="font-size:12px;font-weight:700">H2</button>
-        <button class="tb-btn" title="제목 3" style="font-size:11px;font-weight:700">H3</button>
+        <button type="button" class="tb-btn" title="제목 1" style="font-size:14px;font-weight:700" data-cmd="formatBlock" data-val="H1">H1</button>
+        <button type="button" class="tb-btn" title="제목 2" style="font-size:12px;font-weight:700" data-cmd="formatBlock" data-val="H2">H2</button>
+        <button type="button" class="tb-btn" title="제목 3" style="font-size:11px;font-weight:700" data-cmd="formatBlock" data-val="H3">H3</button>
         <div class="tb-sep"></div>
-        <button class="tb-btn"><span class="material-icons-round">format_list_bulleted</span></button>
-        <button class="tb-btn"><span class="material-icons-round">format_list_numbered</span></button>
-        <button class="tb-btn"><span class="material-icons-round">format_quote</span></button>
-        <button class="tb-btn"><span class="material-icons-round">code</span></button>
+        <button type="button" class="tb-btn" data-cmd="insertUnorderedList" title="글머리 기호"><span class="material-icons-round">format_list_bulleted</span></button>
+        <button type="button" class="tb-btn" data-cmd="insertOrderedList" title="번호 매기기"><span class="material-icons-round">format_list_numbered</span></button>
+        <button type="button" class="tb-btn" data-cmd="formatBlock" data-val="BLOCKQUOTE" title="인용"><span class="material-icons-round">format_quote</span></button>
+        <button type="button" class="tb-btn" data-cmd="formatBlock" data-val="PRE" title="코드"><span class="material-icons-round">code</span></button>
         <div class="tb-sep"></div>
-        <button class="tb-btn"><span class="material-icons-round">insert_link</span></button>
-        <button class="tb-btn"><span class="material-icons-round">image</span></button>
-        <button class="tb-btn"><span class="material-icons-round">table_chart</span></button>
+        <button type="button" class="tb-btn" data-cmd="createLink" title="링크"><span class="material-icons-round">insert_link</span></button>
+        <button type="button" class="tb-btn" onclick="document.getElementById('fileUpload').click()" title="이미지/파일"><span class="material-icons-round">image</span></button>
         <div class="tb-sep"></div>
-        <button class="tb-btn"><span class="material-icons-round">format_align_left</span></button>
-        <button class="tb-btn"><span class="material-icons-round">format_align_center</span></button>
+        <button type="button" class="tb-btn" data-cmd="justifyLeft" title="왼쪽 정렬"><span class="material-icons-round">format_align_left</span></button>
+        <button type="button" class="tb-btn" data-cmd="justifyCenter" title="가운데 정렬"><span class="material-icons-round">format_align_center</span></button>
+        <button type="button" class="tb-btn" data-cmd="removeFormat" title="서식 지우기"><span class="material-icons-round">format_clear</span></button>
       </div>
 
       <!-- 제목 -->
@@ -278,68 +295,20 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="char-count" id="charCount">0자</div>
 
       <!-- 태그 -->
-      <div class="tag-row">
+      <div class="tag-row" id="tagRow">
         <span class="tag-label">태그</span>
-        <span class="tag-chip">#프리랜서 <button><span class="material-icons-round">close</span></button></span>
-        <span class="tag-chip">#수입공개 <button><span class="material-icons-round">close</span></button></span>
-        <input class="tag-input" placeholder="태그 추가 (Enter로 구분)">
+        <span id="tagList" style="display:contents"></span>
+        <input class="tag-input" id="tagInput" placeholder="태그 추가 (Enter로 구분)">
       </div>
 
       <!-- 첨부 -->
       <div class="attach-row">
         <input type="file" id="fileUpload" style="display:none" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.zip" multiple onchange="handleFileAttach(this)">
-        <button class="attach-btn" onclick="document.getElementById('fileUpload').click()"><span class="material-icons-round">attach_file</span>파일 첨부</button>
-        <span class="attach-note">파일 최대 5개 · 5MB · JPG, PNG, GIF, WebP, PDF</span>
+        <button type="button" class="attach-btn" onclick="document.getElementById('fileUpload').click()"><span class="material-icons-round">attach_file</span>파일 첨부</button>
+        <span class="attach-note" id="attachNote">파일 최대 5개 · 개당 10MB 이하 · JPG, PNG, GIF, WebP, PDF, ZIP</span>
       </div>
       <div id="attachedFiles" class="attached-files"></div>
       <div id="attachAlert" class="attach-alert"></div>
-      <script>
-        let attachedFileList = [];
-        function handleFileAttach(input){
-          const newFiles = Array.from(input.files);
-          for(const f of newFiles){
-            if(attachedFileList.length >= 5){
-              showAttachAlert('파일은 최대 5개까지만 첨부할 수 있습니다.');
-              break;
-            }
-            attachedFileList.push(f);
-          }
-          renderAttachedFiles();
-          input.value = '';
-        }
-        function removeAttachedFile(idx){
-          attachedFileList.splice(idx, 1);
-          renderAttachedFiles();
-          hideAttachAlert();
-        }
-        function renderAttachedFiles(){
-          const wrap = document.getElementById('attachedFiles');
-          if(attachedFileList.length === 0){
-            wrap.innerHTML = '';
-            return;
-          }
-          wrap.innerHTML = attachedFileList.map((f, i) =>
-            '<div class="af-item"><span class="material-icons-round af-icon">description</span><span class="af-name">'+escapeHtml(f.name)+'</span><span class="af-size">'+formatSize(f.size)+'</span><button class="af-del" onclick="removeAttachedFile('+i+')" aria-label="삭제"><span class="material-icons-round">close</span></button></div>'
-          ).join('');
-        }
-        function showAttachAlert(msg){
-          const a = document.getElementById('attachAlert');
-          a.textContent = msg;
-          a.classList.add('show');
-          setTimeout(hideAttachAlert, 3000);
-        }
-        function hideAttachAlert(){
-          document.getElementById('attachAlert').classList.remove('show');
-        }
-        function formatSize(bytes){
-          if(bytes < 1024) return bytes+' B';
-          if(bytes < 1024*1024) return (bytes/1024).toFixed(1)+' KB';
-          return (bytes/(1024*1024)).toFixed(1)+' MB';
-        }
-        function escapeHtml(s){
-          return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-        }
-      </script>
     </div>
   </div>
 
@@ -373,14 +342,170 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   </aside>
 </div>
 
+<script src="posts.js"></script>
 <script>
+const MAX_FILES=5, MAX_BYTES=10*1024*1024;
+let attachedFileList=[];
+let tags=[];
+let selectedCat='on-sv';
+let editingId=null;
+
 function selCat(el,cls){
   document.querySelectorAll('.cc').forEach(c=>{c.className='cc'});
   el.classList.add(cls);
+  selectedCat=cls;
 }
-const body=document.getElementById('editorBody');
+
+const bodyEl=document.getElementById('editorBody');
 const cnt=document.getElementById('charCount');
-body.addEventListener('input',()=>{cnt.textContent=body.innerText.length+'자'});
+bodyEl.addEventListener('input',()=>{cnt.textContent=bodyEl.innerText.length+'자'});
+
+document.querySelectorAll('.toolbar .tb-btn[data-cmd]').forEach(btn=>{
+  btn.addEventListener('mousedown',e=>e.preventDefault());
+  btn.addEventListener('click',()=>{
+    bodyEl.focus();
+    const cmd=btn.dataset.cmd;
+    let val=btn.dataset.val||null;
+    if(cmd==='createLink'){
+      val=prompt('링크 URL을 입력하세요','https://');
+      if(!val)return;
+    }
+    document.execCommand(cmd,false,val);
+  });
+});
+
+function renderTags(){
+  const list=document.getElementById('tagList');
+  list.innerHTML=tags.map((t,i)=>
+    '<span class="tag-chip">#'+window.DesignrPosts.escapeHtml(t)+' <button type="button" onclick="removeTag('+i+')"><span class="material-icons-round">close</span></button></span>'
+  ).join('');
+}
+function addTag(text){
+  text=String(text||'').trim().replace(/^#/,'');
+  if(!text)return;
+  if(tags.includes(text))return;
+  if(tags.length>=10)return;
+  tags.push(text);renderTags();
+}
+function removeTag(i){tags.splice(i,1);renderTags();}
+document.getElementById('tagInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();addTag(e.target.value);e.target.value='';
+  }else if(e.key==='Backspace'&&!e.target.value&&tags.length){
+    tags.pop();renderTags();
+  }
+});
+
+async function handleFileAttach(input){
+  const newFiles=Array.from(input.files);
+  for(const f of newFiles){
+    if(attachedFileList.length>=MAX_FILES){
+      showAttachAlert('파일은 최대 '+MAX_FILES+'개까지만 첨부할 수 있습니다.');break;
+    }
+    if(f.size>MAX_BYTES){
+      showAttachAlert('"'+f.name+'" 파일이 10MB를 초과합니다.');continue;
+    }
+    try{
+      const dataUrl=await window.DesignrPosts.readFileAsDataURL(f);
+      attachedFileList.push({name:f.name,size:f.size,type:f.type,dataUrl,isImage:/^image\//.test(f.type)});
+    }catch(e){showAttachAlert('"'+f.name+'" 파일을 읽지 못했습니다.');}
+  }
+  renderAttachedFiles();
+  input.value='';
+}
+function removeAttachedFile(idx){
+  attachedFileList.splice(idx,1);renderAttachedFiles();hideAttachAlert();
+}
+function renderAttachedFiles(){
+  const wrap=document.getElementById('attachedFiles');
+  if(attachedFileList.length===0){wrap.innerHTML='';return;}
+  wrap.innerHTML=attachedFileList.map((f,i)=>{
+    const head=f.isImage
+      ? '<img class="af-thumb" src="'+f.dataUrl+'" alt="" onclick="window.open(this.src)">'
+      : '<div class="af-icon-box"><span class="material-icons-round af-icon">'+(/\.pdf$/i.test(f.name)?'picture_as_pdf':/\.zip$/i.test(f.name)?'folder_zip':'description')+'</span></div>';
+    return '<div class="af-item">'+head+'<div class="af-info"><span class="af-name">'+window.DesignrPosts.escapeHtml(f.name)+'</span><span class="af-size">'+window.DesignrPosts.formatSize(f.size)+'</span></div><button type="button" class="af-del" onclick="removeAttachedFile('+i+')" aria-label="삭제"><span class="material-icons-round">close</span></button></div>';
+  }).join('');
+}
+function showAttachAlert(msg){
+  const a=document.getElementById('attachAlert');
+  a.textContent=msg;a.classList.add('show');
+  clearTimeout(showAttachAlert._t);showAttachAlert._t=setTimeout(hideAttachAlert,3500);
+}
+function hideAttachAlert(){document.getElementById('attachAlert').classList.remove('show');}
+
+function getFormData(){
+  return{
+    title:document.getElementById('titleInput').value.trim(),
+    contentHtml:bodyEl.innerHTML,
+    category:selectedCat,
+    tags:tags.slice(),
+    attachments:attachedFileList.slice()
+  };
+}
+function validate(d){
+  if(!d.title)return '제목을 입력해주세요.';
+  if(!bodyEl.innerText.trim())return '내용을 입력해주세요.';
+  return null;
+}
+function publishPost(){
+  const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+  if(!u){if(confirm('로그인이 필요합니다. 로그인 페이지로 이동할까요?'))location.href='community-auth.html';return;}
+  const d=getFormData();
+  const err=validate(d);if(err){alert(err);return;}
+  let post;
+  if(editingId){post=window.DesignrPosts.update(editingId,d);if(!post){alert('수정 권한이 없거나 글을 찾을 수 없습니다.');return;}}
+  else{post=window.DesignrPosts.create(d);}
+  try{localStorage.removeItem('designr.draft');}catch(e){}
+  location.href='community-detail.html?id='+post.id;
+}
+function saveDraft(){
+  const d=getFormData();
+  localStorage.setItem('designr.draft',JSON.stringify({...d,editingId,savedAt:Date.now()}));
+  alert('임시저장되었습니다.');
+}
+function cancelWrite(){
+  if(confirm('작성 중인 내용을 버리고 나가시겠습니까?'))history.length>1?history.back():location.href='index.html';
+}
+
+(function init(){
+  const params=new URLSearchParams(location.search);
+  const editId=params.get('id');
+  if(editId){
+    const p=window.DesignrPosts.getById(editId);
+    const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+    if(!p){alert('글을 찾을 수 없습니다.');location.href='index.html';return;}
+    if(!u||p.authorEmail!==u.email){alert('수정 권한이 없습니다.');location.href='community-detail.html?id='+p.id;return;}
+    editingId=p.id;
+    document.getElementById('ehTitle').textContent='글 수정';
+    document.getElementById('publishLabel').textContent='수정 완료';
+    document.getElementById('titleInput').value=p.title;
+    bodyEl.innerHTML=p.contentHtml;
+    cnt.textContent=bodyEl.innerText.length+'자';
+    tags=Array.isArray(p.tags)?p.tags.slice():[];renderTags();
+    attachedFileList=Array.isArray(p.attachments)?p.attachments.map(a=>({...a})):[];renderAttachedFiles();
+    document.querySelectorAll('.cc').forEach(c=>c.className='cc');
+    const catBtn=document.querySelector('.cat-chips .cc:nth-child('+(['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(p.category)+1)+')');
+    if(catBtn){catBtn.classList.add(p.category);selectedCat=p.category;}
+  }else{
+    try{
+      const draft=JSON.parse(localStorage.getItem('designr.draft')||'null');
+      if(draft&&!draft.editingId&&(draft.title||draft.contentHtml)){
+        if(confirm('이전에 작성하던 임시저장 글이 있습니다. 불러올까요?')){
+          document.getElementById('titleInput').value=draft.title||'';
+          bodyEl.innerHTML=draft.contentHtml||'';
+          cnt.textContent=bodyEl.innerText.length+'자';
+          tags=draft.tags||[];renderTags();
+          attachedFileList=draft.attachments||[];renderAttachedFiles();
+          if(draft.category){
+            document.querySelectorAll('.cc').forEach(c=>c.className='cc');
+            const btn=document.querySelector('.cat-chips .cc:nth-child('+(['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(draft.category)+1)+')');
+            if(btn){btn.classList.add(draft.category);selectedCat=draft.category;}
+          }
+        }
+      }
+    }catch(e){}
+  }
+})();
 </script>
 <div style="display:none">
 <a href="community-auth.html">로그인</a>
