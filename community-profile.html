@@ -255,8 +255,9 @@ function setTab(el){document.querySelectorAll('.ptab').forEach(t=>t.classList.re
 <script src="auth.js"></script>
 <script src="posts.js"></script>
 <script>
-(async function(){
+async function renderProfile(){
   const box=document.getElementById('profileContent');
+  if(window.DesignrAuth&&window.DesignrAuth.ready)await window.DesignrAuth.ready;
   const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
   if(!u){
     box.innerHTML='<div style="text-align:center;padding:80px 24px;color:#999"><div style="font-family:\'Noto Serif KR\',serif;font-size:18px;color:#191919;margin-bottom:6px">프로필 정보가 없어요</div><div style="font-size:13px;margin-bottom:16px">로그인 후 마이페이지에서 프로필을 편집해주세요.</div><a href="community-auth.html" style="color:#1B64DA;font-weight:600;text-decoration:none">로그인하러 가기 →</a></div>';
@@ -302,7 +303,9 @@ function setTab(el){document.querySelectorAll('.ptab').forEach(t=>t.classList.re
     '</div>'+
     '<div style="font-family:\'Noto Serif KR\',serif;font-size:18px;font-weight:700;margin-top:36px">작성한 글</div>'+
     postsHtml;
-})();
+}
+renderProfile();
+document.addEventListener('designr:auth-changed',renderProfile);
 </script>
 </body>
 </html>
