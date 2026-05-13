@@ -524,8 +524,11 @@ function applySubcategoryUI(sub){
   const params=new URLSearchParams(location.search);
   const editId=params.get('id');
   const presetCat=params.get('cat');
-  if(presetCat&&window.DesignrPosts.CATEGORIES&&window.DesignrPosts.CATEGORIES[presetCat]){
-    applyCategoryUI(presetCat);
+  const presetSub=params.get('sub');
+  selectedSub='';
+  if(!editId){
+    applyCategoryUI((presetCat&&window.DesignrPosts.CATEGORIES[presetCat])?presetCat:'on-sv');
+    if(presetSub)selectedSub=presetSub;
     renderSubcats();
   }
   if(editId){
@@ -545,7 +548,6 @@ function applySubcategoryUI(sub){
     applyCategoryUI(p.category);
     applySubcategoryUI(p.subcategory);
   }else{
-    renderSubcats();
     try{
       const draft=JSON.parse(localStorage.getItem('designr.draft')||'null');
       if(draft&&!draft.editingId&&(draft.title||draft.contentHtml)){
