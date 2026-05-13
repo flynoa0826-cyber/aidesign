@@ -256,20 +256,47 @@
     'community-list.html':'on-sv',
     'community-list-ai.html':'on-ai',
     'community-list-career.html':'on-ca',
-    'community-list-qa.html':'on-qa'
+    'community-list-qa.html':'on-qa',
+    'community-portfolio.html':'on-pf'
   };
+  const PER_PAGE=10;
+
+  function renderPagination(total,page){
+    const pagi=document.querySelector('.pagi');
+    if(!pagi)return;
+    const pages=Math.ceil(total/PER_PAGE);
+    if(pages<=1){pagi.style.display='none';pagi.innerHTML='';return;}
+    pagi.style.display='';
+    const params=new URLSearchParams(location.search);
+    const linkFor=p=>{const sp=new URLSearchParams(params);sp.set('p',p);return location.pathname+'?'+sp.toString();};
+    let html='';
+    html+='<button class="pgb"'+(page<=1?' disabled':' onclick="location.href=\''+linkFor(page-1)+'\'"')+'><span class="material-icons-round">chevron_left</span></button>';
+    for(let i=1;i<=pages;i++){
+      html+='<button class="pgb'+(i===page?' on':'')+'" onclick="location.href=\''+linkFor(i)+'\'">'+i+'</button>';
+    }
+    html+='<button class="pgb"'+(page>=pages?' disabled':' onclick="location.href=\''+linkFor(page+1)+'\'"')+'><span class="material-icons-round">chevron_right</span></button>';
+    pagi.innerHTML=html;
+  }
+
   async function injectIntoListPage(){
     await ready;
     const file=location.pathname.split('/').pop()||'';
     const cat=PAGE_CAT[file];
-    if(!cat)return;
+    if(!cat){renderPagination(0,1);return;}
     const list=document.querySelector('.post-list');
-    if(!list)return;
-    const posts=listByCategory(cat);
-    if(!posts.length)return;
-    const frag=document.createElement('div');
-    frag.innerHTML=posts.map(pitemHtml).join('');
-    while(frag.firstChild)list.insertBefore(frag.firstChild,list.firstChild);
+    if(!list){renderPagination(0,1);return;}
+    const all=listByCategory(cat);
+    const total=all.length;
+    const params=new URLSearchParams(location.search);
+    let page=parseInt(params.get('p'),10)||1;
+    const pages=Math.max(1,Math.ceil(total/PER_PAGE));
+    if(page<1)page=1;if(page>pages)page=pages;
+    renderPagination(total,page);
+    if(!total)return;
+    const empty=list.querySelector('#emptyState');
+    if(empty)empty.remove();
+    const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
+    list.innerHTML=slice.map(pitemHtml).join('');
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
   else{injectIntoListPage()}
