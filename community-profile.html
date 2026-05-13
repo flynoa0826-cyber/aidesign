@@ -219,7 +219,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 <!-- PROFILE HERO -->
 <div class="profile-hero">
-  <div style="text-align:center;padding:80px 24px;color:#999"><div style="font-family:'Noto Serif KR',serif;font-size:18px;color:#191919;margin-bottom:6px">프로필 정보가 없어요</div><div style="font-size:13px;margin-bottom:16px">로그인 후 마이페이지에서 프로필을 편집해주세요.</div><a href="community-mypage.html" style="color:#1B64DA;font-weight:600;text-decoration:none">마이페이지로 →</a></div>
+  <div id="profileContent" style="max-width:1160px;margin:0 auto;padding:48px 24px">
+    <div style="text-align:center;padding:80px 24px;color:#999">
+      <div style="font-family:'Noto Serif KR',serif;font-size:18px;color:#191919;margin-bottom:6px">불러오는 중...</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -246,5 +250,56 @@ function setTab(el){document.querySelectorAll('.ptab').forEach(t=>t.classList.re
   </div>
 </footer>
 <script src="auth.js"></script>
+<script src="posts.js"></script>
+<script>
+(async function(){
+  const box=document.getElementById('profileContent');
+  const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+  if(!u){
+    box.innerHTML='<div style="text-align:center;padding:80px 24px;color:#999"><div style="font-family:\'Noto Serif KR\',serif;font-size:18px;color:#191919;margin-bottom:6px">프로필 정보가 없어요</div><div style="font-size:13px;margin-bottom:16px">로그인 후 마이페이지에서 프로필을 편집해주세요.</div><a href="community-auth.html" style="color:#1B64DA;font-weight:600;text-decoration:none">로그인하러 가기 →</a></div>';
+    return;
+  }
+  await window.DesignrPosts.ready;
+  const posts=window.DesignrPosts.listByAuthor(u.email);
+  const totalViews=posts.reduce((s,p)=>s+(p.views||0),0);
+  const totalLikes=posts.reduce((s,p)=>s+(p.likes||0),0);
+  const esc=window.DesignrPosts.escapeHtml;
+  const initial=esc((u.nickname||'?').charAt(0));
+  document.title=esc(u.nickname)+' — DESIGNR';
+
+  let postsHtml='';
+  if(posts.length){
+    postsHtml='<div style="display:flex;flex-direction:column;gap:0;margin-top:24px">'+
+      posts.map(p=>{
+        const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+        const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+        return '<div onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="display:flex;gap:14px;padding:18px 0;border-bottom:1px solid #E4E5E7;cursor:pointer;align-items:center">'+
+          '<span style="padding:3px 10px;border-radius:100px;background:'+colors[p.category]+';font-size:11px;font-weight:600;flex-shrink:0">'+esc(c.name)+'</span>'+
+          '<div style="flex:1;font-size:15px;font-weight:500;color:#191919">'+esc(p.title)+'</div>'+
+          '<div style="display:flex;gap:14px;font-size:12px;color:#999;flex-shrink:0"><span><span class="material-icons-round" style="font-size:14px;vertical-align:-2px">visibility</span> '+(p.views||0)+'</span><span>'+window.DesignrPosts.relativeTime(p.createdAt)+'</span></div>'+
+        '</div>';
+      }).join('')+'</div>';
+  }else{
+    postsHtml='<div style="text-align:center;padding:50px 24px;color:#999;font-size:14px;margin-top:24px;border-top:1px solid #E4E5E7">아직 작성한 글이 없어요. <a href="community-write.html" style="color:#1B64DA;font-weight:600;margin-left:6px">첫 글 작성하기 →</a></div>';
+  }
+
+  box.innerHTML=
+    '<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">'+
+      '<div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#FF9E7A,#FF6B35);color:#fff;display:flex;align-items:center;justify-content:center;font-family:\'Noto Serif KR\',serif;font-size:36px;font-weight:700;flex-shrink:0">'+initial+'</div>'+
+      '<div style="flex:1;min-width:200px">'+
+        '<div style="font-family:\'Noto Serif KR\',serif;font-size:26px;font-weight:700;color:#191919;margin-bottom:4px">'+esc(u.nickname)+'</div>'+
+        '<div style="font-size:13px;color:#999;margin-bottom:14px">'+esc(u.email)+(u.career?' · '+esc(u.career):'')+'</div>'+
+        '<div style="display:flex;gap:24px;flex-wrap:wrap">'+
+          '<div><strong style="font-family:\'Noto Serif KR\',serif;font-size:20px;color:#191919">'+posts.length+'</strong> <span style="color:#999;font-size:13px;margin-left:4px">글</span></div>'+
+          '<div><strong style="font-family:\'Noto Serif KR\',serif;font-size:20px;color:#191919">'+totalViews+'</strong> <span style="color:#999;font-size:13px;margin-left:4px">조회</span></div>'+
+          '<div><strong style="font-family:\'Noto Serif KR\',serif;font-size:20px;color:#191919">'+totalLikes+'</strong> <span style="color:#999;font-size:13px;margin-left:4px">좋아요</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<a href="community-mypage.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:100px;border:1.5px solid #D0D2D6;color:#191919;font-size:13px;font-weight:600;text-decoration:none">프로필 편집</a>'+
+    '</div>'+
+    '<div style="font-family:\'Noto Serif KR\',serif;font-size:18px;font-weight:700;margin-top:36px">작성한 글</div>'+
+    postsHtml;
+})();
+</script>
 </body>
 </html>
