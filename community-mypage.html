@@ -376,11 +376,12 @@ function myPostRowHtml(p){
     '<span class="ri-t" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">'+esc(p.title)+'</span>'+
     '<span style="color:#999;font-size:12px;margin-right:10px">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span>'+
     '<button class="di-btn" onclick="location.href=\'community-write.html?id='+encodeURIComponent(p.id)+'\'">수정</button>'+
-    '<button class="di-btn di-del" onclick="if(confirm(\'정말 삭제하시겠습니까?\')){window.DesignrPosts.remove(\''+esc(p.id)+'\');renderMyPage();}">삭제</button>'+
+    '<button class="di-btn di-del" onclick="if(confirm(\'정말 삭제하시겠습니까?\'))window.DesignrPosts.remove(\''+esc(p.id)+'\').then(renderMyPage)">삭제</button>'+
   '</div>';
 }
 
-function renderMyPage(){
+async function renderMyPage(){
+  await window.DesignrPosts.ready;
   const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
   if(!u){
     document.getElementById('welcomeTitle').innerHTML='로그인이 필요합니다. <a href="community-auth.html" style="color:#1B64DA">로그인</a>';

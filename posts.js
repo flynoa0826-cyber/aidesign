@@ -1,5 +1,8 @@
 (function(){
-  const POSTS_KEY='designr.posts';
+  const DB_NAME='designr';
+  const DB_VERSION=1;
+  const STORE='posts';
+  const LEGACY_KEY='designr.posts';
   const MAX_FILES=5;
   const MAX_BYTES=10*1024*1024;
   const CATEGORIES={
@@ -10,19 +13,95 @@
     'on-qa':{name:'Q&A',list:'community-list-qa.html',detail:'community-qa-detail.html'}
   };
 
-  function loadAll(){try{return JSON.parse(localStorage.getItem(POSTS_KEY))||[]}catch(e){return[]}}
-  function saveAll(list){localStorage.setItem(POSTS_KEY,JSON.stringify(list))}
+  let _db=null;
+  let _cache=[];
+
+  function openDB(){
+    if(_db)return Promise.resolve(_db);
+    return new Promise((resolve,reject)=>{
+      const req=indexedDB.open(DB_NAME,DB_VERSION);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains(STORE)){
+          const s=db.createObjectStore(STORE,{keyPath:'id'});
+          s.createIndex('authorEmail','authorEmail',{unique:false});
+          s.createIndex('category','category',{unique:false});
+          s.createIndex('createdAt','createdAt',{unique:false});
+        }
+      };
+      req.onsuccess=()=>{_db=req.result;resolve(_db);};
+      req.onerror=()=>reject(req.error);
+    });
+  }
+
+  function tx(mode){
+    return openDB().then(db=>db.transaction(STORE,mode).objectStore(STORE));
+  }
+
+  async function dbGetAll(){
+    const store=await tx('readonly');
+    return new Promise((resolve,reject)=>{
+      const r=store.getAll();
+      r.onsuccess=()=>resolve(r.result||[]);
+      r.onerror=()=>reject(r.error);
+    });
+  }
+  async function dbPut(post){
+    const store=await tx('readwrite');
+    return new Promise((resolve,reject)=>{
+      const r=store.put(post);
+      r.onsuccess=()=>resolve(post);
+      r.onerror=()=>reject(r.error);
+    });
+  }
+  async function dbDelete(id){
+    const store=await tx('readwrite');
+    return new Promise((resolve,reject)=>{
+      const r=store.delete(id);
+      r.onsuccess=()=>resolve(true);
+      r.onerror=()=>reject(r.error);
+    });
+  }
+
+  async function migrateFromLocalStorage(){
+    try{
+      const legacy=JSON.parse(localStorage.getItem(LEGACY_KEY)||'null');
+      if(Array.isArray(legacy)&&legacy.length){
+        for(const p of legacy){try{await dbPut(p);}catch(e){}}
+        localStorage.removeItem(LEGACY_KEY);
+      }
+    }catch(e){}
+  }
+
+  function sortDesc(arr){return arr.slice().sort((a,b)=>b.createdAt-a.createdAt)}
+  function refreshCacheSync(arr){_cache=sortDesc(arr)}
+
+  async function refreshCache(){
+    const all=await dbGetAll();
+    refreshCacheSync(all);
+    return _cache;
+  }
+
+  const ready=(async()=>{
+    try{
+      await openDB();
+      await migrateFromLocalStorage();
+      await refreshCache();
+    }catch(e){console.error('DesignrPosts init failed',e);}
+    document.dispatchEvent(new CustomEvent('designrposts:ready'));
+  })();
+
+  function loadAll(){return _cache.slice()}
+  function getById(id){return _cache.find(p=>p.id===id)||null}
+  function listByCategory(c){return _cache.filter(p=>p.category===c)}
+  function listByAuthor(email){return _cache.filter(p=>p.authorEmail===email)}
+
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
-  function getById(id){return loadAll().find(p=>p.id===id)||null}
-  function listByCategory(catKey){return loadAll().filter(p=>p.category===catKey).sort((a,b)=>b.createdAt-a.createdAt)}
-  function listByAuthor(email){return loadAll().filter(p=>p.authorEmail===email).sort((a,b)=>b.createdAt-a.createdAt)}
-
-  function create(data){
+  async function create(data){
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
-    const id=uid();
     const post={
-      id,
+      id:uid(),
       title:data.title||'',
       contentHtml:data.contentHtml||'',
       category:data.category||'on-sv',
@@ -35,18 +114,17 @@
       views:0,
       likes:0
     };
-    const all=loadAll();all.unshift(post);saveAll(all);
+    await dbPut(post);
+    _cache.unshift(post);
     return post;
   }
 
-  function update(id,data){
-    const all=loadAll();
-    const i=all.findIndex(p=>p.id===id);
-    if(i<0)return null;
-    const cur=all[i];
+  async function update(id,data){
+    const cur=getById(id);
+    if(!cur)return null;
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     if(u&&cur.authorEmail!==u.email)return null;
-    all[i]={...cur,
+    const next={...cur,
       title:data.title??cur.title,
       contentHtml:data.contentHtml??cur.contentHtml,
       category:data.category??cur.category,
@@ -54,22 +132,27 @@
       attachments:Array.isArray(data.attachments)?data.attachments:cur.attachments,
       updatedAt:Date.now()
     };
-    saveAll(all);
-    return all[i];
+    await dbPut(next);
+    const i=_cache.findIndex(p=>p.id===id);
+    if(i>=0)_cache[i]=next;
+    return next;
   }
 
-  function remove(id){
-    const all=loadAll();
+  async function remove(id){
+    const cur=getById(id);
+    if(!cur)return false;
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
-    const idx=all.findIndex(p=>p.id===id);
-    if(idx<0)return false;
-    if(u&&all[idx].authorEmail!==u.email)return false;
-    all.splice(idx,1);saveAll(all);return true;
+    if(u&&cur.authorEmail!==u.email)return false;
+    await dbDelete(id);
+    _cache=_cache.filter(p=>p.id!==id);
+    return true;
   }
 
-  function incView(id){
-    const all=loadAll();const p=all.find(x=>x.id===id);
-    if(p){p.views=(p.views||0)+1;saveAll(all);}
+  async function incView(id){
+    const cur=getById(id);
+    if(!cur)return;
+    cur.views=(cur.views||0)+1;
+    try{await dbPut(cur);}catch(e){}
   }
 
   function readFileAsDataURL(file){
@@ -86,17 +169,10 @@
     if(bytes<1024*1024)return (bytes/1024).toFixed(1)+' KB';
     return (bytes/(1024*1024)).toFixed(1)+' MB';
   }
-
   function formatDate(ts){
-    const d=new Date(ts);
-    const pad=n=>String(n).padStart(2,'0');
+    const d=new Date(ts);const pad=n=>String(n).padStart(2,'0');
     return d.getFullYear()+'. '+pad(d.getMonth()+1)+'. '+pad(d.getDate());
   }
-
-  function escapeHtml(s){
-    return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
   function relativeTime(ts){
     const s=Math.floor((Date.now()-ts)/1000);
     if(s<60)return '방금 전';
@@ -105,25 +181,21 @@
     if(s<86400*7)return Math.floor(s/86400)+'일 전';
     return formatDate(ts);
   }
-
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
   function plainText(html){
     const d=document.createElement('div');d.innerHTML=html||'';
     return (d.textContent||'').replace(/\s+/g,' ').trim();
   }
-
-  function firstImage(post){
-    const a=(post.attachments||[]).find(x=>x.isImage);
-    return a?a.dataUrl:null;
-  }
+  function firstImage(p){const a=(p.attachments||[]).find(x=>x.isImage);return a?a.dataUrl:null}
 
   function catBadge(catKey){
     const c=CATEGORIES[catKey]||CATEGORIES['on-sv'];
     const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
     return '<span class="tag tag-cat" style="background:'+colors[catKey]+'">'+escapeHtml(c.name)+'</span>';
   }
-
   function pitemHtml(p){
-    const c=CATEGORIES[p.category]||CATEGORIES['on-sv'];
     const detailUrl='community-detail.html?id='+encodeURIComponent(p.id);
     const excerpt=plainText(p.contentHtml).slice(0,140);
     const thumb=firstImage(p);
@@ -147,11 +219,10 @@
     'community-list.html':'on-sv',
     'community-list-ai.html':'on-ai',
     'community-list-career.html':'on-ca',
-    'community-portfolio.html':'on-pf',
     'community-list-qa.html':'on-qa'
   };
-
-  function injectIntoListPage(){
+  async function injectIntoListPage(){
+    await ready;
     const file=location.pathname.split('/').pop()||'';
     const cat=PAGE_CAT[file];
     if(!cat)return;
@@ -163,14 +234,13 @@
     frag.innerHTML=posts.map(pitemHtml).join('');
     while(frag.firstChild)list.insertBefore(frag.firstChild,list.firstChild);
   }
-
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectIntoListPage)}
   else{injectIntoListPage()}
 
   window.DesignrPosts={
-    MAX_FILES,MAX_BYTES,CATEGORIES,
+    MAX_FILES,MAX_BYTES,CATEGORIES,ready,
     loadAll,getById,listByCategory,listByAuthor,
-    create,update,remove,incView,
+    create,update,remove,incView,refreshCache,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
     plainText,firstImage,catBadge,pitemHtml
   };
