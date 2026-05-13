@@ -362,26 +362,15 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <a href="community-list.html" class="btn btn-ol">둘러보기</a>
     </div>
     <div class="hero-stats">
-      <div class="hs"><span class="hs-n">2,840</span><span class="hs-l">함께하는 디자이너</span></div>
-      <div class="hs"><span class="hs-n">1,240</span><span class="hs-l">실전 아티클</span></div>
-      <div class="hs"><span class="hs-n">94%</span><span class="hs-l">도움이 됐다는 응답</span></div>
+      <div class="hs"><span class="hs-n" id="hs-users">0</span><span class="hs-l">함께하는 디자이너</span></div>
+      <div class="hs"><span class="hs-n" id="hs-posts">0</span><span class="hs-l">작성된 글</span></div>
     </div>
   </div>
-  <div class="hero-panel">
-    <div class="hcard" onclick="location.href='community-detail.html'">
-      <div class="hcard-top"><div class="hav hav-o">박</div><div class="hav-meta"><div class="hav-name">박지은 · UX 디자이너</div><div class="hav-time">2시간 전</div></div><span class="hc-tag tc-sv">생존전략</span></div>
-      <div class="hc-title">3년차 UX가 프리랜서로 전환한 첫 달 수입을 공개합니다</div>
-      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>284</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>47</div><div class="hc-st"><span class="material-icons-round">visibility</span>3.2k</div></div>
-    </div>
-    <div class="hcard" onclick="location.href='community-ai-detail.html'">
-      <div class="hcard-top"><div class="hav hav-p">김</div><div class="hav-meta"><div class="hav-name">김민준 · AI 프로덕트 디자이너</div><div class="hav-time">5시간 전</div></div><span class="hc-tag tc-ai">AI 실무</span></div>
-      <div class="hc-title">Figma + Claude로 하루 만에 UI 시안 12개 뽑은 방법</div>
-      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>521</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>88</div><div class="hc-st"><span class="material-icons-round">visibility</span>8.1k</div></div>
-    </div>
-    <div class="hcard" onclick="location.href='community-career-detail.html'">
-      <div class="hcard-top"><div class="hav hav-g">이</div><div class="hav-meta"><div class="hav-name">이수연 · 브랜드 디자이너</div><div class="hav-time">어제</div></div><span class="hc-tag tc-ca">커리어</span></div>
-      <div class="hc-title">디자이너에서 PM으로 피벗 — 6개월 후기</div>
-      <div class="hc-foot"><div class="hc-st"><span class="material-icons-round">favorite_border</span>318</div><div class="hc-st"><span class="material-icons-round">chat_bubble_outline</span>63</div><div class="hc-st"><span class="material-icons-round">visibility</span>5.4k</div></div>
+  <div class="hero-panel" id="heroPanel">
+    <div style="padding:32px 24px;text-align:center;border:1px dashed #D0D2D6;border-radius:16px;background:#fff">
+      <div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:#191919;margin-bottom:6px">곧 새로운 이야기가 올라와요</div>
+      <div style="font-size:13px;color:#999;margin-bottom:14px">당신의 첫 글을 기다리고 있어요.</div>
+      <a href="community-write.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:100px;background:#1B64DA;color:#fff;font-size:13px;font-weight:600;text-decoration:none"><span class="material-icons-round" style="font-size:16px">edit</span>글쓰기</a>
     </div>
   </div>
 </div>
@@ -404,50 +393,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <a href="community-list.html" class="sec-more">전체 보기<span class="material-icons-round">chevron_right</span></a>
     </div>
     <div class="post-list">
-      <div class="pitem" onclick="location.href='community-detail.html'">
-        <div class="pitem-body">
-          <div class="pitem-tags"><span class="tag tag-hot"><span class="material-icons-round">local_fire_department</span>인기</span><span class="tag tc-sv">생존 전략</span></div>
-          <div class="pitem-title">스타트업 디자이너 대량 해고 — 우리가 할 수 있는 현실적인 선택지</div>
-          <div class="pitem-excerpt">최근 3개월간 국내외 스타트업의 디자이너 해고 사례를 모아 분석했습니다. 공통점과 우리가 준비해야 할 것들을 정리했어요.</div>
-          <div class="pitem-foot"><div class="p-author"><div class="pav pa1">정</div><span class="p-name">정다은</span></div><span class="p-sep">·</span><span class="p-date">3일 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>441</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>72</div></div></div>
-        </div>
-        <div class="pitem-thumb th1">생존<br>전략</div>
-      </div>
-      <div class="pitem" onclick="location.href='community-ai-detail.html'">
-        <div class="pitem-body">
-          <div class="pitem-tags"><span class="tag tc-ai">AI 실무</span></div>
-          <div class="pitem-title">디자이너가 Claude를 실무에 쓰기 시작한 이후 달라진 것들</div>
-          <div class="pitem-excerpt">과장하지 않고 솔직하게 씁니다. 생산성이 오른 부분도 있고, 생각보다 별로인 부분도 있어요. 3개월 사용 후기를 공유합니다.</div>
-          <div class="pitem-foot"><div class="p-author"><div class="pav pa2">최</div><span class="p-name">최민혁</span></div><span class="p-sep">·</span><span class="p-date">5일 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>628</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>91</div></div></div>
-        </div>
-        <div class="pitem-thumb th2">Claude<br>실무</div>
-      </div>
-      <div class="pitem" onclick="location.href='community-career-detail.html'">
-        <div class="pitem-body">
-          <div class="pitem-tags"><span class="tag tc-ca">커리어 토크</span></div>
-          <div class="pitem-title">연봉 협상에서 디자이너가 불리한 이유와 바꾸는 방법</div>
-          <div class="pitem-excerpt">개발자 대비 낮은 협상력, 포트폴리오의 애매한 가치 측정. 구조적인 문제를 이해하고 협상 테이블에서 살아남는 법을 이야기합니다.</div>
-          <div class="pitem-foot"><div class="p-author"><div class="pav pa3">한</div><span class="p-name">한소희</span></div><span class="p-sep">·</span><span class="p-date">1주 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>387</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>54</div></div></div>
-        </div>
-        <div class="pitem-thumb th3">커리어<br>협상</div>
-      </div>
-      <div class="pitem" onclick="location.href='community-portfolio-detail.html'">
-        <div class="pitem-body">
-          <div class="pitem-tags"><span class="tag tc-pf">포트폴리오</span></div>
-          <div class="pitem-title">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가 케이스 스터디</div>
-          <div class="pitem-excerpt">피그마 + Claude로 3일 만에 완성한 12개 화면 시안. 실제 작업 과정과 피그마 파일을 공개합니다.</div>
-          <div class="pitem-foot"><div class="p-author"><div class="pav pa4">박</div><span class="p-name">박지은</span></div><span class="p-sep">·</span><span class="p-date">2주 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">favorite_border</span>284</div><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>42</div></div></div>
-        </div>
-        <div class="pitem-thumb th4">포트<br>폴리오</div>
-      </div>
-      <div class="pitem" onclick="location.href='community-qa-detail.html'">
-        <div class="pitem-body">
-          <div class="pitem-tags"><span class="tag tc-qa">Q&amp;A</span></div>
-          <div class="pitem-title">클라이언트가 계약서 쓰기를 꺼려하면 어떻게 해야 하나요?</div>
-          <div class="pitem-excerpt">소규모 클라이언트들이 "이 정도면 그냥 믿고 하면 되지 않나요?"라고 하는데, 자연스럽게 계약서를 도입하는 방법이 궁금합니다.</div>
-          <div class="pitem-foot"><div class="p-author"><div class="pav pa1">강</div><span class="p-name">강민서</span></div><span class="p-sep">·</span><span class="p-date">6시간 전</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">chat_bubble_outline</span>31</div><div class="p-st"><span class="material-icons-round">favorite_border</span>78</div></div></div>
-        </div>
-        <div class="pitem-thumb th5">Q&amp;A</div>
+      <div style="text-align:center;padding:80px 24px;background:#fff;border:1px solid #E4E5E7;border-radius:16px">
+        <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:#191919;margin-bottom:6px">아직 작성된 글이 없어요</div>
+        <div style="font-size:13px;color:#999;margin-bottom:16px">첫 글을 작성해 커뮤니티를 채워보세요.</div>
+        <a href="community-write.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:100px;background:#1B64DA;color:#fff;font-size:14px;font-weight:600;text-decoration:none"><span class="material-icons-round" style="font-size:18px">edit</span>글쓰기</a>
       </div>
     </div>
 
@@ -455,26 +404,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="sec-h-l"><span class="sec-eye">Trending</span><span class="sec-tit">지금 뜨는 글</span></div>
     </div>
     <div class="hot-list">
-      <div class="hot-item" onclick="location.href='community-detail.html'">
-        <div class="hot-n">01</div><div class="hot-body"><div class="hot-title">AI가 내 일을 빼앗기 전에 내가 먼저 AI를 쓰는 법</div><div class="hot-meta">생존 전략 · 조회 12,400</div></div>
-        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
-      </div>
-      <div class="hot-item" onclick="location.href='community-portfolio.html'">
-        <div class="hot-n">02</div><div class="hot-body"><div class="hot-title">포트폴리오에 AI 프로젝트를 넣어야 할까 말아야 할까</div><div class="hot-meta">포트폴리오 · 조회 9,820</div></div>
-        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
-      </div>
-      <div class="hot-item" onclick="location.href='community-list.html'">
-        <div class="hot-n">03</div><div class="hot-body"><div class="hot-title">프리랜서 전환 후 세금 신고 — 디자이너를 위한 완전 정리</div><div class="hot-meta">수익화 · 조회 7,340</div></div>
-        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
-      </div>
-      <div class="hot-item" onclick="location.href='community-list-ai.html'">
-        <div class="hot-n">04</div><div class="hot-body"><div class="hot-title">Figma AI 기능 총정리 — 실제로 쓸 만한 것만</div><div class="hot-meta">AI 실무 · 조회 6,910</div></div>
-        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
-      </div>
-      <div class="hot-item" onclick="location.href='community-career-detail.html'">
-        <div class="hot-n">05</div><div class="hot-body"><div class="hot-title">번아웃 왔을 때 디자이너가 실제로 한 것들</div><div class="hot-meta">커리어 토크 · 조회 5,680</div></div>
-        <span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>
-      </div>
+      <div style="padding:18px;color:#999;font-size:13px;text-align:center">조회수 높은 글이 모이면 여기에 표시돼요</div>
     </div>
   </div>
 
@@ -490,16 +420,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="scard-h">이달의 필자 <a href="community-profile.html" style="font-size:12px;font-weight:600;color:var(--blue);text-decoration:none;">더보기</a></div>
       <div class="scard-b">
         <div class="writer-list">
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#FFF0E8;color:#FF6B35">한</div><div class="w-info"><div class="w-name">한소희</div><div class="w-role">시니어 UX · 협상 전문</div></div><div class="w-cnt">28개</div></div>
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#F0ECFE;color:#6C3BF5">김</div><div class="w-info"><div class="w-name">김민준</div><div class="w-role">AI 프로덕트 디자이너</div></div><div class="w-cnt">19개</div></div>
-          <div class="witem" onclick="location.href='community-profile.html'"><div class="wav" style="background:#E6F9F3;color:#0BAD75">이</div><div class="w-info"><div class="w-name">이수연</div><div class="w-role">브랜드 디자이너</div></div><div class="w-cnt">15개</div></div>
+          <div style="padding:14px 4px;color:#999;font-size:13px;text-align:center">이달의 필자가 곧 소개돼요</div>
         </div>
       </div>
     </div>
     <div class="scard">
       <div class="scard-h">인기 태그</div>
       <div class="scard-b">
-        <div class="tag-cloud"><span class="tg">#AI실무</span><span class="tg">#프리랜서</span><span class="tg">#연봉협상</span><span class="tg">#포트폴리오</span><span class="tg">#Claude</span><span class="tg">#번아웃</span><span class="tg">#피그마</span><span class="tg">#이직</span><span class="tg">#생존전략</span><span class="tg">#수입공개</span></div>
+        <div class="tag-cloud"><div style="padding:8px 0;color:#999;font-size:13px">자주 사용되는 태그가 모이면 여기에 표시돼요</div></div>
       </div>
     </div>
   </aside>
@@ -507,7 +435,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
 <div class="promo-band">
   <div class="promo-inner">
-    <div><div class="promo-eye">Join Community</div><div class="promo-h">스마트한 기술,<br>기분 좋은 경험의 시작!</div><div class="promo-sub">2,840명의 디자이너가 이미 함께하고 있습니다</div></div>
+    <div><div class="promo-eye">Join Community</div><div class="promo-h">스마트한 기술,<br>기분 좋은 경험의 시작!</div><div class="promo-sub">디자이너들의 이야기를 함께 채워가요</div></div>
     <div class="promo-btns"><a href="community-auth.html" class="btn btn-pw">무료로 시작하기</a><a href="community-list.html" class="btn btn-pol">글 둘러보기</a></div>
   </div>
 </div>
@@ -541,5 +469,46 @@ function setCat(el){document.querySelectorAll('.cat-tab').forEach(t=>t.classList
 </script>
 <script src="auth.js"></script>
 <script src="posts.js"></script>
+<script>
+(async function(){
+  await window.DesignrPosts.ready;
+  const posts=window.DesignrPosts.loadAll();
+  const postCount=posts.length;
+  const userCount=(()=>{try{return (JSON.parse(localStorage.getItem('designr.users'))||[]).length}catch(e){return 0}})();
+  const elU=document.getElementById('hs-users');if(elU)elU.textContent=userCount;
+  const elP=document.getElementById('hs-posts');if(elP)elP.textContent=postCount;
+  if(postCount>0){
+    const list=document.querySelector('.post-list');
+    if(list)list.innerHTML=posts.slice(0,8).map(window.DesignrPosts.pitemHtml).join('');
+    const hero=document.getElementById('heroPanel');
+    if(hero){
+      const top3=posts.slice(0,3);
+      hero.innerHTML=top3.map(p=>{
+        const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+        const esc=window.DesignrPosts.escapeHtml;
+        const initial=esc((p.authorNickname||'?').charAt(0));
+        return '<div class="hcard" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'">'+
+          '<div class="hcard-top"><div class="hav hav-o">'+initial+'</div><div class="hav-meta"><div class="hav-name">'+esc(p.authorNickname)+'</div><div class="hav-time">'+window.DesignrPosts.relativeTime(p.createdAt)+'</div></div><span class="hc-tag tc-sv">'+esc(c.name)+'</span></div>'+
+          '<div class="hc-title">'+esc(p.title)+'</div>'+
+          '<div class="hc-foot"><div class="hc-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div>'+
+        '</div>';
+      }).join('');
+    }
+    const hot=document.querySelector('.hot-list');
+    if(hot){
+      const top5=posts.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
+      hot.innerHTML=top5.map((p,i)=>{
+        const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+        const esc=window.DesignrPosts.escapeHtml;
+        return '<div class="hot-item" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'">'+
+          '<div class="hot-n">'+String(i+1).padStart(2,'0')+'</div>'+
+          '<div class="hot-body"><div class="hot-title">'+esc(p.title)+'</div><div class="hot-meta">'+esc(c.name)+' · 조회 '+(p.views||0)+'</div></div>'+
+          '<span class="material-icons-round" style="color:var(--ink-3);font-size:18px">chevron_right</span>'+
+        '</div>';
+      }).join('');
+    }
+  }
+})();
+</script>
 </body>
 </html>

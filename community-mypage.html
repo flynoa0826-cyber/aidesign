@@ -229,10 +229,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <!-- 사이드 네비 -->
   <div class="my-nav">
     <div class="my-profile">
-      <div class="my-av">박</div>
+      <div class="my-av" id="myAv">?</div>
       <div>
-        <div class="my-name">박지은</div>
-        <div class="my-email">parkjieun@email.com</div>
+        <div class="my-name" id="myName">게스트</div>
+        <div class="my-email" id="myEmail">로그인이 필요합니다</div>
       </div>
       <button class="my-btn" onclick="location.href='community-profile.html'">공개 프로필 보기</button>
     </div>
@@ -240,7 +240,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="mm-section">콘텐츠</div>
       <button class="mm-item on" onclick="showSection('overview',this)"><span class="material-icons-round">dashboard</span>개요</button>
       <button class="mm-item" onclick="showSection('posts',this)"><span class="material-icons-round">article</span>내 글</button>
-      <button class="mm-item" onclick="showSection('drafts',this)"><span class="material-icons-round">edit_note</span>임시저장<span class="mm-badge">3</span></button>
+      <button class="mm-item" onclick="showSection('drafts',this)"><span class="material-icons-round">edit_note</span>임시저장</button>
       <button class="mm-item" onclick="showSection('saved',this)"><span class="material-icons-round">bookmark</span>저장한 글</button>
       <div class="mm-section">설정</div>
       <button class="mm-item" onclick="showSection('profile',this)"><span class="material-icons-round">person</span>프로필 편집</button>
@@ -264,13 +264,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
         <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">article</span>최근 글</div><button class="scard-edit" onclick="showSection('posts',document.querySelector('.mm-item:nth-child(3)'))">전체보기</button></div>
         <div class="scard-b" style="padding:8px 20px" id="recentPostsBox">
           <div style="padding:24px 0;text-align:center;color:#999;font-size:14px">아직 작성한 글이 없어요. <a href="community-write.html" style="color:#1B64DA;font-weight:600;margin-left:6px">첫 글 작성하기 →</a></div>
-        </div>
-      </div>
-      <div class="scard">
-        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">edit_note</span>임시저장</div><span class="mm-badge">3</span></div>
-        <div class="scard-b" style="padding:8px 20px">
-          <div class="draft-item"><span class="di-tag">AI 실무</span><span class="di-t">Midjourney v7 디자이너 활용법 — 무드보드 제작</span><span class="di-date">어제</span><div class="di-acts"><button class="di-btn" onclick="location.href='community-write.html'">계속 쓰기</button><button class="di-btn di-del">삭제</button></div></div>
-          <div class="draft-item"><span class="di-tag">커리어</span><span class="di-t">번아웃 회복 후 복귀한 디자이너의 이야기</span><span class="di-date">3일 전</span><div class="di-acts"><button class="di-btn" onclick="location.href='community-write.html'">계속 쓰기</button><button class="di-btn di-del">삭제</button></div></div>
         </div>
       </div>
     </div>
@@ -313,17 +306,17 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
         <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">person</span>기본 정보</div></div>
         <div class="scard-b">
           <div class="field-row">
-            <div class="field"><label>이름</label><input type="text" value="박지은"></div>
-            <div class="field"><label>닉네임</label><input type="text" value="parkjieun"></div>
+            <div class="field"><label>이름</label><input type="text" id="pfName" placeholder="이름을 입력하세요"></div>
+            <div class="field"><label>닉네임</label><input type="text" id="pfNickname" placeholder="닉네임"></div>
           </div>
           <div class="field-row">
-            <div class="field"><label>직업</label><input type="text" value="UX 디자이너"></div>
-            <div class="field"><label>경력</label><select><option>주니어 (1~3년)</option><option selected>미드레벨 (4~7년)</option><option>시니어 (8년+)</option></select></div>
+            <div class="field"><label>직업</label><input type="text" id="pfJob" placeholder="예: UX 디자이너"></div>
+            <div class="field"><label>경력</label><select id="pfCareer"><option value="">선택해주세요</option><option>신입 (0~1년)</option><option>주니어 (1~3년)</option><option>미드레벨 (4~7년)</option><option>시니어 (8년 이상)</option><option>학생</option></select></div>
           </div>
-          <div class="field" style="margin-bottom:14px"><label>소개</label><textarea>스타트업 3년 후 프리랜서로 전환했어요. 솔직한 경험을 공유하는 걸 좋아합니다.</textarea></div>
+          <div class="field" style="margin-bottom:14px"><label>소개</label><textarea id="pfBio" placeholder="간단한 자기소개를 적어주세요"></textarea></div>
           <div class="field-row">
-            <div class="field"><label>이메일</label><input type="email" value="parkjieun@email.com"></div>
-            <div class="field"><label>위치</label><input type="text" value="서울"></div>
+            <div class="field"><label>이메일</label><input type="email" id="pfEmail" readonly placeholder="(가입한 이메일)"></div>
+            <div class="field"><label>위치</label><input type="text" id="pfLocation" placeholder="예: 서울"></div>
           </div>
           <button class="save-btn" onclick="alert('저장되었습니다!')">변경사항 저장</button>
         </div>
@@ -388,6 +381,13 @@ async function renderMyPage(){
     return;
   }
   document.getElementById('welcomeTitle').textContent='안녕하세요, '+u.nickname+'님 👋';
+  const initial=(u.nickname||'?').charAt(0);
+  const elAv=document.getElementById('myAv');if(elAv)elAv.textContent=initial;
+  const elName=document.getElementById('myName');if(elName)elName.textContent=u.nickname;
+  const elEmail=document.getElementById('myEmail');if(elEmail)elEmail.textContent=u.email;
+  const pfNick=document.getElementById('pfNickname');if(pfNick&&!pfNick.value)pfNick.value=u.nickname||'';
+  const pfEmail=document.getElementById('pfEmail');if(pfEmail)pfEmail.value=u.email||'';
+  const pfCareer=document.getElementById('pfCareer');if(pfCareer&&u.career){for(const o of pfCareer.options){if(o.textContent===u.career){o.selected=true;break;}}}
   const posts=window.DesignrPosts.listByAuthor(u.email);
   document.getElementById('stat-posts').textContent=posts.length;
   document.getElementById('stat-likes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
