@@ -380,8 +380,33 @@
     pagi.innerHTML=html;
   }
 
+  function rewriteWriteLinks(){
+    const file=location.pathname.split('/').pop()||'';
+    const cat=PAGE_CAT[file];
+    if(!cat)return;
+    document.querySelectorAll('a.gnb-write, .gnb-mdr-acts a[href*="community-write.html"]').forEach(a=>{
+      try{
+        const u=new URL(a.getAttribute('href'),location.href);
+        if(u.pathname.endsWith('community-write.html')){
+          u.searchParams.set('cat',cat);
+          a.setAttribute('href',u.pathname.split('/').pop()+(u.search?u.search:''));
+        }
+      }catch(e){}
+    });
+    document.querySelectorAll('#emptyState a[href*="community-write.html"]').forEach(a=>{
+      try{
+        const u=new URL(a.getAttribute('href'),location.href);
+        if(u.pathname.endsWith('community-write.html')){
+          u.searchParams.set('cat',cat);
+          a.setAttribute('href',u.pathname.split('/').pop()+(u.search?u.search:''));
+        }
+      }catch(e){}
+    });
+  }
+
   async function injectIntoListPage(){
     await ready;
+    rewriteWriteLinks();
     const file=location.pathname.split('/').pop()||'';
     const cat=PAGE_CAT[file];
     if(!cat){renderPagination(0,1);return;}
