@@ -452,6 +452,7 @@ async function renderMyPage(){
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderMyPage)}
 else{renderMyPage()}
+document.addEventListener('designr:auth-changed',renderMyPage);
 </script>
 <div style="display:none">
 <a href="community-auth.html">로그인</a>

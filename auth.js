@@ -11,17 +11,20 @@
   }
 
   function setUserFromSession(session,profile){
-    if(!session||!session.user){currentUser=null;return;}
-    const u=session.user;
-    currentUser={
-      id:u.id,
-      email:u.email,
-      nickname:profile?.nickname||u.email.split('@')[0],
-      career:profile?.career||'',
-      job:profile?.job||'',
-      bio:profile?.bio||'',
-      location:profile?.location||''
-    };
+    if(!session||!session.user){currentUser=null;}
+    else{
+      const u=session.user;
+      currentUser={
+        id:u.id,
+        email:u.email,
+        nickname:profile?.nickname||u.email.split('@')[0],
+        career:profile?.career||'',
+        job:profile?.job||'',
+        bio:profile?.bio||'',
+        location:profile?.location||''
+      };
+    }
+    try{document.dispatchEvent(new CustomEvent('designr:auth-changed',{detail:{user:currentUser}}));}catch(e){}
   }
 
   async function init(){
