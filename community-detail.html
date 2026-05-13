@@ -530,10 +530,11 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
 <script src="auth.js"></script>
 <script src="posts.js"></script>
 <script>
-(function(){
+(async function(){
   const params=new URLSearchParams(location.search);
   const id=params.get('id');
   if(!id)return;
+  await window.DesignrPosts.ready;
   const p=window.DesignrPosts.getById(id);
   if(!p){
     document.querySelector('.art-title').textContent='글을 찾을 수 없습니다';
@@ -564,7 +565,7 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
     const initial=esc((p.authorNickname||'?').charAt(0));
     const ownerActions=isOwner
       ? '<button class="meta-act" title="수정" onclick="location.href=\'community-write.html?id='+esc(p.id)+'\'"><span class="material-icons-round">edit</span></button>'+
-        '<button class="meta-act" title="삭제" onclick="if(confirm(\'정말 삭제하시겠습니까?\')){window.DesignrPosts.remove(\''+esc(p.id)+'\');location.href=\''+catInfo.list+'\';}"><span class="material-icons-round">delete</span></button>'
+        '<button class="meta-act" title="삭제" onclick="if(confirm(\'정말 삭제하시겠습니까?\'))window.DesignrPosts.remove(\''+esc(p.id)+'\').then(()=>location.href=\''+catInfo.list+'\')"><span class="material-icons-round">delete</span></button>'
       : '';
     meta.innerHTML=
       '<div class="author-block">'+
