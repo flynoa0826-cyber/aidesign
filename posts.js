@@ -262,6 +262,36 @@
     return n;
   }
 
+  const RECENT_MAX=10,POPULAR_MAX=10;
+  function _recentKey(){
+    const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+    return 'designr.recent.'+(u?u.email:'guest');
+  }
+  function getRecentSearches(){
+    try{return JSON.parse(localStorage.getItem(_recentKey()))||[]}catch(e){return[]}
+  }
+  function removeRecentSearch(q){
+    let r=getRecentSearches().filter(x=>x!==q);
+    localStorage.setItem(_recentKey(),JSON.stringify(r));
+  }
+  function clearRecentSearches(){
+    localStorage.setItem(_recentKey(),'[]');
+  }
+  function recordSearch(q){
+    q=String(q||'').trim();
+    if(!q)return;
+    let r=getRecentSearches().filter(x=>x!==q);
+    r.unshift(q);if(r.length>RECENT_MAX)r.length=RECENT_MAX;
+    localStorage.setItem(_recentKey(),JSON.stringify(r));
+    let pop={};try{pop=JSON.parse(localStorage.getItem('designr.popular'))||{}}catch(e){}
+    pop[q]=(pop[q]||0)+1;
+    localStorage.setItem('designr.popular',JSON.stringify(pop));
+  }
+  function getPopularSearches(){
+    let p={};try{p=JSON.parse(localStorage.getItem('designr.popular'))||{}}catch(e){}
+    return Object.entries(p).map(([q,n])=>({q,n})).sort((a,b)=>b.n-a.n||a.q.localeCompare(b.q)).slice(0,POPULAR_MAX);
+  }
+
   function neighborPosts(postId){
     const p=getById(postId);if(!p)return{prev:null,next:null};
     const same=_cache.filter(x=>x.category===p.category);
@@ -559,6 +589,7 @@
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
     isFollowing,toggleFollow,followerCount,neighborPosts,
+    recordSearch,getRecentSearches,removeRecentSearch,clearRecentSearches,getPopularSearches,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
     plainText,firstImage,catBadge,pitemHtml,gitemHtml,qitemHtml,
     authorColor,avatarHtml,enhanceYoutube
