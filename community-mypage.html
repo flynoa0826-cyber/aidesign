@@ -245,7 +245,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
       <div class="mm-section">설정</div>
       <button class="mm-item" onclick="showSection('profile',this)"><span class="material-icons-round">person</span>프로필 편집</button>
       <button class="mm-item" onclick="showSection('notifications',this)"><span class="material-icons-round">notifications</span>알림 설정</button>
-      <button class="mm-item" style="color:var(--cat)"><span class="material-icons-round">logout</span>로그아웃</button>
+      <button class="mm-item" style="color:var(--cat)" onclick="if(confirm('로그아웃 하시겠습니까?')){window.DesignrAuth.logout();location.href='index.html';}"><span class="material-icons-round">logout</span>로그아웃</button>
     </div>
   </div>
 
@@ -352,5 +352,6 @@ function showSection(id,el){
     <span>AI 시대 디자이너를 위한 커뮤니티</span>
   </div>
 </footer>
+<script src="auth.js"></script>
 </body>
 </html>
