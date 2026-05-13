@@ -528,5 +528,78 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   </div>
 </footer>
 <script src="auth.js"></script>
+<script src="posts.js"></script>
+<script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  const id=params.get('id');
+  if(!id)return;
+  const p=window.DesignrPosts.getById(id);
+  if(!p){
+    document.querySelector('.art-title').textContent='글을 찾을 수 없습니다';
+    document.querySelector('.art-body').innerHTML='<p>요청하신 글이 삭제되었거나 존재하지 않습니다.</p>';
+    return;
+  }
+  window.DesignrPosts.incView(id);
+  const esc=window.DesignrPosts.escapeHtml;
+  const cats=window.DesignrPosts.CATEGORIES;
+  const catInfo=cats[p.category]||cats['on-sv'];
+  document.title=p.title+' — DESIGNR';
+
+  const crumb=document.querySelector('.crumb');
+  if(crumb){crumb.innerHTML='<a href="index.html">홈</a><span class="material-icons-round">chevron_right</span><a href="'+catInfo.list+'">'+esc(catInfo.name)+'</a><span class="material-icons-round">chevron_right</span><span>'+esc(p.title)+'</span>';}
+
+  const tagsEl=document.querySelector('.art-tags');
+  if(tagsEl){
+    tagsEl.innerHTML='<span class="tag tag-cat">'+esc(catInfo.name)+'</span>'+
+      (p.tags||[]).map(t=>'<span class="tag tag-sub">'+esc(t)+'</span>').join('');
+  }
+  const titleEl=document.querySelector('.art-title');
+  if(titleEl)titleEl.textContent=p.title;
+
+  const meta=document.querySelector('.art-meta');
+  const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+  const isOwner=u&&u.email===p.authorEmail;
+  if(meta){
+    const initial=esc((p.authorNickname||'?').charAt(0));
+    const ownerActions=isOwner
+      ? '<button class="meta-act" title="수정" onclick="location.href=\'community-write.html?id='+esc(p.id)+'\'"><span class="material-icons-round">edit</span></button>'+
+        '<button class="meta-act" title="삭제" onclick="if(confirm(\'정말 삭제하시겠습니까?\')){window.DesignrPosts.remove(\''+esc(p.id)+'\');location.href=\''+catInfo.list+'\';}"><span class="material-icons-round">delete</span></button>'
+      : '';
+    meta.innerHTML=
+      '<div class="author-block">'+
+        '<div class="av">'+initial+'</div>'+
+        '<div><div class="author-name">'+esc(p.authorNickname)+'</div><div class="author-role">'+esc(p.authorEmail)+'</div></div>'+
+      '</div>'+
+      (isOwner?'':'<button class="fol-btn">+ 팔로우</button>')+
+      '<span class="meta-sep">·</span>'+
+      '<div class="meta-item"><span class="material-icons-round">schedule</span>'+window.DesignrPosts.formatDate(p.createdAt)+(p.updatedAt&&p.updatedAt!==p.createdAt?' (수정됨)':'')+'</div>'+
+      '<div class="meta-item"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div>'+
+      '<div class="meta-r">'+
+        ownerActions+
+        '<button class="meta-act"><span class="material-icons-round">share</span></button>'+
+        '<button class="meta-act"><span class="material-icons-round">bookmark_border</span></button>'+
+      '</div>';
+  }
+
+  const bodyEl=document.querySelector('.art-body');
+  if(bodyEl){
+    let html=p.contentHtml||'';
+    const imgs=(p.attachments||[]).filter(a=>a.isImage);
+    const files=(p.attachments||[]).filter(a=>!a.isImage);
+    if(imgs.length){
+      html+='<div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:10px">'+
+        imgs.map(a=>'<a href="'+a.dataUrl+'" target="_blank" style="display:block"><img src="'+a.dataUrl+'" alt="'+esc(a.name)+'" style="max-width:200px;max-height:200px;border-radius:8px;border:1px solid #E4E5E7;object-fit:cover;cursor:zoom-in"></a>').join('')+
+        '</div>';
+    }
+    if(files.length){
+      html+='<div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">'+
+        files.map(a=>'<a href="'+a.dataUrl+'" download="'+esc(a.name)+'" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;background:#F7F8FA;border:1px solid #E4E5E7;text-decoration:none;color:#191919"><span class="material-icons-round" style="font-size:20px;color:#1B64DA">'+(/\.pdf$/i.test(a.name)?'picture_as_pdf':/\.zip$/i.test(a.name)?'folder_zip':'description')+'</span><span style="flex:1;font-size:13px;font-weight:500">'+esc(a.name)+'</span><span style="font-size:12px;color:#999">'+window.DesignrPosts.formatSize(a.size)+'</span></a>').join('')+
+        '</div>';
+    }
+    bodyEl.innerHTML=html;
+  }
+})();
+</script>
 </body>
 </html>

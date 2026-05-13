@@ -253,19 +253,17 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div>
     <!-- 개요 -->
     <div id="overview">
-      <div class="page-title">안녕하세요, 박지은님 👋</div>
+      <div class="page-title" id="welcomeTitle">안녕하세요 👋</div>
       <div class="stat-grid">
-        <div class="sg"><span class="sg-n">12</span><span class="sg-l">작성한 글</span></div>
-        <div class="sg"><span class="sg-n">2.1k</span><span class="sg-l">받은 좋아요</span></div>
-        <div class="sg"><span class="sg-n">341</span><span class="sg-l">팔로워</span></div>
-        <div class="sg"><span class="sg-n">6.8k</span><span class="sg-l">이번 달 조회</span></div>
+        <div class="sg"><span class="sg-n" id="stat-posts">0</span><span class="sg-l">작성한 글</span></div>
+        <div class="sg"><span class="sg-n" id="stat-likes">0</span><span class="sg-l">받은 좋아요</span></div>
+        <div class="sg"><span class="sg-n">0</span><span class="sg-l">팔로워</span></div>
+        <div class="sg"><span class="sg-n" id="stat-views">0</span><span class="sg-l">총 조회수</span></div>
       </div>
       <div class="scard">
-        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">article</span>최근 글</div><button class="scard-edit" onclick="showSection('posts',null)">전체보기</button></div>
-        <div class="scard-b" style="padding:8px 20px">
-          <div class="ri" onclick="location.href='community-detail.html'"><span class="ri-tag" style="background:#FFF0E8;color:#FF6B35">생존 전략</span><span class="ri-t">3년차 UX가 프리랜서로 전환한 첫 달 수입을 공개합니다</span><div class="ri-stats"><span><span class="material-icons-round">favorite_border</span>441</span><span><span class="material-icons-round">chat_bubble_outline</span>72</span></div></div>
-          <div class="ri" onclick="location.href='community-portfolio-detail.html'"><span class="ri-tag" style="background:var(--cat-lt);color:var(--cat)">포트폴리오</span><span class="ri-t">헬스케어 앱 UX 리디자인 — AI 진단 기능 추가</span><div class="ri-stats"><span><span class="material-icons-round">favorite_border</span>284</span><span><span class="material-icons-round">chat_bubble_outline</span>42</span></div></div>
-          <div class="ri" onclick="location.href='community-detail.html'"><span class="ri-tag" style="background:#F0ECFE;color:#6C3BF5">AI 실무</span><span class="ri-t">Claude로 UX 리서치 시간을 60% 줄인 방법</span><div class="ri-stats"><span><span class="material-icons-round">favorite_border</span>198</span><span><span class="material-icons-round">chat_bubble_outline</span>34</span></div></div>
+        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">article</span>최근 글</div><button class="scard-edit" onclick="showSection('posts',document.querySelector('.mm-item:nth-child(3)'))">전체보기</button></div>
+        <div class="scard-b" style="padding:8px 20px" id="recentPostsBox">
+          <div style="padding:24px 0;text-align:center;color:#999;font-size:14px">아직 작성한 글이 없어요. <a href="community-write.html" style="color:#1B64DA;font-weight:600;margin-left:6px">첫 글 작성하기 →</a></div>
         </div>
       </div>
       <div class="scard">
@@ -274,6 +272,37 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
           <div class="draft-item"><span class="di-tag">AI 실무</span><span class="di-t">Midjourney v7 디자이너 활용법 — 무드보드 제작</span><span class="di-date">어제</span><div class="di-acts"><button class="di-btn" onclick="location.href='community-write.html'">계속 쓰기</button><button class="di-btn di-del">삭제</button></div></div>
           <div class="draft-item"><span class="di-tag">커리어</span><span class="di-t">번아웃 회복 후 복귀한 디자이너의 이야기</span><span class="di-date">3일 전</span><div class="di-acts"><button class="di-btn" onclick="location.href='community-write.html'">계속 쓰기</button><button class="di-btn di-del">삭제</button></div></div>
         </div>
+      </div>
+    </div>
+
+    <!-- 내 글 (숨김) -->
+    <div id="posts" style="display:none">
+      <div class="page-title">내 글</div>
+      <div class="scard">
+        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">article</span>작성한 글 <span id="postsCount" style="color:#999;font-weight:400;margin-left:4px"></span></div><button class="scard-edit" onclick="location.href='community-write.html'">새 글 작성</button></div>
+        <div class="scard-b" style="padding:8px 20px" id="myPostsBox">
+          <div style="padding:24px 0;text-align:center;color:#999;font-size:14px">아직 작성한 글이 없어요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 임시저장 (숨김) -->
+    <div id="drafts" style="display:none">
+      <div class="page-title">임시저장</div>
+      <div class="scard">
+        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">edit_note</span>임시저장 글</div></div>
+        <div class="scard-b" style="padding:14px 20px" id="draftsBox">
+          <div style="padding:24px 0;text-align:center;color:#999;font-size:14px">임시저장된 글이 없어요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 저장한 글 (숨김) -->
+    <div id="saved" style="display:none">
+      <div class="page-title">저장한 글</div>
+      <div class="scard">
+        <div class="scard-h"><div class="scard-h-left"><span class="material-icons-round">bookmark</span>북마크</div></div>
+        <div class="scard-b" style="padding:24px 20px;text-align:center;color:#999;font-size:14px">아직 저장한 글이 없어요.</div>
       </div>
     </div>
 
@@ -318,16 +347,70 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   </div>
 </div>
 
+<script src="posts.js"></script>
 <script>
+const SECTIONS=['overview','posts','drafts','saved','profile','notifications'];
 function showSection(id,el){
-  ['overview','profile','notifications'].forEach(s=>{
-    const el=document.getElementById(s);
-    if(el)el.style.display='none';
-  });
+  SECTIONS.forEach(s=>{const x=document.getElementById(s);if(x)x.style.display='none';});
   const target=document.getElementById(id);
   if(target)target.style.display='block';
   if(el){document.querySelectorAll('.mm-item').forEach(m=>m.classList.remove('on'));el.classList.add('on');}
 }
+
+function recentRowHtml(p){
+  const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+  const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+  const esc=window.DesignrPosts.escapeHtml;
+  return '<div class="ri" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'">'+
+    '<span class="ri-tag" style="background:'+colors[p.category]+'">'+esc(c.name)+'</span>'+
+    '<span class="ri-t">'+esc(p.title)+'</span>'+
+    '<div class="ri-stats"><span><span class="material-icons-round">visibility</span>'+(p.views||0)+'</span><span><span class="material-icons-round">favorite_border</span>'+(p.likes||0)+'</span></div>'+
+  '</div>';
+}
+
+function myPostRowHtml(p){
+  const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+  const esc=window.DesignrPosts.escapeHtml;
+  return '<div class="ri" style="padding:14px 0">'+
+    '<span class="ri-tag" style="background:#EEF4FF;color:#1B64DA">'+esc(c.name)+'</span>'+
+    '<span class="ri-t" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">'+esc(p.title)+'</span>'+
+    '<span style="color:#999;font-size:12px;margin-right:10px">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span>'+
+    '<button class="di-btn" onclick="location.href=\'community-write.html?id='+encodeURIComponent(p.id)+'\'">수정</button>'+
+    '<button class="di-btn di-del" onclick="if(confirm(\'정말 삭제하시겠습니까?\')){window.DesignrPosts.remove(\''+esc(p.id)+'\');renderMyPage();}">삭제</button>'+
+  '</div>';
+}
+
+function renderMyPage(){
+  const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+  if(!u){
+    document.getElementById('welcomeTitle').innerHTML='로그인이 필요합니다. <a href="community-auth.html" style="color:#1B64DA">로그인</a>';
+    return;
+  }
+  document.getElementById('welcomeTitle').textContent='안녕하세요, '+u.nickname+'님 👋';
+  const posts=window.DesignrPosts.listByAuthor(u.email);
+  document.getElementById('stat-posts').textContent=posts.length;
+  document.getElementById('stat-likes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
+  document.getElementById('stat-views').textContent=posts.reduce((s,p)=>s+(p.views||0),0);
+
+  const recent=document.getElementById('recentPostsBox');
+  if(posts.length){recent.innerHTML=posts.slice(0,5).map(recentRowHtml).join('');}
+
+  const mybox=document.getElementById('myPostsBox');
+  document.getElementById('postsCount').textContent='('+posts.length+')';
+  if(posts.length){mybox.innerHTML=posts.map(myPostRowHtml).join('');}
+  else{mybox.innerHTML='<div style="padding:24px 0;text-align:center;color:#999;font-size:14px">아직 작성한 글이 없어요. <a href="community-write.html" style="color:#1B64DA;font-weight:600;margin-left:6px">첫 글 작성하기 →</a></div>';}
+
+  let draft=null;try{draft=JSON.parse(localStorage.getItem('designr.draft')||'null');}catch(e){}
+  const draftBox=document.getElementById('draftsBox');
+  if(draft&&(draft.title||draft.contentHtml)){
+    const c=window.DesignrPosts.CATEGORIES[draft.category]||window.DesignrPosts.CATEGORIES['on-sv'];
+    const esc=window.DesignrPosts.escapeHtml;
+    draftBox.innerHTML='<div class="draft-item"><span class="di-tag">'+esc(c.name)+'</span><span class="di-t">'+esc(draft.title||'(제목 없음)')+'</span><span class="di-date">'+window.DesignrPosts.relativeTime(draft.savedAt||Date.now())+'</span><div class="di-acts"><button class="di-btn" onclick="location.href=\'community-write.html\'">계속 쓰기</button><button class="di-btn di-del" onclick="localStorage.removeItem(\'designr.draft\');renderMyPage()">삭제</button></div></div>';
+  }
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderMyPage)}
+else{renderMyPage()}
 </script>
 <div style="display:none">
 <a href="community-auth.html">로그인</a>
