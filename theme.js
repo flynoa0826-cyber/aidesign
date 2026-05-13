@@ -120,6 +120,20 @@
 
 #themeToggle{transition:transform .25s ease}
 #themeToggle:hover{transform:rotate(15deg)}
+
+/* === Dadalla top banner === */
+#dadalla-banner{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 20px;background:linear-gradient(90deg,#FF6B35 0%,#E8335D 100%);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;line-height:1.5;text-align:center;z-index:101}
+#dadalla-banner .dadalla-link{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+#dadalla-banner .dadalla-link:hover{text-decoration:underline}
+#dadalla-banner .dadalla-emoji{font-size:16px}
+#dadalla-banner .dadalla-cta{font-weight:700;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:100px;backdrop-filter:blur(4px)}
+#dadalla-banner .dadalla-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:#fff;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;opacity:.8;transition:opacity .15s,background .15s}
+#dadalla-banner .dadalla-close:hover{opacity:1;background:rgba(0,0,0,.15)}
+@media (max-width:640px){
+  #dadalla-banner{font-size:12px;padding:9px 40px 9px 14px;gap:8px}
+  #dadalla-banner .dadalla-cta{font-size:11px;padding:2px 8px}
+  #dadalla-banner .dadalla-msg-long{display:none}
+}
 `;
   const s=document.createElement('style');s.id='designr-theme-overrides';s.textContent=css;
   if(document.head)document.head.appendChild(s);
@@ -134,7 +148,30 @@
   }
   function toggle(){set(current()==='dark'?'light':'dark')}
 
+  function injectBanner(){
+    const BANNER_KEY='designr.banner.dadalla.v1';
+    let dismissed=false;try{dismissed=localStorage.getItem(BANNER_KEY)==='1'}catch(e){}
+    if(dismissed)return;
+    if(document.getElementById('dadalla-banner'))return;
+    const wrap=document.createElement('div');
+    wrap.id='dadalla-banner';
+    wrap.innerHTML=
+      '<a class="dadalla-link" href="https://dadalla.io" target="_blank" rel="noopener noreferrer">'+
+        '<span class="dadalla-emoji">💼</span>'+
+        '<span><b>사직서 쓰기 전 잠깐</b><span class="dadalla-msg-long"> — 경제적 해결책부터 확인하세요</span></span>'+
+        '<span class="dadalla-cta">dadalla.io →</span>'+
+      '</a>'+
+      '<button type="button" class="dadalla-close" aria-label="배너 닫기">×</button>';
+    document.body.insertBefore(wrap,document.body.firstChild);
+    wrap.querySelector('.dadalla-close').addEventListener('click',function(e){
+      e.preventDefault();e.stopPropagation();
+      try{localStorage.setItem(BANNER_KEY,'1')}catch(e2){}
+      wrap.remove();
+    });
+  }
+
   function inject(){
+    injectBanner();
     const navR=document.querySelector('.nav-r');
     if(navR&&!document.getElementById('themeToggle')){
       const btn=document.createElement('button');
