@@ -242,6 +242,33 @@
     return p&&Array.isArray(p.comments)?p.comments.slice():[];
   }
 
+  function _followKey(){const e=_currentUserEmail();return e?'designr.follows.'+e:null}
+  function isFollowing(authorEmail){const k=_followKey();return k?_readSet(k).has(authorEmail):false}
+  function toggleFollow(authorEmail){
+    const k=_followKey();if(!k)return null;
+    const set=_readSet(k);
+    let on;if(set.has(authorEmail)){set.delete(authorEmail);on=false;}else{set.add(authorEmail);on=true;}
+    _writeSet(k,set);return on;
+  }
+  function followerCount(authorEmail){
+    let n=0;
+    try{
+      const users=JSON.parse(localStorage.getItem('designr.users'))||[];
+      for(const u of users){
+        const set=_readSet('designr.follows.'+u.email);
+        if(set.has(authorEmail))n++;
+      }
+    }catch(e){}
+    return n;
+  }
+
+  function neighborPosts(postId){
+    const p=getById(postId);if(!p)return{prev:null,next:null};
+    const same=_cache.filter(x=>x.category===p.category);
+    const i=same.findIndex(x=>x.id===p.id);
+    return{prev:i>0?same[i-1]:null,next:i>=0&&i<same.length-1?same[i+1]:null};
+  }
+
   function toast(msg){
     let t=document.getElementById('__designr_toast');
     if(!t){
@@ -531,6 +558,7 @@
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
+    isFollowing,toggleFollow,followerCount,neighborPosts,
     readFileAsDataURL,formatSize,formatDate,relativeTime,escapeHtml,
     plainText,firstImage,catBadge,pitemHtml,gitemHtml,qitemHtml,
     authorColor,avatarHtml,enhanceYoutube
