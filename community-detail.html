@@ -124,7 +124,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 .cm-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .cm-title{font-family:var(--serif);font-size:20px;font-weight:700}
 .cm-cnt{color:var(--cat)}
-.cm-sort{padding:6px 12px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent;font-size:12px;font-family:var(--sans);cursor:pointer;outline:none;color:var(--ink-2)}
+.cm-sort{padding:6px 28px 6px 14px;border-radius:var(--r-full);border:1.5px solid var(--line);background:transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23555' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 10px center;font-size:12px;font-family:var(--sans);cursor:pointer;outline:none;color:var(--ink-2);appearance:none;-webkit-appearance:none;-moz-appearance:none}
 .cm-input{display:flex;gap:12px;margin-bottom:24px;align-items:flex-start}
 .cm-av{width:36px;height:36px;border-radius:50%;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
 .cm-ta{flex:1;padding:12px 16px;border:1.5px solid var(--line);border-radius:var(--r-lg);font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--bg);resize:none;min-height:76px;outline:none;transition:border-color var(--t);line-height:1.7}
@@ -455,12 +455,12 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   likeBtn.addEventListener('click',async()=>{
     if(!requireLogin())return;
     const r=await window.DesignrPosts.toggleLike(id);
-    if(r)setLikeUI(r.liked,r.count);
+    if(r){setLikeUI(r.liked,r.count);window.DesignrPosts.toast(r.liked?'좋아요를 눌렀어요':'좋아요를 취소했어요');}
   });
   saveBtn.addEventListener('click',()=>{
     if(!requireLogin())return;
     const on=window.DesignrPosts.toggleBookmark(id);
-    if(on!=null)setSaveUI(on);
+    if(on!=null){setSaveUI(on);window.DesignrPosts.toast(on?'저장되었어요':'저장이 해제되었어요');}
   });
   async function copyUrl(){
     try{await navigator.clipboard.writeText(location.href);return true;}
@@ -473,7 +473,7 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
   }
   linkBtn.addEventListener('click',async()=>{
     const ok=await copyUrl();
-    alert(ok?'링크가 복사되었습니다.':location.href);
+    window.DesignrPosts.toast(ok?'링크가 복사되었어요':'링크 복사에 실패했어요');
   });
   shareBtn.addEventListener('click',async()=>{
     if(navigator.share){try{await navigator.share({title:document.title,url:location.href});return;}catch(e){}}
@@ -522,21 +522,64 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
 
   const bodyEl=document.querySelector('.art-body');
   if(bodyEl){
-    let html=p.contentHtml||'';
-    const imgs=(p.attachments||[]).filter(a=>a.isImage);
-    const files=(p.attachments||[]).filter(a=>!a.isImage);
+    const isImg=a=>a.isImage||/^image\//.test(a.type||'')||/\.(jpe?g|png|gif|webp|svg|bmp)$/i.test(a.name||'');
+    const imgs=(p.attachments||[]).filter(isImg);
+    const files=(p.attachments||[]).filter(a=>!isImg(a));
+    let html='';
     if(imgs.length){
-      html+='<div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:10px">'+
-        imgs.map(a=>'<a href="'+a.dataUrl+'" target="_blank" style="display:block"><img src="'+a.dataUrl+'" alt="'+esc(a.name)+'" style="max-width:200px;max-height:200px;border-radius:8px;border:1px solid #E4E5E7;object-fit:cover;cursor:zoom-in"></a>').join('')+
+      html+='<div style="margin-bottom:24px;display:flex;flex-direction:column;gap:12px">'+
+        imgs.map(a=>'<a href="'+a.dataUrl+'" target="_blank" style="display:block"><img src="'+a.dataUrl+'" alt="'+esc(a.name)+'" style="max-width:100%;height:auto;border-radius:10px;border:1px solid #E4E5E7;cursor:zoom-in;display:block"></a>').join('')+
         '</div>';
     }
+    html+=(p.contentHtml||'');
     if(files.length){
-      html+='<div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">'+
+      html+='<div style="margin-top:24px;display:flex;flex-direction:column;gap:6px">'+
         files.map(a=>'<a href="'+a.dataUrl+'" download="'+esc(a.name)+'" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;background:#F7F8FA;border:1px solid #E4E5E7;text-decoration:none;color:#191919"><span class="material-icons-round" style="font-size:20px;color:#1B64DA">'+(/\.pdf$/i.test(a.name)?'picture_as_pdf':/\.zip$/i.test(a.name)?'folder_zip':'description')+'</span><span style="flex:1;font-size:13px;font-weight:500">'+esc(a.name)+'</span><span style="font-size:12px;color:#999">'+window.DesignrPosts.formatSize(a.size)+'</span></a>').join('')+
         '</div>';
     }
     bodyEl.innerHTML=html;
   }
+
+  // 댓글
+  const cmList=document.querySelector('.cm-list');
+  const cmTa=document.querySelector('.cm-ta');
+  const cmSub=document.querySelector('.cm-sub');
+  const cmSort=document.querySelector('.cm-sort');
+  if(!Array.isArray(p.comments))p.comments=[];
+  function renderComments(){
+    const sort=cmSort?cmSort.value:'최신순';
+    const list=p.comments.slice().sort((a,b)=>sort==='좋아요순'?(b.likes||0)-(a.likes||0):b.createdAt-a.createdAt);
+    document.querySelectorAll('.cmt-count').forEach(el=>el.textContent=p.comments.length);
+    if(!list.length){cmList.innerHTML='<div style="text-align:center;padding:40px 24px;color:#999;font-size:13px">아직 댓글이 없어요.</div>';return;}
+    const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
+    cmList.innerHTML=list.map(c=>{
+      const initial=esc((c.authorNickname||'?').charAt(0));
+      const canDel=u&&(c.authorEmail===u.email||p.authorEmail===u.email);
+      return '<div class="cm-item">'+
+        '<div class="cm-top"><div class="ci-av ci-a1">'+initial+'</div><div class="ci-name">'+esc(c.authorNickname)+'</div><div class="ci-date">'+window.DesignrPosts.relativeTime(c.createdAt)+'</div></div>'+
+        '<div class="cm-body">'+esc(c.text).replace(/\n/g,'<br>')+'</div>'+
+        (canDel?'<div class="cm-acts"><button type="button" class="ca" data-cid="'+c.id+'"><span class="material-icons-round">delete_outline</span>삭제</button></div>':'')+
+      '</div>';
+    }).join('');
+    cmList.querySelectorAll('.ca[data-cid]').forEach(btn=>{
+      btn.addEventListener('click',async()=>{
+        if(!confirm('정말 삭제하시겠습니까?'))return;
+        const ok=await window.DesignrPosts.removeComment(id,btn.dataset.cid);
+        if(ok){p.comments=p.comments.filter(x=>x.id!==btn.dataset.cid);renderComments();window.DesignrPosts.toast('댓글이 삭제되었어요');}
+      });
+    });
+  }
+  if(cmSub&&cmTa){
+    cmSub.addEventListener('click',async()=>{
+      if(!requireLogin())return;
+      const text=cmTa.value.trim();
+      if(!text){window.DesignrPosts.toast('댓글 내용을 입력해주세요');cmTa.focus();return;}
+      const c=await window.DesignrPosts.addComment(id,text);
+      if(c){p.comments.push(c);cmTa.value='';renderComments();window.DesignrPosts.toast('댓글이 등록되었어요');}
+    });
+  }
+  if(cmSort)cmSort.addEventListener('change',renderComments);
+  renderComments();
 })();
 </script>
 </body>
