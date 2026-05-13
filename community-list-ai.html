@@ -248,7 +248,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div class="mob-search-inner">
     <div class="mob-search-bar">
       <span class="material-icons-round">search</span>
-      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html'}">
+      <input type="text" id="mobSearchInput" placeholder="검색어를 입력하세요" onkeydown="if(event.key==='Enter'){location.href='community-search.html?q='+encodeURIComponent(this.value)}">
       <button onclick="document.getElementById('mobSearch').classList.remove('open')"><span class="material-icons-round">close</span></button>
     </div>
     <div class="mob-search-tags">
