@@ -110,19 +110,32 @@
       });
     }
     updateBellDot();
-    if(!user)return;
     document.querySelectorAll('.gnb-login').forEach(el=>{
-      el.textContent='';
-      const ic=document.createElement('span');ic.className='material-icons-round';ic.style.fontSize='18px';ic.style.marginRight='6px';ic.textContent='account_circle';
-      el.appendChild(ic);
-      el.appendChild(document.createTextNode(user.nickname));
-      el.setAttribute('href','community-mypage.html');
-      el.setAttribute('title',user.email+' · 클릭하여 마이페이지로 이동');
+      if(user){
+        el.textContent='';
+        const ic=document.createElement('span');ic.className='material-icons-round';ic.style.fontSize='18px';ic.style.marginRight='6px';ic.textContent='account_circle';
+        el.appendChild(ic);
+        el.appendChild(document.createTextNode(user.nickname));
+        el.setAttribute('href','community-mypage.html');
+        el.setAttribute('title',user.email+' · 클릭하여 마이페이지로 이동');
+      }else{
+        el.textContent='로그인';
+        el.setAttribute('href','community-auth.html');
+        el.removeAttribute('title');
+      }
     });
     document.querySelectorAll('.gnb-mdr-acts a').forEach(a=>{
-      if(a.textContent.trim()==='로그인'){
-        a.textContent=user.nickname+' 마이페이지';
-        a.setAttribute('href','community-mypage.html');
+      const t=(a.textContent||'').trim();
+      if(user){
+        if(t==='로그인'||/마이페이지$/.test(t)){
+          a.textContent=user.nickname+' 마이페이지';
+          a.setAttribute('href','community-mypage.html');
+        }
+      }else{
+        if(t==='로그인'||/마이페이지$/.test(t)){
+          a.textContent='로그인';
+          a.setAttribute('href','community-auth.html');
+        }
       }
     });
   }
