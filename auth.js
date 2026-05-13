@@ -48,17 +48,22 @@
 
   function renderNav(){
     const user=getCurrentUser();
-    // 알림 벨의 숫자 뱃지: 미로그인이거나 안 읽은 알림이 없으면 숨김
+    // 알림 벨 숫자 뱃지: 기본은 숨김(.gnb-ndot { display:none }), JS가 .show 부여
+    // 알림 데이터는 localStorage(동기)에 있으므로 IndexedDB 준비를 기다리지 않고 즉시 계산해서 깜박임 방지
     function updateBellDot(){
-      const count=user&&window.DesignrPosts&&typeof window.DesignrPosts.unreadCount==='function'?window.DesignrPosts.unreadCount(user.email):0;
+      let count=0;
+      if(user){
+        try{
+          const list=JSON.parse(localStorage.getItem('designr.notifications.'+user.email))||[];
+          for(const n of list)if(!n.read)count++;
+        }catch(e){}
+      }
       document.querySelectorAll('.gnb-ndot').forEach(d=>{
-        if(count>0){d.style.display='';d.textContent=count>99?'99+':String(count);}
-        else{d.style.display='none';d.textContent='';}
+        if(count>0){d.textContent=count>99?'99+':String(count);d.classList.add('show');}
+        else{d.textContent='';d.classList.remove('show');}
       });
     }
-    if(window.DesignrPosts&&window.DesignrPosts.ready&&window.DesignrPosts.ready.then){
-      window.DesignrPosts.ready.then(updateBellDot);
-    }else{updateBellDot();}
+    updateBellDot();
     if(!user)return;
     document.querySelectorAll('.gnb-login').forEach(el=>{
       el.textContent='';
