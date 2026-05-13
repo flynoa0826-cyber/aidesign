@@ -517,9 +517,26 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
       '<div class="meta-item"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div>'+
       '<div class="meta-r">'+
         ownerActions+
-        '<button class="meta-act"><span class="material-icons-round">share</span></button>'+
-        '<button class="meta-act"><span class="material-icons-round">bookmark_border</span></button>'+
+        '<button id="topShareBtn" class="meta-act" title="링크 복사"><span class="material-icons-round">share</span></button>'+
+        '<button id="topSaveBtn" class="meta-act" title="저장"><span class="material-icons-round">bookmark_border</span></button>'+
       '</div>';
+    const topShare=document.getElementById('topShareBtn');
+    const topSave=document.getElementById('topSaveBtn');
+    if(topShare)topShare.addEventListener('click',()=>linkBtn&&linkBtn.click());
+    function setTopSaveUI(saved){
+      if(!topSave)return;
+      topSave.classList.toggle('liked',saved);
+      const ic=topSave.querySelector('.material-icons-round');
+      if(ic)ic.textContent=saved?'bookmark':'bookmark_border';
+      if(saved){topSave.style.borderColor='var(--cat)';topSave.style.color='var(--cat)';}
+      else{topSave.style.borderColor='';topSave.style.color='';}
+    }
+    setTopSaveUI(window.DesignrPosts.hasBookmarked(id));
+    if(topSave)topSave.addEventListener('click',()=>{
+      if(!requireLogin())return;
+      const on=window.DesignrPosts.toggleBookmark(id);
+      if(on!=null){setTopSaveUI(on);setSaveUI(on);window.DesignrPosts.toast(on?'저장되었어요':'저장이 해제되었어요');}
+    });
   }
 
   const bodyEl=document.querySelector('.art-body');
