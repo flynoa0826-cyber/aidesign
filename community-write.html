@@ -538,9 +538,19 @@ function applySubcategoryUI(sub){
     renderSubcats();
   }
   if(editId){
+    let _dbResult=null,_dbErr=null;
+    try{
+      if(window.sb){
+        const r=await sb.from('posts').select('*').eq('id',editId).maybeSingle();
+        _dbResult=r.data;_dbErr=r.error;
+      }
+    }catch(e){_dbErr=e;}
     const p=await window.DesignrPosts.getByIdFromDB(editId);
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
-    if(!p){alert('글을 찾을 수 없습니다.');location.href='index.html';return;}
+    if(!p){
+      alert('진단:\n editId='+editId+'\n sb='+(!!window.sb)+'\n u.id='+(u?.id||'없음')+'\n DB 직접 조회 결과='+(_dbResult?'있음(author='+_dbResult.author_id+')':'없음')+'\n DB 에러='+(_dbErr?(_dbErr.message||JSON.stringify(_dbErr)):'없음'));
+      location.href='index.html';return;
+    }
     const isOwner=u&&((p.authorId&&p.authorId===u.id)||(p.authorEmail&&p.authorEmail===u.email)||(p.authorNickname&&p.authorNickname===u.nickname));
     if(!isOwner){alert('수정 권한이 없습니다.');location.href='community-detail.html?id='+p.id;return;}
     editingId=p.id;
