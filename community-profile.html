@@ -264,7 +264,7 @@ async function renderProfile(){
     return;
   }
   await window.DesignrPosts.ready;
-  const posts=window.DesignrPosts.listByAuthor(u);
+  const posts=await window.DesignrPosts.listMyPosts();
   const totalViews=posts.reduce((s,p)=>s+(p.views||0),0);
   const totalLikes=posts.reduce((s,p)=>s+(p.likes||0),0);
   const esc=window.DesignrPosts.escapeHtml;
