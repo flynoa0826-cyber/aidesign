@@ -137,6 +137,14 @@
 
   function loadAll(){return _cache.slice()}
   function getById(id){return _cache.find(p=>p.id===id)||null}
+  async function getByIdFromDB(id){
+    if(!window.sb||!id)return null;
+    const cached=getById(id);if(cached)return cached;
+    const {data,error}=await sb.from('posts').select('*,profiles!posts_author_id_fkey(email,nickname)').eq('id',id).maybeSingle();
+    if(error){console.error('getByIdFromDB',error);return null}
+    if(!data)return null;
+    return mapPost(data);
+  }
   function listByCategory(c,sub){return _cache.filter(p=>p.category===c&&(!sub||sub==='전체'||p.subcategory===sub))}
   function listByAuthor(key){
     if(key&&typeof key==='object'){
@@ -211,7 +219,9 @@
 
   async function update(id,d){
     const u=_user();if(!u)return null;
-    const cur=getById(id);if(!cur)return null;
+    let cur=getById(id);
+    if(!cur)cur=await getByIdFromDB(id);
+    if(!cur)return null;
     if(cur.authorId!==u.id)return null;
     const attachments=await uploadAttachments(d.attachments||cur.attachments||[],id);
     const patch={
@@ -531,7 +541,7 @@
 
   window.DesignrPosts={
     MAX_FILES,MAX_BYTES,CATEGORIES,SUBCATS,ready,
-    loadAll,getById,listByCategory,listByAuthor,listMyPosts,listBookmarked,search,
+    loadAll,getById,getByIdFromDB,listByCategory,listByAuthor,listMyPosts,listBookmarked,search,
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
