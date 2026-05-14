@@ -538,10 +538,11 @@ function applySubcategoryUI(sub){
     renderSubcats();
   }
   if(editId){
-    const p=window.DesignrPosts.getById(editId);
+    const p=await window.DesignrPosts.getByIdFromDB(editId);
     const u=window.DesignrAuth&&window.DesignrAuth.getCurrentUser();
     if(!p){alert('글을 찾을 수 없습니다.');location.href='index.html';return;}
-    if(!u||p.authorEmail!==u.email){alert('수정 권한이 없습니다.');location.href='community-detail.html?id='+p.id;return;}
+    const isOwner=u&&((p.authorId&&p.authorId===u.id)||(p.authorEmail&&p.authorEmail===u.email)||(p.authorNickname&&p.authorNickname===u.nickname));
+    if(!isOwner){alert('수정 권한이 없습니다.');location.href='community-detail.html?id='+p.id;return;}
     editingId=p.id;
     document.getElementById('ehTitle').textContent='글 수정';
     document.getElementById('publishLabel').textContent='수정 완료';
