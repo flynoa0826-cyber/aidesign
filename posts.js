@@ -144,6 +144,18 @@
     }
     return _cache.filter(p=>p.authorId===key||p.authorEmail===key||p.authorNickname===key);
   }
+  async function listMyPosts(){
+    if(!window.sb)return[];
+    const u=_user();if(!u||!u.id)return[];
+    const {data,error}=await sb.from('posts').select('*,profiles!posts_author_id_fkey(email,nickname)').eq('author_id',u.id).order('created_at',{ascending:false});
+    if(error){console.error('listMyPosts',error);return[]}
+    return (data||[]).map(row=>{
+      const post=mapPost(row);
+      const cached=_cache.find(p=>p.id===post.id);
+      if(cached){post.likes=cached.likes;post.comments=cached.comments;}
+      return post;
+    });
+  }
   function search(q){q=String(q||'').toLowerCase().trim();if(!q)return[];return _cache.filter(p=>{const t=(p.title||'').toLowerCase()+' '+plainText(p.contentHtml).toLowerCase()+' '+(p.tags||[]).join(' ').toLowerCase();return t.includes(q)})}
 
   // ===== writes =====
@@ -519,7 +531,7 @@
 
   window.DesignrPosts={
     MAX_FILES,MAX_BYTES,CATEGORIES,SUBCATS,ready,
-    loadAll,getById,listByCategory,listByAuthor,listBookmarked,search,
+    loadAll,getById,listByCategory,listByAuthor,listMyPosts,listBookmarked,search,
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
     addComment,removeComment,listComments,toast,
