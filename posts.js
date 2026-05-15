@@ -48,7 +48,7 @@
   function avatarHtml(post,opts){opts=opts||{};const size=opts.size||24;const seed=post.authorEmail||post.authorNickname||'?';const c=authorColor(seed);const init=escapeHtml((post.authorNickname||'?').charAt(0).toUpperCase());const fs=Math.max(10,Math.round(size*0.45));return '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+c+';color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:'+fs+'px;font-weight:700;flex-shrink:0;line-height:1">'+init+'</div>'}
 
   function firstImage(p){const a=(p.attachments||[]).find(x=>x.isImage);return a?a.dataUrl:null}
-  function catBadge(c){const cat=CATEGORIES[c]||CATEGORIES['on-sv'];const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};return '<span class="tag tag-cat" style="background:'+colors[c]+'">'+escapeHtml(cat.name)+'</span>'}
+  function catBadge(c){const cat=CATEGORIES[c]||CATEGORIES['on-sv'];const cls={'on-sv':'tc-sv','on-ai':'tc-ai','on-ca':'tc-ca','on-pf':'tc-pf','on-qa':'tc-qa'};return '<span class="tag tag-cat '+(cls[c]||'tc-sv')+'">'+escapeHtml(cat.name)+'</span>'}
 
   function enhanceYoutube(html){
     if(!html||!/youtu/.test(html))return html||'';

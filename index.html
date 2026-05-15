@@ -58,19 +58,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 .hcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);padding:18px 20px;cursor:pointer;transition:all var(--t);box-shadow:var(--sh-1)}
 .hcard:hover{box-shadow:var(--sh-3);transform:translateY(-2px);border-color:transparent}
 .hcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.hav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.hav-o{background:#FFF0E8;color:#FF6B35}
-.hav-p{background:#F0ECFE;color:#6C3BF5}
-.hav-g{background:#E6F9F3;color:#0BAD75}
-.hav-meta{flex:1}
-.hav-name{font-size:12px;font-weight:600;color:var(--ink)}
-.hav-time{font-size:11px;color:var(--ink-3)}
-.hc-tag{padding:3px 9px;border-radius:var(--r-full);font-size:11px;font-weight:600;flex-shrink:0}
-.tc-sv{background:#FFF0E8;color:#FF6B35}
-.tc-ai{background:#F0ECFE;color:#6C3BF5}
-.tc-ca{background:#E6F9F3;color:#0BAD75}
-.tc-pf{background:#FDEDF1;color:#E8335D}
-.tc-qa{background:#FFF8EC;color:#E8930B}
+.hav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;color:#fff}
+.hav-meta{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.hav-name{font-size:12px;font-weight:500;color:var(--ink)}
+.hav-sep{font-size:12px;color:var(--line-2)}
+.hav-time{font-size:12px;color:var(--ink-3)}
+.hc-tag{flex-shrink:0}
 .hc-title{font-size:14px;font-weight:500;color:var(--ink);line-height:1.5;margin-bottom:10px}
 .hc-foot{display:flex;gap:12px}
 .hc-st{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink-3)}
@@ -517,7 +510,7 @@ let renderLatestPosts=function(){};
         const esc=window.DesignrPosts.escapeHtml;
         const initial=esc((p.authorNickname||'?').charAt(0));
         return '<div class="hcard" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'">'+
-          '<div class="hcard-top"><div class="hav hav-o">'+initial+'</div><div class="hav-meta"><div class="hav-name">'+esc(p.authorNickname)+'</div><div class="hav-time">'+window.DesignrPosts.relativeTime(p.createdAt)+'</div></div><span class="hc-tag tc-sv">'+esc(c.name)+'</span></div>'+
+          '<div class="hcard-top"><div class="hav" style="background:'+window.DesignrPosts.authorColor(p.authorEmail||p.authorNickname)+'">'+initial+'</div><div class="hav-meta"><span class="hav-name">'+esc(p.authorNickname)+'</span><span class="hav-sep">·</span><span class="hav-time">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span></div><span class="hc-tag '+({"on-sv":"tc-sv","on-ai":"tc-ai","on-ca":"tc-ca","on-pf":"tc-pf","on-qa":"tc-qa"}[p.category]||"tc-sv")+'">'+esc(c.name)+'</span></div>'+
           '<div class="hc-title">'+esc(p.title)+'</div>'+
           '<div class="hc-foot"><div class="hc-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div>'+
         '</div>';
