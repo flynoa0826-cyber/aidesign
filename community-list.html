@@ -42,9 +42,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 
 
 /* PAGE HEADER */
-.ph{background:var(--cat);padding:40px 24px 36px;position:relative;overflow:hidden}
+.ph{background:var(--cat);padding:40px 0 36px;position:relative;overflow:hidden}
 .ph::after{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
-.ph-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1}
+.ph-inner{max-width:1160px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
 .ph-crumb{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.55);margin-bottom:14px}
 .ph-crumb a{color:rgba(255,255,255,.55);text-decoration:none}
 .ph-crumb a:hover{color:rgba(255,255,255,.85)}
@@ -157,7 +157,7 @@ to{transform:translateX(0)}
 
 
 
-@media(max-width:900px){.side{display:none}.ph-stats{display:none}.ph-top{flex-direction:column;align-items:flex-start}.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.side{display:none!important}.ph-stats{display:none!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}}
+@media(max-width:900px){.ph-top{flex-direction:column;align-items:flex-start;gap:20px}.ph-stats{width:100%;gap:10px}.phs{flex:1;padding:10px 8px}.phs-n{font-size:18px}.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}.side{position:static!important;top:auto!important}.ph-inner{padding-left:16px!important;padding-right:16px!important}}
 @media(max-width:600px){.pitem-side{display:none}.lay{padding:24px 16px 60px}}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
@@ -336,11 +336,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
     </div>
     <div class="scard">
       <div class="scard-h">이번 주 인기글</div>
-      <div style='padding:14px 18px;color:#999;font-size:13px'>인기 글이 모일 예정이에요</div>
+      <div class="scard-b" id="weeklyHotList"><div style="padding:8px 0;color:var(--ink-3);font-size:13px">불러오는 중...</div></div>
     </div>
     <div class="scard">
       <div class="scard-h">인기 태그</div>
-      <div class="scard-b"><div class="tag-cloud"><span class="tg">#프리랜서</span><span class="tg">#수익화</span><span class="tg">#AI대응</span><span class="tg">#사이드프로젝트</span><span class="tg">#세금신고</span><span class="tg">#단가책정</span><span class="tg">#계약서</span></div></div>
+      <div class="scard-b"><div class="tag-cloud" id="popularTagCloud"><div style="padding:8px 0;color:var(--ink-3);font-size:13px">불러오는 중...</div></div></div>
     </div>
   </aside>
 </div>
@@ -375,5 +375,46 @@ document.querySelectorAll('.pgb').forEach(b=>b.addEventListener('click',()=>{doc
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script src="posts.js"></script>
+<script>
+(async function(){
+  await window.DesignrPosts.ready;
+  const posts=window.DesignrPosts.loadAll().filter(p=>p.category==='on-sv');
+  const fmt=n=>n>=1000000?(n/1000000).toFixed(1).replace(/\.0$/,'')+'m':n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n||0);
+  const stats=document.querySelectorAll('.phs .phs-n');
+  if(stats[0])stats[0].textContent=fmt(posts.length);
+  let commentCount=0;
+  try{
+    const comments=await window.DesignrPosts.loadAllComments();
+    const ids=new Set(posts.map(p=>p.id));
+    commentCount=comments.filter(c=>ids.has(c.postId)).length;
+  }catch(e){}
+  if(stats[1])stats[1].textContent=fmt(commentCount);
+  const monthAgo=Date.now()-30*24*60*60*1000;
+  const monthlyViews=posts.filter(p=>p.createdAt>=monthAgo).reduce((s,p)=>s+(p.views||0),0);
+  if(stats[2])stats[2].textContent=fmt(monthlyViews);
+  const esc=window.DesignrPosts.escapeHtml;
+  const hot=document.getElementById('weeklyHotList');
+  if(hot){
+    const weekAgo=Date.now()-7*24*60*60*1000;
+    const top5=posts.filter(p=>p.createdAt>=weekAgo).sort((a,b)=>((b.views||0)+(b.likes||0)*5)-((a.views||0)+(a.likes||0)*5)).slice(0,5);
+    if(top5.length){
+      hot.innerHTML=top5.map((p,i)=>'<div onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="display:flex;gap:10px;padding:10px 0;'+(i<top5.length-1?'border-bottom:1px solid var(--line);':'')+'cursor:pointer"><span style="font-family:Noto Serif KR,serif;font-weight:700;color:var(--cat);width:18px;flex-shrink:0;text-align:center">'+(i+1)+'</span><span style="flex:1;font-size:13px;color:var(--ink);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.title)+'</span></div>').join('');
+    }else{
+      hot.innerHTML='<div style="padding:8px 0;color:var(--ink-3);font-size:13px">이번 주 인기 글이 모일 예정이에요</div>';
+    }
+  }
+  const cloud=document.getElementById('popularTagCloud');
+  if(cloud){
+    const tc={};
+    posts.forEach(p=>{(p.tags||[]).forEach(t=>{const tag=String(t||'').trim();if(tag)tc[tag]=(tc[tag]||0)+1;});});
+    const top10=Object.entries(tc).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,10);
+    if(top10.length){
+      cloud.innerHTML=top10.map(([t])=>'<span class="tg" onclick="location.href=\'community-search.html?q='+encodeURIComponent(t)+'\'">#'+esc(t)+'</span>').join('');
+    }else{
+      cloud.innerHTML='<div style="padding:8px 0;color:var(--ink-3);font-size:13px">아직 태그가 충분하지 않아요</div>';
+    }
+  }
+})();
+</script>
 </body>
 </html>
