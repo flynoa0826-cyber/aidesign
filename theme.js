@@ -124,6 +124,8 @@
 [data-theme="dark"] .noti-item.unread{background:#1A2540!important}
 [data-theme="dark"] .promo-band{background:var(--bg-2)!important}
 [data-theme="dark"] .nl-card,[data-theme="dark"] .side-card{background:var(--bg)!important;border-color:var(--line)!important;color:var(--ink)!important}
+/* === mobile nav padding: pull search/burger buttons closer to the right edge === */
+@media(max-width:900px){.nw{padding:0 16px!important}}
 
 /* === article body text (critical: was hardcoded #2C2C2C, invisible on dark) === */
 [data-theme="dark"] .art-body,[data-theme="dark"] .art-body *,
