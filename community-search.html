@@ -358,10 +358,10 @@ function renderResults(){
   box.innerHTML='<div style="font-size:13px;color:var(--ink-3);margin-bottom:14px"><strong style="color:var(--ink)">'+results.length+'</strong>건의 결과</div>'+
     results.map(p=>{
       const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
-      const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+      const cls={'on-sv':'tc-sv','on-ai':'tc-ai','on-ca':'tc-ca','on-pf':'tc-pf','on-qa':'tc-qa'};
       const snippet=window.DesignrPosts.plainText(p.contentHtml).slice(0,200);
       return '<div onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'" style="padding:18px 0;border-bottom:1px solid var(--line);cursor:pointer">'+
-        '<div style="display:flex;gap:6px;margin-bottom:6px"><span style="padding:3px 10px;border-radius:100px;background:'+colors[p.category]+';font-size:11px;font-weight:600">'+esc(c.name)+'</span>'+
+        '<div style="display:flex;gap:6px;margin-bottom:6px"><span class="tag tag-cat '+(cls[p.category]||'tc-sv')+'">'+esc(c.name)+'</span>'+
         (p.subcategory?'<span style="padding:3px 10px;border-radius:100px;background:var(--bg-2);color:var(--ink-2);font-size:11px;font-weight:500">'+esc(p.subcategory)+'</span>':'')+
         '</div>'+
         '<div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px">'+highlight(p.title,q)+'</div>'+
