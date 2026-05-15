@@ -110,7 +110,7 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 .my-post{padding:16px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .my-post:last-child{border-bottom:none}
 .mp-head{display:flex;align-items:center;gap:8px}
-.mp-cat{padding:3px 10px;border-radius:var(--r-full);font-size:11px;font-weight:600;background:#EEF4FF;color:#1B64DA;flex-shrink:0}
+.mp-cat{flex-shrink:0}
 .mp-date{font-size:12px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
 .mp-title{font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color var(--t)}
 .mp-title:hover{color:var(--blue)}
@@ -396,9 +396,10 @@ function recentRowHtml(p){
 function myPostRowHtml(p){
   const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
   const esc=window.DesignrPosts.escapeHtml;
+  const tcCls={'on-sv':'tc-sv','on-ai':'tc-ai','on-ca':'tc-ca','on-pf':'tc-pf','on-qa':'tc-qa'}[p.category]||'tc-sv';
   return '<div class="my-post">'+
     '<div class="mp-head">'+
-      '<span class="mp-cat">'+esc(c.name)+'</span>'+
+      '<span class="mp-cat tag tag-cat '+tcCls+'">'+esc(c.name)+'</span>'+
       '<span class="mp-date">'+window.DesignrPosts.relativeTime(p.createdAt)+'</span>'+
     '</div>'+
     '<a class="mp-title" href="community-detail.html?id='+encodeURIComponent(p.id)+'">'+esc(p.title)+'</a>'+

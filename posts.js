@@ -343,6 +343,16 @@
   }
 
   // ===== comments =====
+  async function loadAllComments(){
+    if(!window.sb)return[];
+    const {data}=await sb.from('comments').select('id,post_id,author_id,created_at,profiles!comments_author_id_fkey(nickname,email)').order('created_at',{ascending:true});
+    return (data||[]).map(r=>({
+      id:r.id,postId:r.post_id,authorId:r.author_id,
+      authorNickname:r.profiles?.nickname||'',
+      authorEmail:r.profiles?.email||'',
+      createdAt:new Date(r.created_at).getTime()
+    }));
+  }
   async function listComments(postId){
     if(!window.sb)return[];
     const {data}=await sb.from('comments').select('*,profiles!comments_author_id_fkey(email,nickname)').eq('post_id',postId).order('created_at',{ascending:true});
@@ -544,7 +554,7 @@
     loadAll,getById,getByIdFromDB,listByCategory,listByAuthor,listMyPosts,listBookmarked,search,
     create,update,remove,incView,refreshCache,
     hasLiked,hasBookmarked,toggleLike,toggleBookmark,
-    addComment,removeComment,listComments,toast,
+    addComment,removeComment,listComments,loadAllComments,toast,
     getNotifications,unreadCount,markAllRead,removeNotification,clearAllNotifications,
     isFollowing,toggleFollow,followerCount,neighborPosts,
     recordSearch,getRecentSearches,removeRecentSearch,clearRecentSearches,getPopularSearches,

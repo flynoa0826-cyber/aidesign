@@ -51,7 +51,6 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 /* 아티클 헤더 */
 .art-tags{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .tag{padding:4px 12px;border-radius:var(--r-full);font-size:12px;font-weight:600}
-.tag-cat{background:var(--cat-lt);color:var(--cat)}
 .tag-hot{background:var(--ink);color:#fff;display:flex;align-items:center;gap:3px}
 .tag-hot .material-icons-round{font-size:12px}
 .tag-sub{background:var(--bg-2);color:var(--ink-2)}
@@ -505,7 +504,8 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
 
   const tagsEl=document.querySelector('.art-tags');
   if(tagsEl){
-    tagsEl.innerHTML='<span class="tag tag-cat">'+esc(catInfo.name)+'</span>'+
+    const tcCls={'on-sv':'tc-sv','on-ai':'tc-ai','on-ca':'tc-ca','on-pf':'tc-pf','on-qa':'tc-qa'}[p.category]||'tc-sv';
+    tagsEl.innerHTML='<span class="tag tag-cat '+tcCls+'">'+esc(catInfo.name)+'</span>'+
       (p.tags||[]).map(t=>'<span class="tag tag-sub">'+esc(t)+'</span>').join('');
   }
   const titleEl=document.querySelector('.art-title');
