@@ -58,6 +58,31 @@
 [data-theme="dark"] .cc.on-ca{background:rgba(11,173,117,.18)!important;border-color:#10C98A!important;color:#7ADEBE!important;font-weight:600!important}
 [data-theme="dark"] .cc.on-pf{background:rgba(232,51,93,.18)!important;border-color:#FF4F76!important;color:#FF96B0!important;font-weight:600!important}
 [data-theme="dark"] .cc.on-qa{background:rgba(232,147,11,.18)!important;border-color:#F5A623!important;color:#FFC966!important;font-weight:600!important}
+/* category badges (.tag-cat) — dark mode: outlined chip with matching color */
+[data-theme="dark"] .tag-cat[style*="#FFF0E8"]{background:transparent!important;border:1.5px solid #FF6B35!important;color:#FFB089!important}
+[data-theme="dark"] .tag-cat[style*="#F0ECFE"]{background:transparent!important;border:1.5px solid #8E63FF!important;color:#C7B3FF!important}
+[data-theme="dark"] .tag-cat[style*="#E6F9F3"]{background:transparent!important;border:1.5px solid #10C98A!important;color:#7ADEBE!important}
+[data-theme="dark"] .tag-cat[style*="#FDEDF1"]{background:transparent!important;border:1.5px solid #FF4F76!important;color:#FF96B0!important}
+[data-theme="dark"] .tag-cat[style*="#FFF8EC"]{background:transparent!important;border:1.5px solid #F5A623!important;color:#FFC966!important}
+/* === category page header (.ph) — dark mode: dark bg + cat-color accent === */
+[data-theme="dark"] .ph{background:var(--bg-2)!important;border-bottom:1px solid var(--line)!important;position:relative}
+[data-theme="dark"] .ph::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:var(--cat);pointer-events:none;z-index:1}
+[data-theme="dark"] .ph::after{background:color-mix(in srgb, var(--cat) 10%, transparent)!important}
+[data-theme="dark"] .ph-title{color:var(--ink)!important}
+[data-theme="dark"] .ph-label{color:var(--cat)!important}
+[data-theme="dark"] .ph-desc{color:var(--ink-2)!important}
+[data-theme="dark"] .ph-crumb,[data-theme="dark"] .ph-crumb a{color:var(--ink-3)!important}
+[data-theme="dark"] .ph-crumb a:hover{color:var(--ink)!important}
+[data-theme="dark"] .phs{background:var(--bg)!important;border:1px solid var(--line)!important}
+[data-theme="dark"] .phs-n{color:var(--ink)!important}
+[data-theme="dark"] .phs-l{color:var(--ink-3)!important}
+/* === sidebar CTA banner (.write-banner) — dark mode === */
+[data-theme="dark"] .write-banner{background:var(--bg)!important;border:1px solid var(--cat)!important}
+[data-theme="dark"] .write-banner::after{background:color-mix(in srgb, var(--cat) 10%, transparent)!important}
+[data-theme="dark"] .wb-title{color:var(--ink)!important}
+[data-theme="dark"] .wb-desc{color:var(--ink-2)!important}
+[data-theme="dark"] .wb-btn{background:var(--cat)!important;color:#fff!important}
+[data-theme="dark"] .wb-btn:hover{background:var(--cat)!important;opacity:.85}
 [data-theme="dark"] .chip,[data-theme="dark"] .ftab,[data-theme="dark"] .sb,[data-theme="dark"] .ntab{background:var(--bg)!important;color:var(--ink-2)!important;border-color:var(--line)!important}
 [data-theme="dark"] .ntab.on,[data-theme="dark"] .sb.on{background:var(--blue)!important;color:#fff!important}
 [data-theme="dark"] .chip.on,[data-theme="dark"] .ftab.on{background:var(--blue-lt)!important;color:var(--blue)!important;border-color:var(--blue)!important}
