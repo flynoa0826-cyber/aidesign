@@ -59,11 +59,18 @@
 [data-theme="dark"] .cc.on-pf{background:rgba(232,51,93,.18)!important;border-color:#FF4F76!important;color:#FF96B0!important;font-weight:600!important}
 [data-theme="dark"] .cc.on-qa{background:rgba(232,147,11,.18)!important;border-color:#F5A623!important;color:#FFC966!important;font-weight:600!important}
 /* category badges (.tag-cat) — dark mode: outlined chip with matching color */
-[data-theme="dark"] .tag-cat[style*="#FFF0E8"]{background:transparent!important;border:1.5px solid #FF6B35!important;color:#FFB089!important}
-[data-theme="dark"] .tag-cat[style*="#F0ECFE"]{background:transparent!important;border:1.5px solid #8E63FF!important;color:#C7B3FF!important}
-[data-theme="dark"] .tag-cat[style*="#E6F9F3"]{background:transparent!important;border:1.5px solid #10C98A!important;color:#7ADEBE!important}
-[data-theme="dark"] .tag-cat[style*="#FDEDF1"]{background:transparent!important;border:1.5px solid #FF4F76!important;color:#FF96B0!important}
-[data-theme="dark"] .tag-cat[style*="#FFF8EC"]{background:transparent!important;border:1.5px solid #F5A623!important;color:#FFC966!important}
+/* === unified category badges (.tc-*) — light & dark mode, used by .tag-cat and .hc-tag === */
+.tag-cat,.hc-tag{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;border:1.5px solid transparent;display:inline-block;line-height:1.5}
+.tc-sv{background:#FFF0E8;border-color:#FF6B35;color:#FF6B35}
+.tc-ai{background:#F0ECFE;border-color:#6C3BF5;color:#6C3BF5}
+.tc-ca{background:#E6F9F3;border-color:#0BAD75;color:#0BAD75}
+.tc-pf{background:#FDEDF1;border-color:#E8335D;color:#E8335D}
+.tc-qa{background:#FFF8EC;border-color:#E8930B;color:#E8930B}
+[data-theme="dark"] .tc-sv{background:transparent!important;border-color:#FF6B35!important;color:#FFB089!important}
+[data-theme="dark"] .tc-ai{background:transparent!important;border-color:#8E63FF!important;color:#C7B3FF!important}
+[data-theme="dark"] .tc-ca{background:transparent!important;border-color:#10C98A!important;color:#7ADEBE!important}
+[data-theme="dark"] .tc-pf{background:transparent!important;border-color:#FF4F76!important;color:#FF96B0!important}
+[data-theme="dark"] .tc-qa{background:transparent!important;border-color:#F5A623!important;color:#FFC966!important}
 /* === category page header (.ph) — dark mode: dark bg + cat-color accent === */
 [data-theme="dark"] .ph{background:var(--bg-2)!important;border-bottom:1px solid var(--line)!important;position:relative}
 [data-theme="dark"] .ph::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:var(--cat);pointer-events:none;z-index:1}
@@ -95,13 +102,14 @@
 [data-theme="dark"] .chip,[data-theme="dark"] .ftab,[data-theme="dark"] .sb,[data-theme="dark"] .ntab{background:var(--bg)!important;color:var(--ink-2)!important;border-color:var(--line)!important}
 [data-theme="dark"] .ntab.on,[data-theme="dark"] .sb.on{background:var(--blue)!important;color:#fff!important}
 [data-theme="dark"] .chip.on,[data-theme="dark"] .ftab.on{background:var(--blue-lt)!important;color:var(--blue)!important;border-color:var(--blue)!important}
-[data-theme="dark"] .fbar .ftab.on{background:transparent!important;border-color:transparent!important;color:var(--cat)!important}
+[data-theme="dark"] .fbar .ftab.on{background:transparent!important;color:var(--blue)!important;border-color:var(--blue)!important}
 [data-theme="dark"] .my-nav,[data-theme="dark"] .my-main{background:transparent!important}
 [data-theme="dark"] .my-nav{background:var(--bg)!important;border-color:var(--line)!important}
 [data-theme="dark"] .mm-item{color:var(--ink-2)!important}
 [data-theme="dark"] .mm-item:hover{background:var(--bg-2)!important;color:var(--ink)!important}
 [data-theme="dark"] .mm-item.on{background:var(--blue-lt)!important;color:var(--blue)!important}
 [data-theme="dark"] .att-open,[data-theme="dark"] .af-item{background:var(--bg-2)!important;border-color:var(--line)!important;color:var(--ink)!important}
+[data-theme="dark"] .af-name{color:#ffffff!important}
 [data-theme="dark"] .scard-h,[data-theme="dark"] .scard-b{background:transparent!important;border-color:var(--line)!important}
 [data-theme="dark"] mark{background:#4a3d00!important;color:#ffe066!important}
 [data-theme="dark"] .pitem-title,[data-theme="dark"] .g-title,[data-theme="dark"] .qi-title{color:var(--ink)!important}
