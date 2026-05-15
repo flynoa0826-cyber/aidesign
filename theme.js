@@ -139,6 +139,8 @@
   .crumb>a,.crumb>span{flex-shrink:0}
   .crumb>span:last-child{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 }
+/* === prevent oversized article images from pushing the page wider than viewport === */
+.art-body img,.q-body img,.ans-body img,.editor-body img{max-width:100%!important;height:auto!important;display:block}
 
 /* === article body text (critical: was hardcoded #2C2C2C, invisible on dark) === */
 [data-theme="dark"] .art-body,[data-theme="dark"] .art-body *,
