@@ -134,6 +134,10 @@
   .ans-meta,.tag-cloud .tg,
   [style*="font-size:13px"]{font-size:14px!important}
   .pitem-title,.qi-title,.g-title,.mp-title{font-size:18px!important}
+  /* breadcrumb on detail pages: force single line, ellipsis on the long title */
+  .crumb{white-space:nowrap!important;overflow:hidden!important}
+  .crumb>a,.crumb>span{flex-shrink:0}
+  .crumb>span:last-child{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 }
 
 /* === article body text (critical: was hardcoded #2C2C2C, invisible on dark) === */
