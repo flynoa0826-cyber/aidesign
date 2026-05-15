@@ -138,6 +138,10 @@
   .crumb{white-space:nowrap!important;overflow:hidden!important}
   .crumb>a,.crumb>span{flex-shrink:0}
   .crumb>span:last-child{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  /* let grid/flex children shrink below their intrinsic content width so
+     long titles, nowrap text, and wide images cannot push the page wider
+     than the viewport */
+  .lay>*,.main>*{min-width:0!important}
 }
 /* === prevent oversized article images from pushing the page wider than viewport === */
 .art-body img,.q-body img,.ans-body img,.editor-body img{max-width:100%!important;height:auto!important;display:block}
