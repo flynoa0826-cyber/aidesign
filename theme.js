@@ -22,7 +22,7 @@
 [data-theme="dark"] .gnb-icon:hover{background:var(--bg-2)!important;color:var(--ink)!important}
 [data-theme="dark"] .gnb-login{color:var(--ink)!important;border-color:var(--line-2)!important;background:transparent!important}
 [data-theme="dark"] .gnb-login:hover{background:var(--bg-2)!important;border-color:var(--blue)!important;color:var(--blue)!important}
-[data-theme="dark"] .gnb-burger{color:var(--ink)!important}
+[data-theme="dark"] .gnb-burger,[data-theme="dark"] .gnb-mob-srch{color:#ffffff!important}
 [data-theme="dark"] .gnb-mdr{background:var(--bg)!important}
 [data-theme="dark"] .gnb-mdr a{color:var(--ink-2)!important}
 [data-theme="dark"] .gnb-mdr a:hover,[data-theme="dark"] .gnb-mdr a.active{background:var(--bg-2)!important;color:var(--ink)!important}
@@ -133,7 +133,7 @@
   .nl-input,.nl-btn,.nl-desc,.btn-sm,.guide-item,.un-item,
   .ans-meta,.tag-cloud .tg,
   [style*="font-size:13px"]{font-size:14px!important}
-  .pitem-title,.qi-title,.g-title,.ri-t,.mp-title{font-size:18px!important}
+  .pitem-title,.qi-title,.g-title,.mp-title{font-size:18px!important}
 }
 
 /* === article body text (critical: was hardcoded #2C2C2C, invisible on dark) === */
