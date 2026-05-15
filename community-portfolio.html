@@ -65,7 +65,7 @@ body{font-family:var(--sans);background:var(--bg-2);color:var(--ink);-webkit-fon
 .ftabs::-webkit-scrollbar{display:none}
 .ftab{padding:14px 16px;border:none;background:transparent;font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:var(--sans);transition:all var(--t);border-bottom:2.5px solid transparent;white-space:nowrap}
 .ftab:hover{color:var(--ink)}
-.ftab.on{color:var(--cat);border-bottom-color:var(--cat);font-weight:600}
+.ftab.on{color:var(--cat);font-weight:600}
 .fright{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:10px 0}
 .view-btn{width:34px;height:34px;border-radius:var(--r-md);border:1.5px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-3);transition:all var(--t)}
 .view-btn:hover,.view-btn.on{border-color:var(--cat);color:var(--cat);background:var(--cat-lt)}
@@ -369,7 +369,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
 
     <!-- 갤러리 그리드 -->
     <div class="gallery cols-3 post-list" id="gallery">
-      <div id="emptyState" style="text-align:center;padding:80px 24px;background:#fff;border:1px solid #E4E5E7;border-radius:16px">
+      <div id="emptyState" style="text-align:center;padding:80px 24px;background:#fff;border:1px solid #E4E5E7;border-radius:16px;column-span:all;break-inside:avoid">
         <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:#191919;margin-bottom:6px">아직 작품이 없어요</div>
         <div style="font-size:13px;color:#999;margin-bottom:16px">포트폴리오를 첫 번째로 공유해보세요</div>
         <a href="community-write.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:100px;background:#1B64DA;color:#fff;font-size:14px;font-weight:600;text-decoration:none"><span class="material-icons-round" style="font-size:18px">add</span>업로드하기</a>

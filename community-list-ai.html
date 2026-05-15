@@ -92,7 +92,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-
 .tag-cat{background:var(--cat-lt);color:var(--cat)}
 .tag-sub{background:var(--bg-2);color:var(--ink-2)}
 .pitem-title{font-size:16px;font-weight:700;color:var(--ink);line-height:1.5;margin-bottom:6px;transition:color var(--t)}
-.pitem-exc{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pitem-exc{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:20px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pitem-side{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;flex-shrink:0;gap:12px}
 .pitem-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .p-auth{display:flex;align-items:center;gap:6px}
 .pav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;background:var(--cat-lt);color:var(--cat)}
@@ -157,7 +158,7 @@ to{transform:translateX(0)}
 
 
 @media(max-width:900px){.side{display:none}.ph-stats{display:none}.ph-top{flex-direction:column;align-items:flex-start}.tool-grid{grid-template-columns:1fr}.lay{grid-template-columns:1fr!important}.main{grid-template-columns:1fr!important}.hero{grid-template-columns:1fr!important}.hero-body{grid-template-columns:1fr!important}.feat-banner{grid-template-columns:1fr!important}.footer-in,.footer-inner{grid-template-columns:1fr 1fr!important}.side{display:none!important}.ph-stats{display:none!important}.hero-panel{display:none!important}.hero-visual{display:none!important}.lay,.main{padding-left:16px!important;padding-right:16px!important}}
-@media(max-width:600px){.pitem-thumb,.p-stats{display:none}.lay{padding:24px 16px 60px}}
+@media(max-width:600px){.pitem-side{display:none}.lay{padding:24px 16px 60px}}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E4E5E7;height:60px;display:flex;align-items:center}
 .nw{width:100%;max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
