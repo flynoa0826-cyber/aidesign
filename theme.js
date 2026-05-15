@@ -202,8 +202,17 @@
   function toggle(){set(current()==='dark'?'light':'dark')}
 
   function injectBanner(){
-    const BANNER_KEY='designr.banner.dadalla.v1';
-    let dismissed=false;try{dismissed=localStorage.getItem(BANNER_KEY)==='1'}catch(e){}
+    const BANNER_KEY='designr.banner.dadalla.v2';
+    const SNOOZE_MS=60*60*1000;
+    let dismissed=false;
+    try{
+      const v=localStorage.getItem(BANNER_KEY);
+      if(v){
+        const t=parseInt(v,10);
+        if(!isNaN(t)&&Date.now()-t<SNOOZE_MS)dismissed=true;
+        else if(v==='1')localStorage.removeItem(BANNER_KEY);
+      }
+    }catch(e){}
     if(dismissed)return;
     if(document.getElementById('dadalla-banner'))return;
     const wrap=document.createElement('div');
@@ -218,7 +227,7 @@
     document.body.insertBefore(wrap,document.body.firstChild);
     wrap.querySelector('.dadalla-close').addEventListener('click',function(e){
       e.preventDefault();e.stopPropagation();
-      try{localStorage.setItem(BANNER_KEY,'1')}catch(e2){}
+      try{localStorage.setItem(BANNER_KEY,String(Date.now()))}catch(e2){}
       wrap.remove();
     });
   }
