@@ -37,6 +37,11 @@
 [data-theme="dark"] .mob-search-bar{background:var(--bg-2)!important}
 [data-theme="dark"] .mob-search-bar input{background:transparent!important;color:var(--ink)!important}
 [data-theme="dark"] .mob-stag{background:var(--bg-2)!important;border-color:var(--line)!important;color:var(--ink-2)!important}
+[data-theme="dark"] .search-sticky{background:var(--bg)!important;border-bottom-color:var(--line)!important}
+[data-theme="dark"] .search-bar{background:var(--bg-2)!important}
+[data-theme="dark"] .search-input{background:transparent!important;color:var(--ink)!important;border-color:transparent!important}
+[data-theme="dark"] .clear-btn{color:var(--ink-3)!important}
+[data-theme="dark"] .clear-btn:hover{color:var(--ink)!important}
 [data-theme="dark"] input,[data-theme="dark"] textarea,[data-theme="dark"] select{background:var(--bg-2)!important;color:var(--ink)!important;border-color:var(--line)!important;color-scheme:dark}
 [data-theme="dark"] input::placeholder,[data-theme="dark"] textarea::placeholder{color:var(--ink-3)!important}
 [data-theme="dark"] .editor-card,[data-theme="dark"] .scard,[data-theme="dark"] .auth-box,[data-theme="dark"] .pitem,[data-theme="dark"] .gitem,[data-theme="dark"] .qi,[data-theme="dark"] .hcard{background:var(--bg)!important;border-color:var(--line)!important}
