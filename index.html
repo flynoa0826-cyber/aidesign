@@ -486,6 +486,17 @@ let renderLatestPosts=function(){};
   }catch(e){}
   const elU=document.getElementById('hs-users');if(elU)elU.textContent=userCount;
   const elP=document.getElementById('hs-posts');if(elP)elP.textContent=postCount;
+  // 인기 태그 — 모든 게시물의 태그를 카운트해서 상위 10개 렌더링
+  const tagCloud=document.querySelector('.tag-cloud');
+  if(tagCloud){
+    const tagCount={};
+    allPosts.forEach(p=>{(p.tags||[]).forEach(t=>{const tag=String(t||'').trim();if(tag)tagCount[tag]=(tagCount[tag]||0)+1;});});
+    const top10=Object.entries(tagCount).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,10);
+    if(top10.length){
+      const esc=window.DesignrPosts.escapeHtml;
+      tagCloud.innerHTML=top10.map(([t])=>'<span class="tg" onclick="location.href=\'community-search.html?q='+encodeURIComponent(t)+'\'">#'+esc(t)+'</span>').join('');
+    }
+  }
   renderLatestPosts=function(){
     const list=document.querySelector('.post-list');
     if(!list)return;

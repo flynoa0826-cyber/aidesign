@@ -345,10 +345,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
     <div class="scard">
       <div class="scard-h"><span class="material-icons-round">article</span>인기 글 참고하기</div>
       <div class="scard-b">
-        <div class="guide-list">
-          <div class="guide-item" onclick="location.href='community-detail.html'"><span class="material-icons-round">trending_up</span>프리랜서 전환 첫 달 수입 공개</div>
-          <div class="guide-item" onclick="location.href='community-ai-detail.html'"><span class="material-icons-round">trending_up</span>Figma + Claude 워크플로우</div>
-          <div class="guide-item" onclick="location.href='community-career-detail.html'"><span class="material-icons-round">trending_up</span>연봉 협상 구조적 분석</div>
+        <div class="guide-list" id="popularGuideList">
+          <div class="guide-item" style="color:var(--ink-3);font-size:13px;cursor:default">불러오는 중...</div>
         </div>
       </div>
     </div>
@@ -378,6 +376,7 @@ function selCat(el,cls){
   selectedCat=cls;
   selectedSub='';
   renderSubcats();
+  renderPopularGuide();
 }
 function renderSubcats(){
   const box=document.getElementById('subcatChips');
@@ -522,6 +521,21 @@ function applyCategoryUI(cat){
   const idx=['on-sv','on-ai','on-ca','on-pf','on-qa'].indexOf(cat);
   const catBtn=document.querySelector('.cat-bar:first-of-type .cat-chips .cc:nth-child('+(idx+1)+')');
   if(catBtn){catBtn.classList.add(cat);selectedCat=cat;}
+  renderPopularGuide();
+}
+function renderPopularGuide(){
+  const box=document.getElementById('popularGuideList');
+  if(!box||!window.DesignrPosts)return;
+  let posts=window.DesignrPosts.loadAll().filter(p=>p.category===selectedCat);
+  if(editingId)posts=posts.filter(p=>p.id!==editingId);
+  posts.sort((a,b)=>((b.views||0)+(b.likes||0)*5)-((a.views||0)+(a.likes||0)*5));
+  const top5=posts.slice(0,5);
+  if(!top5.length){
+    box.innerHTML='<div class="guide-item" style="color:var(--ink-3);font-size:13px;cursor:default">아직 이 카테고리에 인기 글이 없어요</div>';
+    return;
+  }
+  const esc=window.DesignrPosts.escapeHtml;
+  box.innerHTML=top5.map(p=>'<div class="guide-item" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'"><span class="material-icons-round">trending_up</span>'+esc(p.title)+'</div>').join('');
 }
 function applySubcategoryUI(sub){
   selectedSub=sub||'';

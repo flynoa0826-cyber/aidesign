@@ -384,10 +384,10 @@ function showSection(id,el){
 
 function recentRowHtml(p){
   const c=window.DesignrPosts.CATEGORIES[p.category]||window.DesignrPosts.CATEGORIES['on-sv'];
-  const colors={'on-sv':'#FFF0E8;color:#FF6B35','on-ai':'#F0ECFE;color:#6C3BF5','on-ca':'#E6F9F3;color:#0BAD75','on-pf':'#FDEDF1;color:#E8335D','on-qa':'#FFF8EC;color:#E8930B'};
+  const cls={'on-sv':'tc-sv','on-ai':'tc-ai','on-ca':'tc-ca','on-pf':'tc-pf','on-qa':'tc-qa'};
   const esc=window.DesignrPosts.escapeHtml;
   return '<div class="ri" onclick="location.href=\'community-detail.html?id='+encodeURIComponent(p.id)+'\'">'+
-    '<span class="ri-tag" style="background:'+colors[p.category]+'">'+esc(c.name)+'</span>'+
+    '<span class="ri-tag '+(cls[p.category]||'tc-sv')+'">'+esc(c.name)+'</span>'+
     '<span class="ri-t">'+esc(p.title)+'</span>'+
     '<div class="ri-stats"><span><span class="material-icons-round">visibility</span>'+(p.views||0)+'</span><span><span class="material-icons-round">favorite_border</span>'+(p.likes||0)+'</span></div>'+
   '</div>';
