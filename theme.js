@@ -126,6 +126,15 @@
 [data-theme="dark"] .nl-card,[data-theme="dark"] .side-card{background:var(--bg)!important;border-color:var(--line)!important;color:var(--ink)!important}
 /* === mobile nav padding: pull search/burger buttons closer to the right edge === */
 @media(max-width:900px){.nw{padding:0 16px!important}}
+/* === mobile readability: bump 13px text -> 14px, list/card titles 16px -> 18px === */
+@media(max-width:600px){
+  .pitem-exc,.qi-body,.ri-e,.hot-meta,.w-name,.cat-label,.sec-more,.mob-stag,.nav-status,
+  .gnb-footer-desc,.gnb-fcol ul a,.f-desc,.f-col ul a,
+  .nl-input,.nl-btn,.nl-desc,.btn-sm,.guide-item,.un-item,
+  .ans-meta,.tag-cloud .tg,
+  [style*="font-size:13px"]{font-size:14px!important}
+  .pitem-title,.qi-title,.g-title,.ri-t,.mp-title{font-size:18px!important}
+}
 
 /* === article body text (critical: was hardcoded #2C2C2C, invisible on dark) === */
 [data-theme="dark"] .art-body,[data-theme="dark"] .art-body *,
