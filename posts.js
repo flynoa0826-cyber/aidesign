@@ -435,8 +435,8 @@
         '<div class="pitem-tags">'+catBadge(p.category)+(p.subcategory?'<span class="tag tag-sub">'+escapeHtml(p.subcategory)+'</span>':'')+tagsHtml+'</div>'+
         '<div class="pitem-title">'+escapeHtml(p.title)+'</div>'+
         '<div class="pitem-exc">'+escapeHtml(ex)+'</div>'+
-        '<div class="pitem-foot"><div class="p-auth"><div class="pav" style="background:'+color+';color:#fff;font-weight:700">'+init+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span><div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>'+
-      '</div>'+thumbHtml+'</div>';
+        '<div class="pitem-foot"><div class="p-auth"><div class="pav" style="background:'+color+';color:#fff;font-weight:700">'+init+'</div><span class="p-name">'+escapeHtml(p.authorNickname)+'</span></div><span class="p-sep">·</span><span class="p-date">'+relativeTime(p.createdAt)+'</span></div>'+
+      '</div>'+thumbHtml+'<div class="p-stats"><div class="p-st"><span class="material-icons-round">visibility</span>'+(p.views||0)+'</div></div></div>';
   }
 
   function gitemHtml(p){
