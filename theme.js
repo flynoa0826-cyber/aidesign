@@ -287,10 +287,10 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',inject);
   else inject();
 
-  // === mobile swipe navigation between category list pages ===
+  // === mobile swipe navigation between home + category list pages (cyclic) ===
   function initSwipeNav(){
-    const PAGES=['community-list.html','community-list-ai.html','community-list-career.html','community-portfolio.html','community-list-qa.html'];
-    const file=(location.pathname.split('/').pop()||'').toLowerCase();
+    const PAGES=['index.html','community-list.html','community-list-ai.html','community-list-career.html','community-portfolio.html','community-list-qa.html'];
+    const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
     const idx=PAGES.indexOf(file);
     if(idx<0)return;
     let sx=0,sy=0,st=0,track=false;
@@ -319,8 +319,9 @@
       if(dt>MAXT)return;
       if(Math.abs(dy)>MAXY)return;
       if(Math.abs(dx)<TH)return;
-      if(dx<0&&idx<PAGES.length-1)location.href=PAGES[idx+1];
-      else if(dx>0&&idx>0)location.href=PAGES[idx-1];
+      const n=PAGES.length;
+      if(dx<0)location.href=PAGES[(idx+1)%n];
+      else location.href=PAGES[(idx-1+n)%n];
     },{passive:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSwipeNav);
