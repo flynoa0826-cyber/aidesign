@@ -289,39 +289,113 @@
 
   // === mobile swipe navigation between home + category list pages (cyclic) ===
   function initSwipeNav(){
-    const PAGES=['index.html','community-list.html','community-list-ai.html','community-list-career.html','community-portfolio.html','community-list-qa.html'];
+    const PAGES=[
+      {file:'index.html',name:'홈'},
+      {file:'community-list.html',name:'생존 전략'},
+      {file:'community-list-ai.html',name:'AI 실무'},
+      {file:'community-list-career.html',name:'커리어 토크'},
+      {file:'community-portfolio.html',name:'포트폴리오'},
+      {file:'community-list-qa.html',name:'Q&A'}
+    ];
     const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
-    const idx=PAGES.indexOf(file);
+    const idx=PAGES.findIndex(p=>p.file===file);
     if(idx<0)return;
-    let sx=0,sy=0,st=0,track=false;
-    const TH=80,MAXY=50,MAXT=500;
+    const n=PAGES.length;
+    const nextP=PAGES[(idx+1)%n];
+    const prevP=PAGES[(idx-1+n)%n];
+    const TH=80,MAXY=50,MAXT=600;
+    let sx=0,sy=0,st=0,track=false,activeDir=0,canceled=false;
+    // overlay
+    const css='#designr-swipe-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;display:none}'+
+      '#designr-swipe-overlay.dso-active{display:block}'+
+      '#designr-swipe-overlay .dso-bg{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .12s ease-out}'+
+      '#designr-swipe-overlay .dso-label{position:absolute;top:80px;left:50%;transform:translateX(-50%) scale(.85);background:rgba(20,20,20,.92);color:#fff;padding:11px 20px;border-radius:100px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px;opacity:0;white-space:nowrap;transition:opacity .12s ease-out,transform .12s ease-out;box-shadow:0 8px 32px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}'+
+      '#designr-swipe-overlay .dso-arrow{font-size:18px;line-height:1;font-weight:400}'+
+      '#designr-swipe-overlay.dso-spring .dso-bg{transition:opacity .35s ease-out}'+
+      '#designr-swipe-overlay.dso-spring .dso-label{transition:opacity .35s cubic-bezier(.34,1.56,.64,1),transform .45s cubic-bezier(.34,1.56,.64,1)}';
+    const styleEl=document.createElement('style');styleEl.id='designr-swipe-style';styleEl.textContent=css;
+    (document.head||document.documentElement).appendChild(styleEl);
+    const ov=document.createElement('div');
+    ov.id='designr-swipe-overlay';
+    ov.innerHTML='<div class="dso-bg"></div><div class="dso-label"></div>';
+    document.body.appendChild(ov);
+    const bg=ov.querySelector('.dso-bg');
+    const label=ov.querySelector('.dso-label');
     function isInteractive(el){
       while(el&&el!==document.body){
         const tag=el.tagName;
         if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||tag==='BUTTON'||tag==='A')return true;
         if(el.isContentEditable)return true;
-        const ov=getComputedStyle(el).overflowX;
-        if((ov==='auto'||ov==='scroll')&&el.scrollWidth>el.clientWidth)return true;
+        const o=getComputedStyle(el).overflowX;
+        if((o==='auto'||o==='scroll')&&el.scrollWidth>el.clientWidth)return true;
         el=el.parentElement;
       }
       return false;
+    }
+    function setLabel(dx){
+      const dir=dx<0?-1:1;
+      if(dir!==activeDir){
+        activeDir=dir;
+        const dest=dir<0?nextP:prevP;
+        label.innerHTML=dir<0
+          ?'<span class="dso-name">'+dest.name+'</span><span class="dso-arrow">→</span>'
+          :'<span class="dso-arrow">←</span><span class="dso-name">'+dest.name+'</span>';
+      }
+      const progress=Math.min(Math.abs(dx)/TH,1);
+      bg.style.opacity=String(0.4*progress);
+      label.style.opacity=String(progress);
+      label.style.transform='translateX(-50%) scale('+(0.85+0.15*progress)+')';
+    }
+    function springBack(){
+      ov.classList.add('dso-spring');
+      bg.style.opacity='0';
+      label.style.opacity='0';
+      label.style.transform='translateX(-50%) scale(.85)';
+      setTimeout(function(){
+        ov.classList.remove('dso-active');
+        ov.classList.remove('dso-spring');
+      },460);
     }
     document.addEventListener('touchstart',function(e){
       if(window.innerWidth>900)return;
       if(e.touches.length!==1)return;
       if(isInteractive(e.target))return;
-      const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();track=true;
+      const t=e.touches[0];
+      sx=t.clientX;sy=t.clientY;st=Date.now();
+      track=true;canceled=false;activeDir=0;
+    },{passive:true});
+    document.addEventListener('touchmove',function(e){
+      if(!track||canceled)return;
+      const t=e.touches[0];
+      const dx=t.clientX-sx;
+      const dy=t.clientY-sy;
+      if(Math.abs(dy)>MAXY&&Math.abs(dy)>Math.abs(dx)){
+        canceled=true;
+        if(ov.classList.contains('dso-active'))springBack();
+        return;
+      }
+      if(Math.abs(dx)<15)return;
+      ov.classList.remove('dso-spring');
+      ov.classList.add('dso-active');
+      setLabel(dx);
     },{passive:true});
     document.addEventListener('touchend',function(e){
-      if(!track)return;track=false;
+      if(!track){return;}
+      track=false;
+      if(canceled){canceled=false;return;}
       const t=e.changedTouches[0];
       const dx=t.clientX-sx,dy=t.clientY-sy,dt=Date.now()-st;
-      if(dt>MAXT)return;
-      if(Math.abs(dy)>MAXY)return;
-      if(Math.abs(dx)<TH)return;
-      const n=PAGES.length;
-      if(dx<0)location.href=PAGES[(idx+1)%n];
-      else location.href=PAGES[(idx-1+n)%n];
+      if(dt>MAXT||Math.abs(dy)>MAXY||Math.abs(dx)<TH){
+        if(ov.classList.contains('dso-active'))springBack();
+        return;
+      }
+      // commit: brief flash before navigation
+      bg.style.opacity='0.55';
+      label.style.opacity='1';
+      label.style.transform='translateX(-50%) scale(1.08)';
+      setTimeout(function(){
+        location.href=dx<0?nextP.file:prevP.file;
+      },140);
     },{passive:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSwipeNav);
