@@ -309,8 +309,9 @@
     const css='#designr-swipe-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;display:none}'+
       '#designr-swipe-overlay.dso-active{display:block}'+
       '#designr-swipe-overlay .dso-bg{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .12s ease-out}'+
-      '#designr-swipe-overlay .dso-label{position:absolute;top:80px;left:50%;transform:translateX(-50%) scale(.85);background:rgba(20,20,20,.92);color:#fff;padding:11px 20px;border-radius:100px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px;opacity:0;white-space:nowrap;transition:opacity .12s ease-out,transform .12s ease-out;box-shadow:0 8px 32px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}'+
-      '#designr-swipe-overlay .dso-arrow{font-size:18px;line-height:1;font-weight:400}'+
+      '#designr-swipe-overlay .dso-label{position:absolute;top:80px;left:50%;transform:translateX(-50%) scale(.7);width:148px;height:148px;border-radius:50%;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:22px;font-weight:700;opacity:0;white-space:nowrap;transition:opacity .12s ease-out,transform .12s ease-out;box-shadow:0 16px 48px rgba(0,0,0,.5)}'+
+      '#designr-swipe-overlay .dso-arrow{font-size:38px;line-height:1;font-weight:400}'+
+      '#designr-swipe-overlay .dso-name{font-size:22px;line-height:1.2}'+
       '#designr-swipe-overlay.dso-spring .dso-bg{transition:opacity .35s ease-out}'+
       '#designr-swipe-overlay.dso-spring .dso-label{transition:opacity .35s cubic-bezier(.34,1.56,.64,1),transform .45s cubic-bezier(.34,1.56,.64,1)}';
     const styleEl=document.createElement('style');styleEl.id='designr-swipe-style';styleEl.textContent=css;
@@ -337,20 +338,19 @@
       if(dir!==activeDir){
         activeDir=dir;
         const dest=dir<0?nextP:prevP;
-        label.innerHTML=dir<0
-          ?'<span class="dso-name">'+dest.name+'</span><span class="dso-arrow">→</span>'
-          :'<span class="dso-arrow">←</span><span class="dso-name">'+dest.name+'</span>';
+        const ar=dir<0?'→':'←';
+        label.innerHTML='<span class="dso-arrow">'+ar+'</span><span class="dso-name">'+dest.name+'</span>';
       }
       const progress=Math.min(Math.abs(dx)/TH,1);
-      bg.style.opacity=String(0.4*progress);
+      bg.style.opacity=String(0.45*progress);
       label.style.opacity=String(progress);
-      label.style.transform='translateX(-50%) scale('+(0.85+0.15*progress)+')';
+      label.style.transform='translateX(-50%) scale('+(0.7+0.3*progress)+')';
     }
     function springBack(){
       ov.classList.add('dso-spring');
       bg.style.opacity='0';
       label.style.opacity='0';
-      label.style.transform='translateX(-50%) scale(.85)';
+      label.style.transform='translateX(-50%) scale(.7)';
       setTimeout(function(){
         ov.classList.remove('dso-active');
         ov.classList.remove('dso-spring');
@@ -390,7 +390,7 @@
         return;
       }
       // commit: brief flash before navigation
-      bg.style.opacity='0.55';
+      bg.style.opacity='0.6';
       label.style.opacity='1';
       label.style.transform='translateX(-50%) scale(1.08)';
       setTimeout(function(){
