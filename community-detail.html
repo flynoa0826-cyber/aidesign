@@ -288,7 +288,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
     <a href="index.html" class="logo">DESIGNR<span class="logo-dot"></span></a>
     <ul class="nm">
       <li><a href="index.html">홈</a></li>
-      <li><a href="community-list.html" class="active">생존 전략</a></li>
+      <li><a href="community-list.html">생존 전략</a></li>
       <li><a href="community-list-ai.html">AI 실무</a></li>
       <li><a href="community-list-career.html">커리어 토크</a></li>
       <li><a href="community-portfolio.html">포트폴리오</a></li>
@@ -324,7 +324,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-
   <div class="gnb-mdr">
     <a href="index.html" class="gnb-mdr-logo">DESIGNR<span class="logo-dot"></span></a>
     <a href="index.html"><span class="material-icons-round">home</span>홈</a>
-    <a href="community-list.html" class="active"><span class="material-icons-round">shield</span>생존 전략</a>
+    <a href="community-list.html"><span class="material-icons-round">shield</span>생존 전략</a>
     <a href="community-list-ai.html"><span class="material-icons-round">auto_awesome</span>AI 실무</a>
     <a href="community-list-career.html"><span class="material-icons-round">work</span>커리어 토크</a>
     <a href="community-portfolio.html"><span class="material-icons-round">palette</span>포트폴리오</a>
@@ -501,6 +501,9 @@ window.addEventListener('scroll',()=>{let c='';hs.forEach(h=>{if(window.scrollY>
 
   const crumb=document.querySelector('.crumb');
   if(crumb){crumb.innerHTML='<a href="index.html">홈</a><span class="material-icons-round">chevron_right</span><a href="'+catInfo.list+'">'+esc(catInfo.name)+'</a><span class="material-icons-round">chevron_right</span><span>'+esc(p.title)+'</span>';}
+  // GNB 활성 표시: 게시물의 실제 카테고리에 해당하는 nav 항목에만 active 적용
+  document.querySelectorAll('.nm a.active,.gnb-mdr a.active').forEach(a=>a.classList.remove('active'));
+  document.querySelectorAll('.nm a,.gnb-mdr a').forEach(a=>{if(a.getAttribute('href')===catInfo.list)a.classList.add('active');});
 
   const tagsEl=document.querySelector('.art-tags');
   if(tagsEl){
